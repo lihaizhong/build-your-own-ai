@@ -1,0 +1,10 @@
+[project]
+name = "case01"
+version = "0.1.0"
+description = "CASE-API使用"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "dashscope>=1.24.2",
+    "python-dotenv>=1.1.1",
+]
