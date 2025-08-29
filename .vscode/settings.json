@@ -13,6 +13,7 @@
     "dotenv",
     "envrc",
     "htmlcov",
+    "ipykernel",
     "ipynb",
     "Marimo",
     "mkdocs",
