@@ -2,7 +2,7 @@ import os
 from modelscope import AutoModelForCausalLM, AutoTokenizer
 
 # 1. 加载模型：从本地路径加载 DeepSeek-R1 7B 模型
-model_name = "./models/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+model_name = "./models/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
 print(f"模型路径: {model_name}")
 print(f"路径是否存在: {os.path.exists(model_name)}")
 print("开始加载模型...")
@@ -12,7 +12,7 @@ model = AutoModelForCausalLM.from_pretrained(
   device_map="auto",
 )
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-prompt = "帮我写一个二分查找法"
+prompt = "帮我用JavaScript写一个二分查找法"
 messages = [
   {"role": "system", "content": "you are a helpful assistant"},
   {"role": "user", "content": prompt}
