@@ -1,0 +1,11 @@
+[project]
+name = "day02"
+version = "0.1.0"
+description = "DeepSeek使用与Prompt工程"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "dashscope>=1.24.2",
+    "modelscope>=1.29.1",
+    "python-dotenv>=1.1.1",
+]
