@@ -21,6 +21,8 @@
     "modelscope",
     "mypy",
     "nosetests",
+    "ollama",
+    "peft",
     "pipenv",
     "Pipfile",
     "pixi",

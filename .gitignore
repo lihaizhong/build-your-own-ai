@@ -208,3 +208,6 @@ __marimo__/
 
 # JS/TS
 node_modules/
+
+# AI Models
+models/
