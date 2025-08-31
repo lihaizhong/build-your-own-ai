@@ -8,6 +8,7 @@ dashscope.api_key = os.getenv("DASHSCOPE_API_KEY")
 
 def get_response(messages):
   response = dashscope.MultiModalConversation.call(
+    # 视觉大模型
     model="qwen-vl-plus",
     messages=messages
   )
