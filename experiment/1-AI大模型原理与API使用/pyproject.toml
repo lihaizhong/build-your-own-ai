@@ -1,5 +1,5 @@
 [project]
-name = "case01"
+name = "day01"
 version = "0.1.0"
 description = "CASE-API使用"
 readme = "README.md"
