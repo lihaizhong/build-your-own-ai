@@ -31,6 +31,7 @@
     "pypirc",
     "pytest",
     "pytype",
+    "pytz",
     "qwen",
     "ropeproject",
     "scrapy",
