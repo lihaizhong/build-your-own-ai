@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医院病床使用情况可视化大屏</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f4c75 0%, #3282b8 50%, #bbe1fa 100%);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .dashboard-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .dashboard-subtitle {
+            font-size: 1.2em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .update-time {
+            font-size: 0.9em;
+            opacity: 0.6;
+        }
+        
+        /* 关键指标卡片样式 */
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .kpi-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #00d4ff;
+        }
+        
+        .kpi-label {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+        
+        .kpi-unit {
+            font-size: 0.8em;
+            opacity: 0.6;
+            margin-top: 5px;
+        }
+        
+        /* 图表容器样式 */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            padding: 0 20px 20px;
+            height: calc(100vh - 300px);
+        }
+        
+        .chart-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #00d4ff;
+        }
+        
+        .chart-content {
+            flex: 1;
+            min-height: 300px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, 1fr);
+                height: auto;
+            }
+            
+            .kpi-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .kpi-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-title {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面标题 -->
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">🏥 医院病床使用情况可视化大屏</h1>
+        <p class="dashboard-subtitle">实时监控病床占用率与分布情况</p>
+        <p class="update-time">最后更新时间：<span id="updateTime"></span></p>
+    </div>
+
+    <!-- 关键指标卡片 -->
+    <div class="kpi-container">
+        <div class="kpi-card">
+            <div class="kpi-value" id="totalBeds">-</div>
+            <div class="kpi-label">总床位数</div>
+            <div class="kpi-unit">张</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-value" id="occupiedBeds">-</div>
+            <div class="kpi-label">已占用床位</div>
+            <div class="kpi-unit">张</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-value" id="availableBedsKPI">-</div>
+            <div class="kpi-label">空闲床位</div>
+            <div class="kpi-unit">张</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-value" id="occupancyRate">-</div>
+            <div class="kpi-label">整体占用率</div>
+            <div class="kpi-unit">%</div>
+        </div>
+    </div>
+
+    <!-- 图表容器 -->
+    <div class="charts-container">
+        <!-- 各科室病床占用率环形图 -->
+        <div class="chart-panel">
+            <div class="chart-title">📊 各科室病床占用率分布</div>
+            <div class="chart-content" id="departmentOccupancy"></div>
+        </div>
+
+        <!-- 病床使用率趋势图 -->
+        <div class="chart-panel">
+            <div class="chart-title">📈 24小时病床占用率趋势</div>
+            <div class="chart-content" id="occupancyTrend"></div>
+        </div>
+
+        <!-- 各科室空闲床位柱状图 -->
+        <div class="chart-panel">
+            <div class="chart-title">🛏️ 各科室空闲床位数量</div>
+            <div class="chart-content" id="availableBedsChart"></div>
+        </div>
+
+        <!-- 病床分布热力矩阵 -->
+        <div class="chart-panel">
+            <div class="chart-title">🔥 病床分布热力图</div>
+            <div class="chart-content" id="bedDistribution"></div>
+        </div>
+    </div>
+
+    <script>
+        // 图表实例存储
+        const charts = {};
+        
+        // 初始化所有图表
+        function initCharts() {
+            charts.departmentOccupancy = echarts.init(document.getElementById('departmentOccupancy'));
+            charts.occupancyTrend = echarts.init(document.getElementById('occupancyTrend'));
+            charts.availableBeds = echarts.init(document.getElementById('availableBedsChart'));
+            charts.bedDistribution = echarts.init(document.getElementById('bedDistribution'));
+            
+            console.log('图表初始化完成');
+        }
+        
+        // 加载关键指标数据
+        async function loadKeyIndicators() {
+            try {
+                const response = await fetch('/api/key_indicators');
+                const data = await response.json();
+                
+                document.getElementById('totalBeds').textContent = data.total_beds;
+                document.getElementById('occupiedBeds').textContent = data.occupied_beds;
+                document.getElementById('availableBedsKPI').textContent = data.available_beds;
+                document.getElementById('occupancyRate').textContent = data.occupancy_rate;
+                
+            } catch (error) {
+                console.error('加载关键指标数据失败:', error);
+            }
+        }
+        
+        // 加载科室占用率环形图
+        async function loadDepartmentOccupancy() {
+            try {
+                const response = await fetch('/api/department_occupancy');
+                const data = await response.json();
+                
+                const option = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{a} <br/>{b}: {c}% ({d}%)'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        right: '10%',
+                        top: 'center',
+                        textStyle: {
+                            color: '#fff',
+                            fontSize: 12
+                        }
+                    },
+                    series: [
+                        {
+                            name: '科室占用率',
+                            type: 'pie',
+                            radius: ['45%', '75%'],
+                            center: ['40%', '50%'],
+                            avoidLabelOverlap: false,
+                            label: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                label: {
+                                    show: true,
+                                    fontSize: '18',
+                                    fontWeight: 'bold',
+                                    color: '#fff'
+                                }
+                            },
+                            labelLine: {
+                                show: false
+                            },
+                            data: data.map((item, index) => ({
+                                value: item.value,
+                                name: item.name,
+                                itemStyle: {
+                                    color: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'][index % 8]
+                                }
+                            }))
+                        }
+                    ]
+                };
+                
+                charts.departmentOccupancy.setOption(option);
+            } catch (error) {
+                console.error('加载科室占用率数据失败:', error);
+            }
+        }
+        
+        // 加载占用率趋势图
+        async function loadOccupancyTrend() {
+            try {
+                const response = await fetch('/api/occupancy_trend');
+                const data = await response.json();
+                
+                const option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            label: {
+                                backgroundColor: '#6a7985'
+                            }
+                        }
+                    },
+                    legend: {
+                        data: ['占用率', '占用床位数'],
+                        textStyle: { color: '#fff' }
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: data.times,
+                            axisLabel: { color: '#fff' },
+                            axisLine: { lineStyle: { color: '#fff' } }
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            name: '占用率(%)',
+                            min: 0,
+                            max: 100,
+                            axisLabel: { color: '#fff' },
+                            axisLine: { lineStyle: { color: '#fff' } },
+                            splitLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+                        },
+                        {
+                            type: 'value',
+                            name: '床位数',
+                            axisLabel: { color: '#fff' },
+                            axisLine: { lineStyle: { color: '#fff' } }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '占用率',
+                            type: 'line',
+                            stack: 'Total',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: '#00d4ff'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'rgba(0, 212, 255, 0.6)'
+                                    }, {
+                                        offset: 1, color: 'rgba(0, 212, 255, 0.1)'
+                                    }]
+                                }
+                            },
+                            data: data.occupancy_rates
+                        },
+                        {
+                            name: '占用床位数',
+                            type: 'line',
+                            yAxisIndex: 1,
+                            smooth: true,
+                            lineStyle: {
+                                width: 2,
+                                color: '#ff6b6b'
+                            },
+                            data: data.occupied_counts
+                        }
+                    ]
+                };
+                
+                charts.occupancyTrend.setOption(option);
+            } catch (error) {
+                console.error('加载趋势数据失败:', error);
+            }
+        }
+        
+        // 加载空闲床位柱状图
+        async function loadAvailableBeds() {
+            try {
+                const response = await fetch('/api/available_beds');
+                const data = await response.json();
+                
+                const option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    },
+                    grid: {
+                        left: '20%',
+                        right: '10%',
+                        top: '10%',
+                        bottom: '10%'
+                    },
+                    xAxis: {
+                        type: 'value',
+                        boundaryGap: [0, 0.01],
+                        axisLabel: { color: '#fff' },
+                        axisLine: { lineStyle: { color: '#fff' } },
+                        splitLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: data.departments,
+                        axisLabel: { color: '#fff' },
+                        axisLine: { lineStyle: { color: '#fff' } }
+                    },
+                    series: [
+                        {
+                            name: '空闲床位',
+                            type: 'bar',
+                            data: data.available_counts.map((value, index) => ({
+                                value: value,
+                                itemStyle: {
+                                    color: data.colors[index]
+                                }
+                            })),
+                            label: {
+                                show: true,
+                                position: 'right',
+                                color: '#fff',
+                                fontSize: 12,
+                                formatter: '{c}张'
+                            }
+                        }
+                    ]
+                };
+                
+                charts.availableBeds.setOption(option);
+            } catch (error) {
+                console.error('加载空闲床位数据失败:', error);
+            }
+        }
+        
+        // 加载病床分布热力图
+        async function loadBedDistribution() {
+            try {
+                const response = await fetch('/api/bed_distribution');
+                const data = await response.json();
+                
+                const option = {
+                    tooltip: {
+                        position: 'top',
+                        formatter: function(params) {
+                            return data.departments[params.data[0]] + '<br/>' +
+                                   data.floors[params.data[1]] + '<br/>' +
+                                   '占用率: ' + params.data[2] + '%';
+                        }
+                    },
+                    grid: {
+                        height: '60%',
+                        top: '10%'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: data.departments,
+                        splitArea: {
+                            show: true
+                        },
+                        axisLabel: {
+                            color: '#fff',
+                            rotate: 45,
+                            fontSize: 10
+                        }
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: data.floors,
+                        splitArea: {
+                            show: true
+                        },
+                        axisLabel: {
+                            color: '#fff'
+                        }
+                    },
+                    visualMap: {
+                        min: 0,
+                        max: 100,
+                        calculable: true,
+                        orient: 'horizontal',
+                        left: 'center',
+                        bottom: '5%',
+                        textStyle: {
+                            color: '#fff'
+                        },
+                        inRange: {
+                            color: ['#2ed573', '#ffa502', '#ff4757']
+                        }
+                    },
+                    series: [{
+                        name: '病床占用率',
+                        type: 'heatmap',
+                        data: data.data,
+                        label: {
+                            show: true,
+                            color: '#fff',
+                            fontSize: 10,
+                            formatter: '{c}%'
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }]
+                };
+                
+                charts.bedDistribution.setOption(option);
+            } catch (error) {
+                console.error('加载分布热力图数据失败:', error);
+            }
+        }
+        
+        // 初始化仪表板数据
+        async function initDashboard() {
+            try {
+                console.log('正在初始化仪表板...');
+                
+                // 并行加载所有数据
+                await Promise.all([
+                    loadKeyIndicators(),
+                    loadDepartmentOccupancy(),
+                    loadOccupancyTrend(),
+                    loadAvailableBeds(),
+                    loadBedDistribution()
+                ]);
+                
+                // 设置更新时间
+                document.getElementById('updateTime').textContent = new Date().toLocaleString('zh-CN');
+                
+                console.log('仪表板初始化完成');
+            } catch (error) {
+                console.error('仪表板初始化失败:', error);
+            }
+        }
+        
+        // 自动调整图表大小
+        function resizeCharts() {
+            Object.values(charts).forEach(chart => {
+                chart.resize();
+            });
+        }
+        
+        // 页面加载完成后初始化
+        window.addEventListener('load', function() {
+            initCharts();
+            initDashboard();
+            
+            // 窗口大小变化时调整图表
+            window.addEventListener('resize', resizeCharts);
+        });
+        
+        // 定时刷新数据（每3分钟）
+        setInterval(function() {
+            initDashboard();
+        }, 3 * 60 * 1000);
+    </script>
+</body>
+</html>
