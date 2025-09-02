@@ -1,7 +1,7 @@
 [project]
-name = "day02"
+name = "build-your-own-ai"
 version = "0.1.0"
-description = "DeepSeek使用与Prompt工程"
+description = "build your own ai."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -9,8 +9,10 @@ dependencies = [
     "dashscope>=1.24.2",
     "fastapi>=0.116.1",
     "modelscope>=1.29.1",
+    "openai>=1.102.0",
     "peft>=0.17.1",
     "python-dotenv>=1.1.1",
+    "pytz>=2025.2",
     "torch>=2.8.0",
     "transformers>=4.56.0",
     "uvicorn>=0.35.0",
