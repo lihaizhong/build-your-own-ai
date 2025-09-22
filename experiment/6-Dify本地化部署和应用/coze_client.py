@@ -98,7 +98,7 @@ class CozeClient:
 
     try:
       # 使用 create_and_poll 方法，这是 SDK 提供的简化方法
-      chat_poll = self.coze.create_and_poll(
+      chat_poll = self.coze.chat.create_and_poll(
         bot_id=self.bot_id,
         user_id=user_id,
         additional_messages=[Message.build_user_question_text(message)],
