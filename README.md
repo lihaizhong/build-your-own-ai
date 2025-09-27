@@ -16,3 +16,5 @@
 - [PyTorch](https://pytorch.org/)
 - [Transformers](https://huggingface.co/docs/transformers/v4.56.0/zh/index)
 - [Pandas](https://www.runoob.com/pandas/pandas-tutorial.html)
+- [Matplotlib](https://www.runoob.com/matplotlib/matplotlib-tutorial.html)
+- [SciPy](https://www.runoob.com/scipy/scipy-tutorial.html)

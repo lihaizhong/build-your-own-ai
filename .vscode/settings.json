@@ -21,6 +21,7 @@
     "ipykernel",
     "ipynb",
     "Marimo",
+    "Matplotlib",
     "mkdocs",
     "modelscope",
     "mypy",
