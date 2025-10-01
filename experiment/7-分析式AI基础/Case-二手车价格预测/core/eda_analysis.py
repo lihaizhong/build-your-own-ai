@@ -35,7 +35,7 @@ warnings.filterwarnings('ignore')
 
 def load_data():
     """加载数据"""
-    data_path = "训练数据/used_car_train_20200313.csv"
+    data_path = "../data/used_car_train_20200313.csv"
     print("正在加载数据...")
     df = pd.read_csv(data_path, sep=' ')
     print(f"数据加载完成，形状: {df.shape}")
@@ -129,7 +129,7 @@ def target_variable_analysis(df):
     axes[1,1].grid(True, alpha=0.3)
     
     plt.tight_layout(pad=3.0)
-    plt.savefig(u'文档报告/价格分布分析.png', dpi=300, bbox_inches='tight', 
+    plt.savefig(u'../docs/价格分布分析.png', dpi=300, bbox_inches='tight', 
                 facecolor='white', edgecolor='none')
     print(u"价格分布图表已保存")
     plt.show()
@@ -241,7 +241,7 @@ def correlation_analysis(df):
     plt.xticks(fontsize=10, rotation=45)
     plt.yticks(fontsize=10, rotation=0)
     plt.tight_layout()
-    plt.savefig(u'文档报告/特征相关性热力图.png', dpi=300, bbox_inches='tight',
+    plt.savefig(u'../docs/特征相关性热力图.png', dpi=300, bbox_inches='tight',
                 facecolor='white', edgecolor='none')
     print(u"相关性热力图已保存")
     plt.show()
@@ -337,7 +337,7 @@ def time_features_analysis(df):
         axes[1,1].set_ylabel(u'价格')
         
         plt.tight_layout()
-        plt.savefig(u'文档报告/时间特征分析.png', dpi=300, bbox_inches='tight')
+        plt.savefig(u'../docs/时间特征分析.png', dpi=300, bbox_inches='tight')
         plt.show()
 
 def feature_importance_analysis(df):
@@ -410,7 +410,7 @@ def feature_importance_analysis(df):
         plt.text(v + 0.001, i, f'{v:.3f}', va='center')
     
     plt.tight_layout()
-    plt.savefig(u'文档报告/特征重要性分析.png', dpi=300, bbox_inches='tight')
+    plt.savefig(u'../docs/特征重要性分析.png', dpi=300, bbox_inches='tight')
     plt.show()
 
 def generate_comprehensive_eda_report(df):
@@ -420,7 +420,7 @@ def generate_comprehensive_eda_report(df):
     print("="*80)
     
     # 确保文档报告目录存在
-    os.makedirs('文档报告', exist_ok=True)
+    os.makedirs('../docs', exist_ok=True)
     
     # 计算详细统计信息
     numerical_cols = df.select_dtypes(include=[np.number]).columns.tolist()
@@ -581,7 +581,7 @@ def generate_comprehensive_eda_report(df):
     report_content += f"\n---\n*报告生成时间: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}*"
     
     # 保存报告
-    with open(u'文档报告/最完整版EDA分析报告.md', 'w', encoding='utf-8') as f:
+    with open(u'../docs/最完整版EDA分析报告.md', 'w', encoding='utf-8') as f:
         f.write(report_content)
     
     print(u"最完整版EDA分析报告已保存到: 文档报告/最完整版EDA分析报告.md")
@@ -591,7 +591,7 @@ def main():
     print("开始进行探索性数据分析（EDA）...")
     
     # 创建文档报告目录
-    os.makedirs('文档报告', exist_ok=True)
+    os.makedirs('../docs', exist_ok=True)
     
     # 加载数据
     df = load_data()

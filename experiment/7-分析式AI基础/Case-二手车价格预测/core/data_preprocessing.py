@@ -467,9 +467,9 @@ def main():
     print("二手车价格预测 - 数据特征预处理")
     print("="*60)
     
+    data_dir = "../data"
     # 创建临时数据目录
-    temp_dir = "临时数据"
-    model_dir = "最终模型"
+    temp_dir = "../temp"
     if not os.path.exists(temp_dir):
         os.makedirs(temp_dir)
         print(f"创建临时数据目录: {temp_dir}")
@@ -480,7 +480,8 @@ def main():
     try:
         # 读取训练集
         print("\n读取训练集...")
-        train_df = pd.read_csv("训练数据/used_car_train_20200313.csv", sep=' ')
+        train_path = os.path.join(data_dir, "used_car_train_20200313.csv")
+        train_df = pd.read_csv(train_path, sep=' ')
         print(f"训练集加载成功: {train_df.shape}")
         
         # 处理训练集
@@ -496,7 +497,8 @@ def main():
         
         # 读取测试集
         print("\n读取测试集...")
-        test_df = pd.read_csv("训练数据/used_car_testB_20200421.csv", sep=' ')
+        test_path = os.path.join(data_dir, "used_car_testB_20200421.csv")
+        test_df = pd.read_csv(test_path, sep=' ')
         print(f"测试集加载成功: {test_df.shape}")
         
         # 处理测试集
@@ -508,7 +510,7 @@ def main():
         print(f"测试集保存成功: {test_save_path}")
         
         # 保存预处理器对象
-        preprocessor_path = os.path.join(model_dir, "preprocessor.pkl")
+        preprocessor_path = os.path.join(temp_dir, "preprocessor.pkl")
         with open(preprocessor_path, 'wb') as f:
             pickle.dump(preprocessor, f)
         print(f"预处理器保存成功: {preprocessor_path}")
