@@ -12,16 +12,32 @@ from sklearn.model_selection import cross_val_score, KFold
 from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import LabelEncoder
 import datetime
+import os
 import warnings
 warnings.filterwarnings('ignore')
+
+def get_project_path(*paths):
+    """
+    获取项目路径的统一方法
+    Args:
+        *paths: 相对于项目根目录的路径组件
+    Returns:
+        str: 绝对路径
+    """
+    # 获取当前脚本所在目录
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 项目根目录
+    project_root = os.path.dirname(current_dir)
+    # 构建目标路径
+    return os.path.join(project_root, *paths)
 
 def load_and_preprocess_data():
     """加载并预处理数据"""
     print("正在加载数据...")
     
     # 加载原始数据
-    train_raw = pd.read_csv('../data/used_car_train_20200313.csv', sep=' ')
-    test_raw = pd.read_csv('../data/used_car_testB_20200421.csv', sep=' ')
+    train_raw = pd.read_csv(get_project_path('data', 'used_car_train_20200313.csv'), sep=' ')
+    test_raw = pd.read_csv(get_project_path('data', 'used_car_testB_20200421.csv'), sep=' ')
     
     print(f"原始训练集: {train_raw.shape}")
     print(f"原始测试集: {test_raw.shape}")
@@ -100,9 +116,18 @@ def create_rf_features(train_data, test_data):
     
     # 简单特征交互
     if 'kilometer' in numeric_features and 'regDate' in numeric_features:
-        # 年份里程比
-        train_data['km_per_year'] = train_data['kilometer'] / (train_data['regDate'] + 1)
-        test_data['km_per_year'] = test_data['kilometer'] / (test_data['regDate'] + 1)
+        # 先将regDate转换为车龄年数（以2020年为基准）
+        current_year = 2020
+        train_data['car_age'] = current_year - (train_data['regDate'] // 10000)
+        test_data['car_age'] = current_year - (test_data['regDate'] // 10000)
+        
+        # 确保车龄为正数
+        train_data['car_age'] = np.maximum(train_data['car_age'], 1)
+        test_data['car_age'] = np.maximum(test_data['car_age'], 1)
+        
+        # 年均里程数（每年平均跑多少公里）
+        train_data['km_per_year'] = train_data['kilometer'] / train_data['car_age']
+        test_data['km_per_year'] = test_data['kilometer'] / test_data['car_age']
     
     if 'power' in numeric_features and 'kilometer' in numeric_features:
         # 功率里程比
@@ -241,7 +266,10 @@ def main():
     })
     
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f'../docs/rf_focused_{timestamp}.csv'
+    filename = get_project_path('prediction_result', f'rf_focused_{timestamp}.csv')
+    
+    # 确保目录存在
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     
     submission.to_csv(filename, index=False)
     print(f"结果已保存到: {filename}")
