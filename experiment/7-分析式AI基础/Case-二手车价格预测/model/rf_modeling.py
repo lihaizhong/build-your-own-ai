@@ -499,7 +499,8 @@ def create_optimized_rf_ensemble(X_train, y_train, X_test, enable_analysis=True)
         print("\n开始模型分析...")
         
         # 创建结果保存目录
-        results_dir = get_project_path('results')
+        results_dir = get_project_path('prediction_result')
+        user_data_dir = get_user_data_path('user_data')
         os.makedirs(results_dir, exist_ok=True)
         
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -510,21 +511,21 @@ def create_optimized_rf_ensemble(X_train, y_train, X_test, enable_analysis=True)
         
         # 1. 特征重要性分析
         print("1. 绘制特征重要性图...")
-        importance_path = os.path.join(results_dir, f'feature_importance_{timestamp}.png')
+        importance_path = os.path.join(user_data_dir, f'feature_importance_{timestamp}.png')
         feature_importance = plot_feature_importance(
             main_model, feature_names, top_n=20, save_path=importance_path
         )
         
         # 2. 学习曲线分析
         print("2. 绘制学习曲线...")
-        learning_path = os.path.join(results_dir, f'learning_curve_{timestamp}.png')
+        learning_path = os.path.join(user_data_dir, f'learning_curve_{timestamp}.png')
         train_mae, val_mae = plot_learning_curve(
             main_model, X_train, y_train, cv=3, save_path=learning_path
         )
         
         # 3. 参数验证曲线
         print("3. 绘制参数验证曲线...")
-        validation_path = os.path.join(results_dir, f'validation_curve_{timestamp}.png')
+        validation_path = os.path.join(user_data_dir, f'validation_curve_{timestamp}.png')
         best_depth, best_mae = plot_validation_curve_analysis(
             X_train, y_train, param_name='max_depth', 
             param_range=[10, 15, 20, 25, 30, 35, 40], 
@@ -535,19 +536,19 @@ def create_optimized_rf_ensemble(X_train, y_train, X_test, enable_analysis=True)
         print("4. 进行残差分析...")
         from sklearn.model_selection import cross_val_predict
         cv_pred = cross_val_predict(main_model, X_train, y_train, cv=3)
-        residual_path = os.path.join(results_dir, f'residual_analysis_{timestamp}.png')
+        residual_path = os.path.join(user_data_dir, f'residual_analysis_{timestamp}.png')
         residual_stats = plot_residual_analysis(
             y_train, cv_pred, save_path=residual_path
         )
         
         # 5. 价格分布对比
         print("5. 绘制价格分布对比...")
-        distribution_path = os.path.join(results_dir, f'price_distribution_{timestamp}.png')
+        distribution_path = os.path.join(user_data_dir, f'price_distribution_{timestamp}.png')
         plot_price_distribution_comparison(
             y_train, ensemble_pred, save_path=distribution_path
         )
         
-        print(f"\n📊 所有分析图表已保存到: {results_dir}")
+        print(f"\n📊 所有分析图表已保存到: {user_data_dir}")
         
         # 返回分析结果
         analysis_results = {
@@ -633,7 +634,7 @@ def main():
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     
     # 按规范保存到results目录
-    results_dir = get_project_path('results')
+    results_dir = get_project_path('prediction_result')
     os.makedirs(results_dir, exist_ok=True)
     
     filename = os.path.join(results_dir, f'rf_result_{timestamp}.csv')
