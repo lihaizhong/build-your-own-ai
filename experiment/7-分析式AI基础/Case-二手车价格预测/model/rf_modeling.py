@@ -12,9 +12,10 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 import seaborn as sns
-import datetime
+from datetime import datetime
 import os
 import warnings
+
 warnings.filterwarnings('ignore')
 
 # 设置中文字体
@@ -23,9 +24,13 @@ plt.rcParams['axes.unicode_minus'] = False
 
 def get_project_path(*paths):
     """获取项目路径的统一方法"""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(current_dir)
-    return os.path.join(project_root, *paths)
+    try:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_dir = os.path.dirname(current_dir)
+
+        return os.path.join(project_dir, *paths)
+    except NameError:
+        return os.path.join(os.getcwd(), *paths)
 
 def get_user_data_path(*paths):
     """获取用户数据路径"""
@@ -34,12 +39,12 @@ def get_user_data_path(*paths):
 def advanced_missing_value_handler(train_data, test_data):
     """
     高级缺失值处理策略 - 专为随机森林优化
-    
+
     策略1: 分组填充 - 根据相关特征分组计算统计值
     策略2: 缺失值指示变量 - 为高缺失率特征创建指示变量
     策略3: 多重插值 - 对关键特征使用多种方法
     策略4: 业务逻辑填充 - 基于领域知识的填充
-    
+
     Args:
         train_data: 训练数据集
         test_data: 测试数据集
@@ -48,13 +53,13 @@ def advanced_missing_value_handler(train_data, test_data):
         处理后的训练集和测试集
     """
     print("\n=== 高级缺失值处理策略 ===")
-    
+
     # 创建数据副本避免修改原始数据
     train_enhanced = train_data.copy()
     test_enhanced = test_data.copy()
-    
+
     missing_report = {}
-    
+
     # 策略1: 关键数值特征的智能分组填充
     key_features_config = {
         'power': {
@@ -70,30 +75,30 @@ def advanced_missing_value_handler(train_data, test_data):
             'create_missing_indicator': True
         }
     }
-    
+
     for feature, config in key_features_config.items():
         if feature in train_enhanced.columns:
             missing_count = train_enhanced[feature].isnull().sum()
             if missing_count > 0:
                 print(f"\n处理关键特征 {feature} ({missing_count} 个缺失值)...")
-                
+
                 # 创建缺失值指示变量
                 if config['create_missing_indicator']:
                     train_enhanced[f'{feature}_was_missing'] = train_enhanced[feature].isnull().astype(int)
                     if feature in test_enhanced.columns:
                         test_enhanced[f'{feature}_was_missing'] = test_enhanced[feature].isnull().astype(int)
-                
+
                 # 智能分组填充
                 filled_count = 0
-                
+
                 # 尝试主要分组策略
                 if all(col in train_enhanced.columns for col in config['group_by']):
                     group_stats = train_enhanced.groupby(config['group_by'])[feature].agg(['median', 'count'])
-                    
+
                     for group_key, group_data in group_stats.iterrows():
                         if group_data['count'] >= 3:  # 至少3个样本才用分组统计
                             fill_value = group_data['median']
-                            
+
                             # 构建筛选条件
                             if len(config['group_by']) == 2:
                                 mask_train = (train_enhanced[config['group_by'][0]] == group_key[0]) & \
@@ -107,7 +112,7 @@ def advanced_missing_value_handler(train_data, test_data):
                                            train_enhanced[feature].isnull()
                                 mask_test = (test_enhanced[config['group_by'][0]] == group_key) & \
                                           test_enhanced[feature].isnull()
-                            
+
                             # 填充
                             count_filled = mask_train.sum()
                             if count_filled > 0:
@@ -132,18 +137,18 @@ def advanced_missing_value_handler(train_data, test_data):
                     'global_filled': remaining_missing,
                     'strategy': '智能分组填充+缺失指示'
                 }
-    
+
     # 策略2: 分类特征的高级处理
     categorical_features = ['fuelType', 'gearbox', 'bodyType', 'model']
-    
+
     for feature in categorical_features:
         if feature in train_enhanced.columns:
             missing_count = train_enhanced[feature].isnull().sum()
             missing_rate = missing_count / len(train_enhanced)
-            
+
             if missing_count > 0:
                 print(f"\n处理分类特征 {feature} ({missing_count} 个缺失值, {missing_rate:.2%})...")
-                
+
                 # 高缺失率特征创建指示变量
                 if missing_rate >= 0.03:  # 3%以上创建指示变量
                     train_enhanced[f'{feature}_was_missing'] = train_enhanced[feature].isnull().astype(int)
@@ -152,23 +157,23 @@ def advanced_missing_value_handler(train_data, test_data):
                     strategy = '众数填充+缺失指示'
                 else:
                     strategy = '众数填充'
-                
+
                 # 众数填充
                 if len(train_enhanced[feature].mode()) > 0:
                     mode_val = train_enhanced[feature].mode().iloc[0]
                 else:
                     mode_val = 'unknown'
-                
+
                 train_enhanced[feature] = train_enhanced[feature].fillna(mode_val)
                 if feature in test_enhanced.columns:
                     test_enhanced[feature] = test_enhanced[feature].fillna(mode_val)
-                
+
                 missing_report[feature] = {
                     'original_missing': missing_count,
                     'missing_rate': missing_rate,
                     'strategy': strategy
                 }
-    
+
     # 策略3: 其他数值特征的标准处理
     numeric_cols = train_enhanced.select_dtypes(include=[np.number]).columns
     for col in numeric_cols:
@@ -197,14 +202,14 @@ def advanced_missing_value_handler(train_data, test_data):
 def load_and_optimize_data():
     """基于分析结果优化数据加载 - 添加高级缺失值处理"""
     print("正在加载并优化数据...")
-    
+
     # 加载原始数据 - 使用绝对路径
     train_path = get_project_path('data', 'used_car_train_20200313.csv')
     test_path = get_project_path('data', 'used_car_testB_20200421.csv')
-    
+
     print(f"训练数据路径: {train_path}")
     print(f"测试数据路径: {test_path}")
-    
+
     try:
         train_raw = pd.read_csv(train_path, sep=' ')
         test_raw = pd.read_csv(test_path, sep=' ')
@@ -213,74 +218,70 @@ def load_and_optimize_data():
         print("尝试使用逗号分隔符...")
         train_raw = pd.read_csv(train_path)
         test_raw = pd.read_csv(test_path)
-    
+
     print(f"原始训练集: {train_raw.shape}")
     print(f"原始测试集: {test_raw.shape}")
-    
+
     # 确保特征完全一致
     common_features = set(train_raw.columns) & set(test_raw.columns)
     feature_cols = [col for col in common_features if col != 'price']
-    
+
     train_data = train_raw[feature_cols + ['price']].copy()
     test_data = test_raw[feature_cols].copy()
-    
+
     # 1. 按规范处理power异常值 (发现143个>600的记录)
     print("处理power异常值...")
+    power_outliers_train = 0
+    power_outliers_test = 0
+
     if 'power' in train_data.columns:
         power_outliers_train = (train_data['power'] > 600).sum()
         train_data.loc[train_data['power'] > 600, 'power'] = 600
         print(f"训练集修正了 {power_outliers_train} 个power异常值")
-    
+
     if 'power' in test_data.columns:
         power_outliers_test = (test_data['power'] > 600).sum()
         test_data.loc[test_data['power'] > 600, 'power'] = 600
         print(f"测试集修正了 {power_outliers_test} 个power异常值")
-    
+
     # 2. 高级缺失值处理 - 替换原有的简单处理
     train_data, test_data = advanced_missing_value_handler(train_data, test_data)
-    train_data.loc[train_data['power'] > 600, 'power'] = 600
-    print(f"训练集修正了 {power_outliers_train} 个power异常值")
-    
-    if 'power' in test_data.columns:
-        power_outliers_test = (test_data['power'] > 600).sum()
-        test_data.loc[test_data['power'] > 600, 'power'] = 600
-        print(f"测试集修正了 {power_outliers_test} 个power异常值")
-    
+
     # 2. 优化缺失值处理 - 分组填充 + 缺失值指示变量
     print("优化缺失值处理...")
-    
+
     # 创建缺失值统计
     missing_stats = {}
-    
+
     # 优先处理关键数值特征 - 使用分组填充
     key_numeric_features = ['power', 'kilometer']
     for col in key_numeric_features:
         if col in train_data.columns:
             missing_count_train = train_data[col].isnull().sum()
             missing_count_test = test_data[col].isnull().sum() if col in test_data.columns else 0
-            
+
             if missing_count_train > 0 or missing_count_test > 0:
                 print(f"  处理 {col} 的 {missing_count_train + missing_count_test} 个缺失值...")
-                
+
                 # 创建缺失值指示变量
                 train_data[f'{col}_missing'] = train_data[col].isnull().astype(int)
                 if col in test_data.columns:
                     test_data[f'{col}_missing'] = test_data[col].isnull().astype(int)
-                
+
                 # 按品牌分组填充（如果brand可用）
                 if 'brand' in train_data.columns and train_data[col].isnull().sum() > 0:
                     # 计算每个品牌的中位数
                     brand_medians = train_data.groupby('brand')[col].median().to_dict()
-                    
+
                     # 填充训练集
                     for brand, median_val in brand_medians.items():
                         mask = (train_data['brand'] == brand) & train_data[col].isnull()
                         train_data.loc[mask, col] = median_val
-                    
+
                     # 处理剩余的缺失值（用全局中位数）
                     global_median = train_data[col].median()
                     train_data[col] = train_data[col].fillna(global_median)
-                    
+
                     # 填充测试集
                     if col in test_data.columns:
                         for brand, median_val in brand_medians.items():
@@ -293,33 +294,33 @@ def load_and_optimize_data():
                     train_data[col] = train_data[col].fillna(median_val)
                     if col in test_data.columns:
                         test_data[col] = test_data[col].fillna(median_val)
-                
+
                 missing_stats[col] = {'train': missing_count_train, 'test': missing_count_test, 'method': '分组中位数+指示变量'}
-    
+
     # 处理其他数值特征 - 简单中位数填充
     numeric_cols = train_data.select_dtypes(include=[np.number]).columns
     for col in numeric_cols:
         if col != 'price' and col not in key_numeric_features and not col.endswith('_missing'):
             missing_count_train = train_data[col].isnull().sum()
             missing_count_test = test_data[col].isnull().sum() if col in test_data.columns else 0
-            
+
             if missing_count_train > 0 or missing_count_test > 0:
                 median_val = train_data[col].median()
                 train_data[col] = train_data[col].fillna(median_val)
                 if col in test_data.columns:
                     test_data[col] = test_data[col].fillna(median_val)
                 missing_stats[col] = {'train': missing_count_train, 'test': missing_count_test, 'method': '中位数填充'}
-    
+
     # 优化分类特征处理 - 创建高缺失率特征的指示变量
     categorical_cols = train_data.select_dtypes(exclude=[np.number]).columns
     high_missing_threshold = 0.05  # 5%以上缺失率创建指示变量
-    
+
     for col in categorical_cols:
         if col != 'price':
             missing_count_train = train_data[col].isnull().sum()
             missing_count_test = test_data[col].isnull().sum() if col in test_data.columns else 0
             missing_rate = missing_count_train / len(train_data)
-            
+
             if missing_count_train > 0 or missing_count_test > 0:
                 # 高缺失率特征创建指示变量
                 if missing_rate >= high_missing_threshold:
@@ -330,19 +331,19 @@ def load_and_optimize_data():
                     method = '众数填充+指示变量'
                 else:
                     method = '众数填充'
-                
+
                 # 众数填充
                 if len(train_data[col].mode()) > 0:
                     mode_val = train_data[col].mode().iloc[0]
                 else:
                     mode_val = 'unknown'
-                
+
                 train_data[col] = train_data[col].fillna(mode_val)
                 if col in test_data.columns:
                     test_data[col] = test_data[col].fillna(mode_val)
-                
+
                 missing_stats[col] = {'train': missing_count_train, 'test': missing_count_test, 'method': method}
-    
+
     # 输出缺失值处理统计
     if missing_stats:
         print("\n缺失值处理统计:")
@@ -352,7 +353,7 @@ def load_and_optimize_data():
         print("  无缺失值需要处理")
     # 3. 分类特征编码优化
     categorical_features = ['brand', 'model', 'bodyType', 'fuelType', 'gearbox', 'notRepairedDamage']
-    
+
     for col in categorical_features:
         if col in train_data.columns and col in test_data.columns:
             # 合并训练和测试集进行统一编码，处理训练集独有值的问题
@@ -360,29 +361,29 @@ def load_and_optimize_data():
                 train_data[col].astype(str), 
                 test_data[col].astype(str)
             ]).unique()
-            
+
             le = LabelEncoder()
             le.fit(all_values)
-            
+
             train_data[col] = le.transform(train_data[col].astype(str))
             test_data[col] = le.transform(test_data[col].astype(str))
-    
+
     # 4. 保守的价格异常值处理（避免过度删除高价样本）
     if 'price' in train_data.columns:
         # 使用更宽松的0.5%-99.5%范围
         price_q005 = train_data['price'].quantile(0.005)
         price_q995 = train_data['price'].quantile(0.995)
-        
+
         valid_idx = (train_data['price'] >= price_q005) & (train_data['price'] <= price_q995)
         removed_count = len(train_data) - valid_idx.sum()
         train_data = train_data[valid_idx].reset_index(drop=True)
-        
+
         print(f"价格范围: {train_data['price'].min():.2f} - {train_data['price'].max():.2f}")
         print(f"移除了 {removed_count} 个价格异常样本 ({removed_count/len(train_raw)*100:.2f}%)")
-    
+
     print(f"优化后训练集: {train_data.shape}")
     print(f"优化后测试集: {test_data.shape}")
-    
+
     return train_data, test_data
 
 def create_targeted_features(train_data, test_data):
@@ -392,11 +393,16 @@ def create_targeted_features(train_data, test_data):
     # 5. 正确处理regDate - 按规范提取年份计算车龄
     if 'regDate' in train_data.columns:
         print("正确处理regDate时间特征...")
-        current_year = 2020
+
+        current_year = datetime.now().year
         
-        # 提取年份
+        # 提取注册年份
         train_data['reg_year'] = train_data['regDate'] // 10000
         test_data['reg_year'] = test_data['regDate'] // 10000
+
+        # 提取上线年份
+        train_data['create_year'] = train_data['creatDate'] // 10000
+        test_data['create_year'] = test_data['creatDate'] // 10000
         
         # 计算车龄
         train_data['car_age'] = current_year - train_data['reg_year']
@@ -412,8 +418,11 @@ def create_targeted_features(train_data, test_data):
         
         # 车龄分档（基于业务理解）
         age_bins = [0, 3, 7, 12, 20, 50]
-        train_data['age_group'] = pd.cut(train_data['car_age'], bins=age_bins, labels=False).fillna(4).astype(int)
-        test_data['age_group'] = pd.cut(test_data['car_age'], bins=age_bins, labels=False).fillna(4).astype(int)
+        train_data['age_group'] = pd.Series(pd.cut(train_data['car_age'], bins=age_bins, labels=False)).fillna(4).astype(int)
+        test_data['age_group'] = pd.Series(pd.cut(test_data['car_age'], bins=age_bins, labels=False)).fillna(4).astype(int)
+
+        train_data.drop(columns=['name', 'offerType', 'seller', 'regDate', 'creatDate'], inplace=True)
+        test_data.drop(columns=['name', 'offerType', 'seller', 'regDate', 'creatDate'], inplace=True)
     
     # 6. 基于重要特征创建交互特征
     if 'kilometer' in train_data.columns and 'car_age' in train_data.columns:
@@ -423,9 +432,9 @@ def create_targeted_features(train_data, test_data):
         
         # 里程使用强度分类
         km_year_bins = [0, 8000, 18000, 35000, np.inf]
-        train_data['usage_intensity'] = pd.cut(train_data['km_per_year'], bins=km_year_bins, labels=False).fillna(0).astype(int)
-        test_data['usage_intensity'] = pd.cut(test_data['km_per_year'], bins=km_year_bins, labels=False).fillna(0).astype(int)
-    
+        train_data['usage_intensity'] = pd.Series(pd.cut(train_data['km_per_year'], bins=km_year_bins, labels=False)).fillna(0).astype(int)
+        test_data['usage_intensity'] = pd.Series(pd.cut(test_data['km_per_year'], bins=km_year_bins, labels=False)).fillna(0).astype(int)
+
     # 7. 功率效率特征 (分析中排名第5)
     if 'power' in train_data.columns and 'kilometer' in train_data.columns:
         train_data['power_efficiency'] = train_data['power'] / (train_data['kilometer'] + 1)
@@ -433,8 +442,8 @@ def create_targeted_features(train_data, test_data):
         
         # 功率分档
         power_bins = [0, 75, 110, 150, 200, 600]
-        train_data['power_level'] = pd.cut(train_data['power'], bins=power_bins, labels=False).fillna(0).astype(int)
-        test_data['power_level'] = pd.cut(test_data['power'], bins=power_bins, labels=False).fillna(0).astype(int)
+        train_data['power_level'] = pd.Series(pd.cut(train_data['power'], bins=power_bins, labels=False)).fillna(0).astype(int)
+        test_data['power_level'] = pd.Series(pd.cut(test_data['power'], bins=power_bins, labels=False)).fillna(0).astype(int)
     
     # 8. 基于Top特征的交互 (v_0, v_12, v_3是最重要的)
     important_features = ['v_0', 'v_12', 'v_3']
@@ -522,12 +531,13 @@ def plot_learning_curve(model, X, y, cv=2, save_path=None):  # 减少CV折数
     sample_size = min(12000, len(X))  # 限制样本大小
     if len(X) > sample_size:
         X_sample = X.sample(n=sample_size, random_state=42)
+        # 使用索引对齐选择对应标签，避免将索引标签误用为整数位置
         y_sample = y.iloc[X_sample.index]
     else:
         X_sample, y_sample = X, y
     
     train_sizes = np.linspace(0.2, 1.0, 6)  # 减少训练大小点数
-    train_sizes, train_scores, val_scores = learning_curve(
+    train_sizes, train_scores, val_scores = learning_curve(  # type: ignore
         model, X_sample, y_sample, cv=cv, train_sizes=train_sizes, 
         scoring='neg_mean_absolute_error', n_jobs=1  # 减少并行度
     )
@@ -702,7 +712,7 @@ def plot_price_distribution_comparison(y_train, ensemble_pred, save_path=None):
     plt.grid(True, alpha=0.3)
     
     plt.subplot(1, 2, 2)
-    plt.boxplot([y_train, ensemble_pred], labels=['训练集真实价格', '测试集预测价格'])
+    plt.boxplot([y_train, ensemble_pred], label=['训练集真实价格', '测试集预测价格'])
     plt.ylabel('价格', fontsize=12)
     plt.title('价格分布箱线图', fontsize=12, fontweight='bold')
     plt.xticks(rotation=45)
@@ -782,7 +792,7 @@ def create_optimized_rf_ensemble(X_train, y_train, X_test, enable_analysis=True)
             max_depth=9,
             min_samples_split=35,
             min_samples_leaf=18,
-            max_features='sqrt',
+            max_features=0.3,
             bootstrap=True,
             max_samples=0.8,       # 样本采样比例
             random_state=999,
@@ -978,7 +988,7 @@ def main():
         'price': ensemble_pred
     })
     
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     # 按规范保存到results目录
     results_dir = get_project_path('prediction_result')

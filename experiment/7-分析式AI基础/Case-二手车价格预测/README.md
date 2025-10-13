@@ -1,28 +1,23 @@
 # 二手车价格预测项目
 
-> 专注于探索随机森林算法在二手车价格预测中的能力和优化策略
+> 专注于探索机器学习在二手车价格预测中的能力和优化策略
 
 ## 项目概述
 
-本项目通过机器学习方法预测二手车的交易价格，主要探索**随机森林算法**在这一任务中的表现和优化策略。项目包含了完整的数据预处理、特征工程、模型训练和性能评估流程。
+本项目通过机器学习方法预测二手车的交易价格，主要探索**机器学习**在这一任务中的表现和优化策略。项目包含了完整的数据预处理、特征工程、模型训练和性能评估流程。
 
 ## 项目结构
 
 ```
 Case-二手车价格预测/
 ├── README.md                 # 项目说明
-├── core/                     # 核心功能模块
-│   ├── data_preprocessing.py # 数据预处理模块
-│   ├── eda_analysis.py       # 探索性数据分析
-│   └── rf_modeling.py        # 随机森林建模
-├── reference/                # 参考实现
-│   ├── simple_rf_modeling.py # 基础RF实现
-│   ├── random_forest_modeling.py # RF建模参考
-│   └── diagnostic_analysis.py # 诊断分析工具
-├── utilities/                # 工具集合
-│   ├── data_analysis_tools.py # 数据分析工具
-│   ├── model_validation_tools.py # 模型验证工具
-│   └── feature_tools.py      # 特征工程工具
+├── code/                     # 核心功能模块
+│   ├── main.py
+│   ├── requirements.txt
+│   └── utilities/                # 工具集合
+│       ├── data_analysis_tools.py # 数据分析工具
+│       ├── model_validation_tools.py # 模型验证工具
+│       └── feature_tools.py      # 特征工程工具
 ├── data/                     # 数据文件
 │   ├── used_car_train_20200313.csv # 训练数据
 │   ├── used_car_testB_20200421.csv # 测试数据
@@ -31,10 +26,10 @@ Case-二手车价格预测/
 │   ├── 项目方案总结报告.md
 │   ├── 诊断分析报告.md
 │   └── ...
-├── results/                  # 预测结果
+├── prediction-result/        # 预测结果
 │   └── rf_result_*.csv
-└── archive/                  # 存档文件
-    └── ...
+├── user_data/                # 用户产生的临时数据
+│   └── ...
 ```
 
 ## 快速开始
@@ -62,12 +57,7 @@ uv run python core/data_preprocessing.py
 uv run python core/eda_analysis.py
 ```
 
-### 4. 随机森林建模
-
-```bash
-# 运行主要建模脚本
-uv run python core/rf_modeling.py
-```
+### 4. 数据建模
 
 ## 核心功能模块
 
@@ -142,61 +132,24 @@ uv run python core/rf_modeling.py
 ## 性能指标
 
 - **目标指标**: MAE (Mean Absolute Error)
-- **基线性能**: MAE ≈ 1200+
-- **当前最佳**: MAE ≈ 600-800 (交叉验证)
-- **稳健性**: 重点关注模型的泛化能力
+- **目标分数**: MAE \< 500
 
 ## 使用说明
 
 ### 新手入门
-1. 从 `core/eda_analysis.py` 开始，了解数据特性
-2. 运行 `core/data_preprocessing.py` 预处理数据
-3. 使用 `reference/simple_rf_modeling.py` 学习基础流程
-4. 进阶到 `core/rf_modeling.py` 进行优化
+1. 从 `code/eda_analysis.py` 开始，了解数据特性
+2. 运行 `code/data_preprocessing.py` 预处理数据
+3. 使用 `code/simple_rf_modeling.py` 学习基础流程
+4. 进阶到 `model/rf_modeling.py` 进行优化
 
 ### 高级用户
-1. 直接使用 `core/rf_modeling.py` 进行建模
-2. 利用 `utilities/` 中的工具进行定制化分析
-3. 参考 `reference/diagnostic_analysis.py` 进行模型诊断
-
-## 重要经验教训
-
-### ✅ 成功经验
-- **数据预处理标准化**: 建立稳定可重用的预处理流程
-- **RF参数保守化**: 防止过拟合的保守参数设置
-- **集成策略简化**: 简单平均优于复杂权重策略
-
-### ⚠️ 重要教训
-- **过拟合风险**: 激进优化策略容易导致严重过拟合
-- **验证一致性**: 本地验证必须与真实评估环境一致
-- **特征工程约束**: 过度复杂的特征工程可能引入噪声
-
-## 最佳实践建议
-
-### 随机森林参数设置
-```python
-RandomForestRegressor(
-    n_estimators=150-250,    # 适中的树数量
-    max_depth=15-25,         # 限制深度防止过拟合
-    min_samples_split=10-20, # 增加分割最小样本数
-    min_samples_leaf=5-10,   # 增加叶节点最小样本数
-    max_features=0.4-0.6,    # 限制特征子集大小
-    random_state=42
-)
-```
-
-### 特征工程策略
-- 重点关注基础特征交互
-- 避免过度复杂的统计特征
-- 使用RF友好的分箱特征
-- 控制特征总数量避免维度灾难
-
-### 验证策略
-- 使用分层交叉验证
-- 考虑数据分布差异
-- 确保验证结果与考试结果的一致性
+1. 直接使用 `model/rf_modeling.py` 进行建模
+2. 利用 `code/utilities/` 中的工具进行定制化分析
+3. 参考 `code/diagnostic_analysis.py` 进行模型诊断
 
 ## 数据来源
+
+- [【AI入门系列】车市先知：二手车价格预测学习赛](https://tianchi.aliyun.com/competition/entrance/231784/information)
 
 本项目使用的数据来自阿里云天池竞赛：
 - **竞赛名称**: 车市先知：二手车价格预测学习赛
@@ -216,8 +169,3 @@ RandomForestRegressor(
 如有问题或建议，欢迎通过以下方式联系：
 - 项目仓库: [GitHub Repository]
 - 技术讨论: [相关论坛或群组]
-
----
-
-*最后更新: 2025-10-01*
-*项目状态: 持续优化中*
