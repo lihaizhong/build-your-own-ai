@@ -1,0 +1,11 @@
+./IMAGES/1.JPG ./ANNOTATIONS/1.xml
+./IMAGES/2.JPG ./ANNOTATIONS/2.xml
+./IMAGES/3.JPG ./ANNOTATIONS/3.xml
+./IMAGES/4.JPG ./ANNOTATIONS/4.xml
+./IMAGES/5.jpg ./ANNOTATIONS/5.xml
+./IMAGES/6.jpg ./ANNOTATIONS/6.xml
+./IMAGES/front_damper_1.JPG ./ANNOTATIONS/front_damper_1.xml
+./IMAGES/front_damper_2.JPG ./ANNOTATIONS/front_damper_2.xml
+./IMAGES/longi_arm1.JPG ./ANNOTATIONS/longi_arm1.xml
+./IMAGES/longi_arm2.JPG ./ANNOTATIONS/longi_arm2.xml
+./IMAGES/longi_arm3.JPG ./ANNOTATIONS/longi_arm3.xml

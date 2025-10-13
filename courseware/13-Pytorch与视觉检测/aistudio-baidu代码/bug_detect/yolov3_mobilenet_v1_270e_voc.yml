@@ -1,0 +1,28 @@
+_BASE_: [
+  './voc.yml', # 定义数据集
+  './runtime.yml',
+  '_base_/optimizer_270e.yml', # 可以调整 epoch
+  '_base_/yolov3_mobilenet_v1.yml', # 需要修改 anchors
+  '_base_/yolov3_reader.yml', # 需要修改 anchors
+]
+
+snapshot_epoch: 5 # 每隔5个epoch，自动保存一次
+weights: output/yolov3_result # 最终完成的时候，存放的weights
+
+# set collate_batch to false because ground-truth info is needed
+# on voc dataset and should not collate data in batch when batch size
+# is larger than 1.
+EvalReader:
+  collate_batch: false
+
+LearningRate:
+  base_lr: 0.001
+  schedulers:
+  - !PiecewiseDecay
+    gamma: 0.1
+    milestones:
+    - 216
+    - 243
+  - !LinearWarmup
+    start_factor: 0.
+    steps: 1000

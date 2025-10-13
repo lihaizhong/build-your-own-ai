@@ -1,0 +1,26 @@
+<annotation>
+	<folder>IMAGES</folder>
+	<filename>4.JPG</filename>
+	<path>C:\Users\cheny\Desktop\企业内训\上汽大众\2022规划\E条线\【E15】\IMAGES\4.JPG</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>3888</width>
+		<height>2592</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bug</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1753</xmin>
+			<ymin>638</ymin>
+			<xmax>1930</xmax>
+			<ymax>1378</ymax>
+		</bndbox>
+	</object>
+</annotation>

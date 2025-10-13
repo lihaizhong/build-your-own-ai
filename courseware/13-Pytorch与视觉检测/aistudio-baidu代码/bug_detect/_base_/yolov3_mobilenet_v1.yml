@@ -1,0 +1,44 @@
+architecture: YOLOv3
+pretrain_weights: https://paddledet.bj.bcebos.com/models/pretrained/MobileNetV1_pretrained.pdparams
+norm_type: sync_bn
+
+YOLOv3:
+  backbone: MobileNet
+  neck: YOLOv3FPN
+  yolo_head: YOLOv3Head
+  post_process: BBoxPostProcess
+
+MobileNet:
+  scale: 1
+  feature_maps: [4, 6, 13]
+  with_extra_blocks: false
+  extra_block_filters: []
+
+# use default config
+# YOLOv3FPN:
+
+YOLOv3Head:
+  anchors: [[58, 13], [79, 14], [83, 14], 
+          [80, 15], [53, 29], [66, 26], 
+          [102, 19], [142, 22], [86, 192]] 
+
+  anchor_masks: [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
+  loss: YOLOv3Loss
+
+YOLOv3Loss:
+  ignore_thresh: 0.7
+  downsample: [32, 16, 8]
+  label_smooth: false
+
+BBoxPostProcess:
+  decode:
+    name: YOLOBox
+    conf_thresh: 0.005
+    downsample_ratio: 32
+    clip_bbox: true
+  nms:
+    name: MultiClassNMS
+    keep_top_k: 100
+    score_threshold: 0.01
+    nms_threshold: 0.45
+    nms_top_k: 1000
