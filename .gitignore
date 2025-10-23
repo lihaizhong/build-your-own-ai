@@ -74,6 +74,7 @@ __pypackages__/
 # 项目特定规则：忽略实验目录下的中间数据
 # 注意：prediction_result/predictions.csv 不能忽略（需提交）
 experiment/**/user_data/
+!experiment/**/user_data/.gitkeep
 
 models/
 catboost_info/
