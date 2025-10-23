@@ -1,5 +1,5 @@
 """
-V15.1版本模型 - 修复性能下降问题
+V16版本模型 - 修复性能下降问题
 
 基于V12的成功经验和V15的教训，实施以下优化策略:
 1. 简化特征工程，保留有效特征
@@ -414,10 +414,10 @@ def create_simple_analysis_plots(y_train, predictions, scores_info, model_name="
 
 def v16_optimize_model():
     """
-    V15.1优化模型训练流程 - 修复性能下降问题
+    V16优化模型训练流程 - 修复性能下降问题
     """
     print("=" * 60)
-    print("开始V15.1优化模型训练（修复版本）...")
+    print("开始V16优化模型训练（修复版本）...")
     print("=" * 60)
     
     # 加载数据
@@ -470,7 +470,7 @@ def v16_optimize_model():
     final_predictions = smart_calibration(ensemble_pred, y_train)
     
     # 创建分析图表
-    create_simple_analysis_plots(y_train, final_predictions, scores_info, "V15.1")
+    create_simple_analysis_plots(y_train, final_predictions, scores_info, "V16")
     
     print(f"\n最终预测统计:")
     print(f"均值: {final_predictions.mean():.2f}")
@@ -493,7 +493,7 @@ def v16_optimize_model():
     
     # 生成优化报告
     print("\n" + "=" * 60)
-    print("V15.1优化总结")
+    print("V16优化总结")
     print("=" * 60)
     print("✅ 简化特征工程 - 保留有效特征，避免过度工程")
     print("✅ 早停机制 - 防止过拟合，提高泛化能力")
@@ -507,4 +507,4 @@ def v16_optimize_model():
 
 if __name__ == "__main__":
     test_pred, scores_info = v16_optimize_model()
-    print("V15.1优化完成! 期待线上分数有显著改善。")
+    print("V16优化完成! 期待线上分数有显著改善。")
