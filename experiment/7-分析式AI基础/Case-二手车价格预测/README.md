@@ -6,6 +6,10 @@
 
 本项目通过机器学习方法预测二手车的交易价格，主要探索**机器学习**在这一任务中的表现和优化策略。项目包含了完整的数据预处理、特征工程、模型训练和性能评估流程。
 
+## 数据来源
+
+- [【AI入门系列】车市先知：二手车价格预测学习赛](https://tianchi.aliyun.com/competition/entrance/231784/information)
+
 ## 考试排名
 
 1. modeling_v17.py
@@ -159,10 +163,6 @@ uv run python core/eda_analysis.py
 1. 直接使用 `model/rf_modeling.py` 进行建模
 2. 利用 `code/utilities/` 中的工具进行定制化分析
 3. 参考 `code/diagnostic_analysis.py` 进行模型诊断
-
-## 数据来源
-
-- [【AI入门系列】车市先知：二手车价格预测学习赛](https://tianchi.aliyun.com/competition/entrance/231784/information)
 
 本项目使用的数据来自阿里云天池竞赛：
 - **竞赛名称**: 车市先知：二手车价格预测学习赛
