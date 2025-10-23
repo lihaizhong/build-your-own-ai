@@ -192,7 +192,7 @@ def optimize_model_v2():
         y_tr_log, y_val_log = y_train_log.iloc[train_idx], y_train_log.iloc[val_idx]
         
         # 训练LightGBM
-        lgb_model = lgb.LGBMRegressor(**lgb_params, n_estimators=200)  # 降低树的数量(从300降到200)
+        lgb_model = lgb.LGBMRegressor(**lgb_params, n_estimators=200)  # type: ignore 降低树的数量(从300降到200)
         lgb_model.fit(X_tr, y_tr_log)
         
         # 预测
@@ -220,7 +220,7 @@ def optimize_model_v2():
         n_jobs=-1
     )
     
-    lgb_model_final = lgb.LGBMRegressor(**lgb_params, n_estimators=200)
+    lgb_model_final = lgb.LGBMRegressor(**lgb_params, n_estimators=200) # type: ignore
     ridge_model = Ridge(alpha=10.0)  # 增加正则化强度(从1.0增到10.0)
     
     # 训练基模型

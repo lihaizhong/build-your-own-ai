@@ -223,7 +223,7 @@ def train_multi_segment_models(X_train, y_train, X_test):
         
         # 训练模型
         print(f"训练{segment_name}价格区间模型...")
-        lgb_model = lgb.LGBMRegressor(**lgb_params)
+        lgb_model = lgb.LGBMRegressor(**lgb_params) # type: ignore
         xgb_model = xgb.XGBRegressor(**xgb_params)
         cat_model = CatBoostRegressor(**catboost_params)
         

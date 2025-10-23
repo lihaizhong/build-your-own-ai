@@ -185,7 +185,7 @@ def train_models(X_train, y_train, X_test):
     
     # 训练模型
     print("训练LightGBM...")
-    lgb_model = lgb.LGBMRegressor(**lgb_params)
+    lgb_model = lgb.LGBMRegressor(**lgb_params) # type: ignore
     lgb_model.fit(X_train, y_train_log)
     
     print("训练XGBoost...")

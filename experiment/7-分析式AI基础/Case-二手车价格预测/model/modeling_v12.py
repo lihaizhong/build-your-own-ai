@@ -245,7 +245,7 @@ def train_models_with_cv_with_monitoring(X_train, y_train, X_test):
         eval_set_xgb = [(X_val, y_val_log)]
         
         # 训练LightGBM
-        lgb_model = lgb.LGBMRegressor(**lgb_params, n_estimators=200)
+        lgb_model = lgb.LGBMRegressor(**lgb_params, n_estimators=200) # type: ignore
         lgb_model.fit(X_tr, y_tr_log, eval_set=eval_set_lgb, callbacks=[lgb.early_stopping(stopping_rounds=20)])
         
         # 计算训练和验证分数

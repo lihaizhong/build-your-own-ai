@@ -194,7 +194,7 @@ def train_high_low_models(X_train, y_train, X_test):
     
     # 训练高价车模型
     print("训练高价车模型...")
-    lgb_high = lgb.LGBMRegressor(**lgb_params, n_estimators=150)
+    lgb_high = lgb.LGBMRegressor(**lgb_params, n_estimators=150) # type: ignore
     xgb_high = xgb.XGBRegressor(**xgb_params, n_estimators=150)
     
     lgb_high.fit(X_train_high, y_train_high_log)
@@ -202,7 +202,7 @@ def train_high_low_models(X_train, y_train, X_test):
     
     # 训练低价车模型
     print("训练低价车模型...")
-    lgb_low = lgb.LGBMRegressor(**lgb_params, n_estimators=150)
+    lgb_low = lgb.LGBMRegressor(**lgb_params, n_estimators=150) # type: ignore
     xgb_low = xgb.XGBRegressor(**xgb_params, n_estimators=150)
     
     lgb_low.fit(X_train_low, y_train_low_log)
@@ -214,7 +214,7 @@ def train_high_low_models(X_train, y_train, X_test):
     
     # 训练整体模型用于初步分类
     print("训练整体模型用于初步分类...")
-    lgb_overall = lgb.LGBMRegressor(**lgb_params, n_estimators=150)
+    lgb_overall = lgb.LGBMRegressor(**lgb_params, n_estimators=150) # type: ignore
     lgb_overall.fit(X_train, np.log1p(y_train))
     
     # 初步预测

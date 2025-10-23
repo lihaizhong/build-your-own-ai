@@ -258,7 +258,7 @@ def train_models_with_cv(X_train, y_train, X_test):
         y_tr_log, y_val_log = y_train_log[train_idx], y_train_log[val_idx]
         
         # 训练LightGBM
-        lgb_model = lgb.LGBMRegressor(**lgb_params, n_estimators=60)
+        lgb_model = lgb.LGBMRegressor(**lgb_params, n_estimators=60) # type: ignore
         lgb_model.fit(X_tr, y_tr_log)
         lgb_pred_log = lgb_model.predict(X_val)
         lgb_pred = np.expm1(np.array(lgb_pred_log))

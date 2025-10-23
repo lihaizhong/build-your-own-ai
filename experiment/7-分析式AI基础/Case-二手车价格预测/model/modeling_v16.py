@@ -209,7 +209,7 @@ def train_models_with_early_stopping(X_train, y_train, X_test):
         'lambda_l1': 0.1,
         'lambda_l2': 0.1,
         'min_child_samples': 20,
-        'random_state': 42
+        'random_state': 42,
     }
     
     xgb_params = {
@@ -252,7 +252,7 @@ def train_models_with_early_stopping(X_train, y_train, X_test):
         y_tr_log, y_val_log = y_train_log.iloc[train_idx], y_train_log.iloc[val_idx]
         
         # 训练LightGBM
-        lgb_model = lgb.LGBMRegressor(**lgb_params, n_estimators=1000)
+        lgb_model = lgb.LGBMRegressor(**lgb_params, n_estimators=1000) # type: ignore
         lgb_model.fit(X_tr, y_tr_log, 
                      eval_set=[(X_val, y_val_log)], 
                      callbacks=[lgb.early_stopping(stopping_rounds=50), lgb.log_evaluation(0)])

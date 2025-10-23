@@ -224,7 +224,7 @@ def optimize_model():
     }
     
     # 创建LightGBM回归器实例
-    lgb_model = lgb.LGBMRegressor(**lgb_params, n_estimators=300)
+    lgb_model = lgb.LGBMRegressor(**lgb_params, n_estimators=300) # type: ignore
     
     # 3. Ridge回归模型（用于Stacking的元学习器之一）
     ridge_model = Ridge(alpha=1.0)  # alpha为正则化强度
