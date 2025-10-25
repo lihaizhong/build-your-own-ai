@@ -12,13 +12,15 @@
 
 ## 考试排名
 
-1. modeling_v19.py
+1. modeling_v23.py
+    - 分数：497.6048
+2. modeling_v22.py
+    - 分数：502.1616
+3. modeling_v19.py
     - 分数：516.7588
-2. modeling_v17.py
+4. modeling_v17.py
     - 分数：531.0229
-3. modeling_v17_fast.py
-    - 分数：535.0420
-4. modeling_v16.py
+5. modeling_v16.py
     - 分数：539.8390
 
 ## 项目结构
