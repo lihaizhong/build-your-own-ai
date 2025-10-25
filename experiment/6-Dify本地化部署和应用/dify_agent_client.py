@@ -232,7 +232,7 @@ class DifyAgentClient:
     Returns:
       Dict[str, Any]: API 响应结果
     """
-    url = f"{self.api_url}/completion-messages"
+    url = f"{self.base_url}/completions-messages"
     
     # 如果没有提供 inputs， 尝试不同的格式
     if inputs is None:
