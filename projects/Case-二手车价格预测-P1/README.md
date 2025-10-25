@@ -27,25 +27,23 @@
 
 ```
 Case-二手车价格预测/
-├── README.md                 # 项目说明
-├── code/                     # 核心功能模块
-│   ├── main.py
-│   ├── requirements.txt
-│   └── utilities/                # 工具集合
-│       ├── data_analysis_tools.py # 数据分析工具
-│       ├── model_validation_tools.py # 模型验证工具
-│       └── feature_tools.py      # 特征工程工具
-├── data/                     # 数据文件
-│   ├── used_car_train_20200313.csv # 训练数据
-│   ├── used_car_testB_20200421.csv # 测试数据
-│   └── used_car_sample_submit.csv  # 提交样例
-├── docs/                     # 文档报告
+├── README.md                                # 项目说明
+├── code/                                    # 代码模块（主要用于数据分析、数据验证等）
+│   ├── data_analysis_tools.py
+│   └── model_validation_tools.py
+├── feature                                 # 特征工程    
+│   ├── feature_engineering.py
+│   └── feature_selection.py
+├── data/                                   # 数据文件
+│   ├── used_car_train_20200313.csv
+│   ├── used_car_testB_20200421.csv
+│   └── used_car_sample_submit.csv
+├── docs/                                   # 文档报告
 │   ├── 项目方案总结报告.md
-│   ├── 诊断分析报告.md
-│   └── ...
-├── prediction-result/        # 预测结果
+│   └── 诊断分析报告.md
+├── prediction-result/                      # 预测结果
 │   └── rf_result_*.csv
-├── user_data/                # 用户产生的临时数据
+├── user_data/                              # 用户产生的临时数据
 │   └── ...
 ```
 
