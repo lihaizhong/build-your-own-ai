@@ -13,9 +13,9 @@ load_dotenv(verbose=True)
 
 def simple_workflow_example() -> None:
   """简单的工作流调用示例"""
-  BASE_URL: Union[str] = os.getenv("DIFY_BASE_URL")
-  API_KEY: Union[str] = os.getenv("DIFY_API_KEY")
-  DEFAULT_USER_ID: Union[str] = os.getenv("DEFAULT_USER_ID")
+  BASE_URL: str | None = os.getenv("DIFY_BASE_URL")
+  API_KEY: str | None = os.getenv("DIFY_API_KEY")
+  DEFAULT_USER_ID: str | None = os.getenv("DEFAULT_USER_ID")
 
   # 检查环境变量是否存在
   if not BASE_URL or not API_KEY or not DEFAULT_USER_ID:

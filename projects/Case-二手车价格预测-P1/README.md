@@ -13,23 +13,30 @@
 ## 考试排名
 
 1. modeling_v24_simplified.py
-    - 分数：488.7255
+    - 分数：**488.7255**
 2. modeling_v23.py
-    - 分数：497.6048
-3. modeling_v24_quick.py
-    - 分数：501.8398
+    - 分数：**497.6048**
+3. modeling_v24_fast.py
+    - 分数：**501.8398**
 4. modeling_v22.py
-    - 分数：502.1616
+    - 分数：**502.1616**
 5. modeling_v19.py
-    - 分数：516.7588
-6. modeling_v17.py
+    - 分数：**516.7588**
+
+### 其他考试成绩
+
+- modeling_v25.py
+    - 分数：1298.1723
+- modeling_v24.py
+    - 分数：5900.2078
+- modeling_v17.py
     - 分数：531.0229
-7. modeling_v16.py
+- modeling_v16.py
     - 分数：539.8390
 
 ## 项目结构
 
-```
+```plaintext
 Case-二手车价格预测/
 ├── README.md                                # 项目说明
 ├── code/                                    # 代码模块（主要用于数据分析、数据验证等）
