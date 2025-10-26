@@ -25,6 +25,12 @@
 
 ### 其他考试成绩
 
+- modeling_v27.py
+    - 分数：783.9360
+- modeling_v27_core.py
+    - 分数：768.5758
+- modeling_v27_fast.py
+    - 分数：531.8382
 - modeling_v25.py
     - 分数：1298.1723
 - modeling_v24.py
