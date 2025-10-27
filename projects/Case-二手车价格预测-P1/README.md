@@ -25,6 +25,8 @@
 
 ### 其他考试成绩
 
+- modeling_v29.py
+    - 分数：542.3983
 - modeling_v28_fast.py
     - 分数：504.9944
 - modeling_v27.py
