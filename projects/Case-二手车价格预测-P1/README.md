@@ -12,29 +12,31 @@
 
 ## 考试排名
 
-1. modeling_v24_simplified.py
+1. modeling_v28.py
+    - 分数：**487.7112**
+2. modeling_v24_simplified.py
     - 分数：**488.7255**
-2. modeling_v23.py
+3. modeling_v23.py
     - 分数：**497.6048**
-3. modeling_v26.py
+4. modeling_v26.py
     - 分数：**497.9590**
-3. modeling_v24_fast.py
+5. modeling_v24_fast.py
     - 分数：**501.8398**
-4. modeling_v22.py
-    - 分数：**502.1616**
 
 ### 其他考试成绩
 
+- modeling_v28_fast.py
+    - 分数：504.9944
 - modeling_v27.py
     - 分数：783.9360
-- modeling_v27_core.py
-    - 分数：768.5758
 - modeling_v27_fast.py
     - 分数：531.8382
 - modeling_v25.py
     - 分数：1298.1723
 - modeling_v24.py
     - 分数：5900.2078
+- modeling_v22.py
+    - 分数：502.1616
 - modeling_v19.py
     - 分数：516.7588
 - modeling_v17.py
