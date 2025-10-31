@@ -39,6 +39,7 @@ dependencies = [
     "ipywidgets>=8.1.5",
     "catboost>=1.2.8",
     "langchain>=1.0.2",
+    "joblib>=1.5.2",
 ]
 
 [dependency-groups]
