@@ -2,12 +2,12 @@
 
 ## 项目概述
 
-这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、向量数据库等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含14个核心课程模块和丰富的实战案例。
+这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、RAG技术、Text2SQL、向量数据库等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含19个核心课程模块和丰富的实战案例，形成了从基础到专家的完整学习路径。项目以实战为导向，通过大量真实项目和竞赛案例，帮助学习者掌握AI技术的实际应用能力。
 
 ## 核心技术栈
 
 - **Python环境管理**: uv (现代Python包管理器)
-- **机器学习**: scikit-learn, pandas, numpy, scipy, statsmodels
+- **机器学习**: scikit-learn, pandas, numpy, scipy, statsmodels, mlxtend
 - **深度学习**: PyTorch, Transformers, accelerate, peft
 - **大模型集成**: OpenAI, Dashscope, ModelScope, cozepy
 - **可视化**: matplotlib, seaborn, plotly
@@ -15,7 +15,9 @@
 - **数据分析**: ydata-profiling, missingno
 - **优化算法**: XGBoost, LightGBM, CatBoost, bayesian-optimization
 - **时间序列**: Prophet
-- **开发工具**: loguru, tqdm, ipywidgets, basedpyright
+- **RAG技术**: LangChain, FAISS向量数据库
+- **Text2SQL**: vanna, SQL Copilot
+- **开发工具**: loguru, tqdm, ipywidgets, basedpyright, joblib
 
 ## 环境配置
 
@@ -57,8 +59,13 @@ build-your-own-ai/
 │   ├── 11-时间序列AI大赛/         # 竞赛项目
 │   ├── 12-神经网络基础与Tensorflow实战/ # TensorFlow
 │   ├── 13-Pytorch与视觉检测/      # PyTorch视觉
-│   └── 14-Embeddings和向量数据库/   # 向量数据库
-├── experiment/                     # 实验代码和案例
+│   ├── 14-Embeddings和向量数据库/   # 向量数据库
+│   ├── 15-RAG技术与应用/          # RAG基础与应用
+│   ├── 16-RAG高级技术与最佳实践/    # RAG高级技术
+│   ├── 17-Text2SQL：自助式数据报表开发/ # Text2SQL开发
+│   ├── 18-LangChain：多任务应用开发/   # LangChain框架
+│   └── 19-Function Calling与协作/    # 函数调用与协作
+├── practice/                       # 实践练习代码
 │   ├── 1-AI大模型原理与API使用/    # API调用实践
 │   ├── 2-DeepSeek使用与Prompt工程/  # 本地模型部署
 │   ├── 3-Cursor编程-从入门到精通/   # 编程工具实战
@@ -67,9 +74,11 @@ build-your-own-ai/
 │   ├── 6-Dify本地化部署和应用/     # 工作流平台实践
 │   ├── 7-分析式AI基础/           # 机器学习基础
 │   ├── 8-不同领域的AI算法/        # 算法应用案例
-│   └── 9-机器学习神器/           # 工具集实践
+│   ├── 9-机器学习神器/           # 工具集实践
+│   ├── 10-时间序列模型/          # 时间序列实践
+│   └── 11-时间序列AI大赛/         # 竞赛项目实践
 ├── projects/                       # 核心项目案例
-│   ├── Case-二手车价格预测/       # 原始版本
+│   ├── Case-二手车价格预测-DataWhale/ # 原始版本
 │   ├── Case-二手车价格预测-P1/    # 优化版本
 │   └── CASE-资金流入流出预测-P1/   # 时间序列项目
 └── public/                         # 公共资源
@@ -83,19 +92,24 @@ build-your-own-ai/
 
 **项目特点**:
 - 完整的数据预处理和特征工程
-- 23个版本的模型迭代优化 (modeling_v1-v23)
-- 多种算法集成 (RandomForest, LightGBM, XGBoost, CatBoost)
+- 29个版本的模型迭代优化 (modeling_v1-v29)
+- 多种算法集成 (RandomForest, LightGBM, XGBoost, CatBoost, ExtraTrees)
 - 高级技术：分层建模、Stacking集成、智能校准、贝叶斯优化
 - 全面的数据分析和可视化
 - 特征分析和模型验证模块
+- 竞赛级性能优化和验证
 
 **运行方式**:
 ```bash
 cd projects/Case-二手车价格预测-P1
-python model/modeling_v23.py  # 最新优化版本
+python model/modeling_v28.py  # 最佳性能版本
 ```
 
-**性能目标**: MAE < 500 (V22版本已达到502分，V23版本精准突破500分)
+**性能成果**:
+- **最佳成绩**: MAE = 487.7112 (modeling_v28.py)
+- **目标达成**: 成功突破MAE < 500的目标
+- **竞赛排名**: 多个版本进入竞赛前列
+- **版本迭代**: 从v1的1000+分优化到v28的487分
 
 ### 📈 资金流入流出预测 (projects/CASE-资金流入流出预测-P1)
 
@@ -107,7 +121,7 @@ python model/modeling_v23.py  # 最新优化版本
 - 季节性和趋势分析
 - 商业场景应用
 
-### 🤖 Dify平台集成 (experiment/6-Dify本地化部署和应用)
+### 🤖 Dify平台集成 (courseware/6-Dify本地化部署和应用)
 
 Dify工作流平台本地化部署和应用案例：
 
@@ -119,8 +133,56 @@ Dify工作流平台本地化部署和应用案例：
 
 **运行方式**:
 ```bash
-cd experiment/6-Dify本地化部署和应用
+cd courseware/6-Dify本地化部署和应用
 python dify_agent_client.py
+```
+
+### 📚 RAG技术与应用 (courseware/15-RAG技术与应用)
+
+RAG(Retrieval-Augmented Generation)技术实战应用：
+
+**项目特点**:
+- ChatPDF应用实现
+- 迪士尼RAG助手案例
+- Embedding技术深入应用
+- 向量检索与生成结合
+
+**运行方式**:
+```bash
+cd courseware/15-RAG技术与应用/CASE-ChatPDF-Faiss
+python chat_pdf.py
+```
+
+### 🔍 Text2SQL开发 (courseware/17-Text2SQL：自助式数据报表开发)
+
+Text2SQL技术实现自助式数据报表开发：
+
+**项目特点**:
+- Vanna框架集成应用
+- LangChain SQL工具链
+- SQL Copilot智能助手
+- 自然语言转SQL实战
+
+**运行方式**:
+```bash
+cd courseware/17-Text2SQL：自助式数据报表开发/CASE-SQL-vanna
+python sql_assistant.py
+```
+
+### ⚙️ LangChain多任务开发 (courseware/18-LangChain：多任务应用开发)
+
+基于LangChain框架的多任务应用开发：
+
+**项目特点**:
+- 故障诊断Agent实现
+- 工具链组合应用
+- LangChain最佳实践
+- 复杂任务自动化
+
+**运行方式**:
+```bash
+cd courseware/18-LangChain：多任务应用开发/CASE-搭建故障诊断Agent
+python diagnostic_agent.py
 ```
 
 ## 学习路径
@@ -143,6 +205,13 @@ python dify_agent_client.py
 3. **13-Pytorch与视觉检测**: 计算机视觉应用
 4. **14-Embeddings和向量数据库**: 向量检索技术
 
+### 高级应用路径
+1. **15-RAG技术与应用**: 掌握检索增强生成技术
+2. **16-RAG高级技术与最佳实践**: RAG系统优化与高级应用
+3. **17-Text2SQL：自助式数据报表开发**: 自然语言转SQL实战
+4. **18-LangChain：多任务应用开发**: 复杂AI应用构建
+5. **19-Function Calling与协作**: 函数调用与多Agent协作
+
 ## 开发规范
 
 ### 代码规范
@@ -150,18 +219,21 @@ python dify_agent_client.py
 - 遵循 PEP 8 代码风格
 - 函数和类添加详细文档字符串
 - 使用 uv 管理项目依赖
+- 使用 basedpyright 进行类型检查
 
 ### 项目结构规范
-- 每个实验目录包含完整的数据、代码、文档
+- 每个课程模块包含完整的材料、案例和实践代码
 - 使用模块化设计，功能分离清晰
 - 配置文件统一管理 (pyproject.toml)
 - 结果输出标准化 (prediction_result/)
+- 文档和代码分离管理
 
 ### 实验规范
-- 每个实验包含README说明
+- 每个项目包含README说明和性能指标
 - 代码版本控制 (modeling_v1, v2...)
 - 结果可重现和可验证
 - 包含完整的错误处理和日志
+- 竞赛级性能验证和优化
 
 ## 常用命令
 
@@ -353,12 +425,22 @@ for stat in top_stats[:10]:
 - **向量数据库**: Faiss集成，支持ChatPDF等应用
 - **时间序列**: Prophet模型集成，专门处理时间序列预测
 - **自动化工作流**: Dify工作流引擎集成
+- **RAG技术**: 完整的检索增强生成技术栈，包括ChatPDF和知识库处理
+- **Text2SQL**: Vanna和LangChain SQL工具链，支持自然语言转SQL
+- **Function Calling**: 函数调用与多Agent协作框架
+- **GraphRAG**: 图数据库增强的RAG技术
+- **Query改写**: 智能查询重写和优化技术
 
 ### 项目优化成果
-- **二手车价格预测**: 从v1迭代到v23，MAE从1000+优化到500以下
+- **二手车价格预测**: 从v1迭代到v29，MAE从1000+优化到487.71，竞赛级性能
 - **特征工程**: 建立了完整的特征分析和自动化流程
 - **模型集成**: 实现了多模型Stacking和动态权重调整
 - **校准技术**: 开发了智能校准算法提升预测精度
+- **RAG应用**: 构建了多个生产级RAG应用案例
+- **Text2SQL系统**: 实现了完整的自助式数据报表开发平台
+- **LangChain应用**: 开发了故障诊断、工具链组合等复杂应用
+- **Function Calling**: 构建了多Agent协作和工单处理系统
+- **竞赛优化**: 多个版本在阿里云天池等竞赛中获得优异成绩
 
 ## 联系支持
 
@@ -369,4 +451,4 @@ for stat in top_stats[:10]:
 ---
 
 *本IFLOW指南将随项目发展持续更新，建议定期查看最新版本。*
-*最后更新: 2025年10月25日*
+*最后更新: 2025年11月1日*
