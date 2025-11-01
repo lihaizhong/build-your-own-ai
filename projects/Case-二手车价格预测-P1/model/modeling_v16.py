@@ -12,9 +12,7 @@ V16版本模型 - 修复性能下降问题
 import os
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import KFold, train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import Ridge
+from sklearn.model_selection import KFold
 from sklearn.preprocessing import LabelEncoder, RobustScaler
 from sklearn.metrics import mean_absolute_error
 import lightgbm as lgb
@@ -28,7 +26,7 @@ warnings.filterwarnings('ignore')
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
-def get_project_path(*paths):
+def get_project_path(*paths: str):
     """获取项目路径的统一方法"""
     try:
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -37,7 +35,7 @@ def get_project_path(*paths):
     except NameError:
         return os.path.join(os.getcwd(), *paths)
 
-def get_user_data_path(*paths):
+def get_user_data_path(*paths: str):
     """获取用户数据路径"""
     return get_project_path('user_data', *paths)
 
@@ -88,8 +86,8 @@ def load_and_preprocess_data():
         brand_stats = all_df.groupby('brand')['price'].agg(['mean', 'count']).reset_index()
         # 适度平滑因子40 - V12的成功参数
         brand_stats['smooth_mean'] = (brand_stats['mean'] * brand_stats['count'] + all_df['price'].mean() * 40) / (brand_stats['count'] + 40)
-        brand_map: dict = brand_stats.set_index('brand')['smooth_mean'].to_dict()  # type: ignore
-        all_df['brand_avg_price'] = all_df['brand'].map(brand_map)  # type: ignore
+        brand_map: dict[str, float] = brand_stats.set_index('brand')['smooth_mean'].to_dict()
+        all_df['brand_avg_price'] = all_df['brand'].map(brand_map)
     
     # 标签编码
     categorical_cols = ['model', 'brand', 'fuelType', 'gearbox', 'bodyType']
@@ -104,7 +102,7 @@ def load_and_preprocess_data():
         null_count = all_df[col].isnull().sum()
         if col not in ['price', 'SaleID'] and null_count > 0:
             median_val = all_df[col].median()
-            if not pd.isna(median_val):  # type: ignore[arg-type]
+            if not pd.isna(median_val):
                 all_df[col] = all_df[col].fillna(median_val)
             else:
                 all_df[col] = all_df[col].fillna(0)
@@ -118,20 +116,26 @@ def load_and_preprocess_data():
     
     return train_df, test_df
 
-def create_effective_features(df):
+def create_effective_features(df: pd.DataFrame):
     """
     创建有效特征 - 基于V12的成功经验，避免过度工程
     """
     df = df.copy()
     
     # 基础分段特征 - 适度分段
-    df['age_segment'] = pd.cut(df['car_age'], bins=[-1, 3, 6, 10, float('inf')], 
-                              labels=['very_new', 'new', 'medium', 'old'])
+    df['age_segment'] = pd.cut(
+        df['car_age'],
+        bins=[-1, 3, 6, 10, float('inf')], 
+        labels=['very_new', 'new', 'medium', 'old']
+    )
     df['age_segment'] = df['age_segment'].cat.codes
     
     if 'power' in df.columns:
-        df['power_segment'] = pd.cut(df['power'], bins=[-1, 100, 200, 300, float('inf')], 
-                                    labels=['low', 'medium', 'high', 'very_high'])
+        df['power_segment'] = pd.cut(
+            df['power'],
+            bins=[-1, 100, 200, 300, float('inf')], 
+            labels=['low', 'medium', 'high', 'very_high']
+        )
         df['power_segment'] = df['power_segment'].cat.codes
     else:
         df['power_segment'] = 0
@@ -184,7 +188,7 @@ def create_effective_features(df):
     
     return df
 
-def train_models_with_early_stopping(X_train, y_train, X_test):
+def train_models_with_early_stopping(X_train: pd.DataFrame, y_train: pd.DataFrame, X_test: pd.DataFrame):
     """
     使用早停机制训练模型 - 基于V12的成功经验
     """
@@ -253,9 +257,15 @@ def train_models_with_early_stopping(X_train, y_train, X_test):
         
         # 训练LightGBM
         lgb_model = lgb.LGBMRegressor(**lgb_params, n_estimators=1000) # type: ignore
-        lgb_model.fit(X_tr, y_tr_log, 
-                     eval_set=[(X_val, y_val_log)], 
-                     callbacks=[lgb.early_stopping(stopping_rounds=50), lgb.log_evaluation(0)])
+        lgb_model.fit(
+            X_tr,
+            y_tr_log, 
+            eval_set=[(X_val, y_val_log)], 
+            callbacks=[
+                lgb.early_stopping(stopping_rounds=50),
+                lgb.log_evaluation(0)
+            ]
+        )
         
         # 预测测试集
         lgb_predictions += np.expm1(np.array(lgb_model.predict(X_test))) / 5
