@@ -1,0 +1,4 @@
+# This file ensures that the user_data directory is tracked by Git
+# even when it's empty. This allows users to store their personal
+# data files in this directory without the directory being removed
+# during clean operations.
