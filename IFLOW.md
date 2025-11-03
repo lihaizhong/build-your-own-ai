@@ -2,14 +2,14 @@
 
 ## 项目概述
 
-这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、RAG技术、Text2SQL、向量数据库等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含19个核心课程模块和丰富的实战案例，形成了从基础到专家的完整学习路径。项目以实战为导向，通过大量真实项目和竞赛案例，帮助学习者掌握AI技术的实际应用能力。
+这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、RAG技术、Text2SQL、向量数据库、MCP与A2A等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含20个核心课程模块和丰富的实战案例，形成了从基础到专家的完整学习路径。项目以实战为导向，通过大量真实项目和竞赛案例，帮助学习者掌握AI技术的实际应用能力。
 
 ## 核心技术栈
 
 - **Python环境管理**: uv (现代Python包管理器)
 - **机器学习**: scikit-learn, pandas, numpy, scipy, statsmodels, mlxtend
 - **深度学习**: PyTorch, Transformers, accelerate, peft
-- **大模型集成**: OpenAI, Dashscope, ModelScope, cozepy
+- **大模型集成**: OpenAI, Dashscope, ModelScope, cozepy, qwen-agent
 - **可视化**: matplotlib, seaborn, plotly
 - **Web服务**: FastAPI, Flask, uvicorn
 - **数据分析**: ydata-profiling, missingno
@@ -17,6 +17,7 @@
 - **时间序列**: Prophet
 - **RAG技术**: LangChain, FAISS向量数据库
 - **Text2SQL**: vanna, SQL Copilot
+- **MCP与A2A**: Model Context Protocol, Agent-to-Agent协作
 - **开发工具**: loguru, tqdm, ipywidgets, basedpyright, joblib
 
 ## 环境配置
@@ -64,23 +65,13 @@ build-your-own-ai/
 │   ├── 16-RAG高级技术与最佳实践/    # RAG高级技术
 │   ├── 17-Text2SQL：自助式数据报表开发/ # Text2SQL开发
 │   ├── 18-LangChain：多任务应用开发/   # LangChain框架
-│   └── 19-Function Calling与协作/    # 函数调用与协作
+│   ├── 19-Function Calling与协作/    # 函数调用与协作
+│   └── 20-MCP与A2A的应用/          # MCP与A2A技术
 ├── practice/                       # 实践练习代码
-│   ├── 1-AI大模型原理与API使用/    # API调用实践
-│   ├── 2-DeepSeek使用与Prompt工程/  # 本地模型部署
-│   ├── 3-Cursor编程-从入门到精通/   # 编程工具实战
-│   ├── 4-Coze工作原理与应用实例/   # 平台应用案例
-│   ├── 5-Agent进阶实战与插件开发/   # Agent开发实践
-│   ├── 6-Dify本地化部署和应用/     # 工作流平台实践
-│   ├── 7-分析式AI基础/           # 机器学习基础
-│   ├── 8-不同领域的AI算法/        # 算法应用案例
-│   ├── 9-机器学习神器/           # 工具集实践
-│   ├── 10-时间序列模型/          # 时间序列实践
-│   └── 11-时间序列AI大赛/         # 竞赛项目实践
-├── projects/                       # 核心项目案例
+│   ├── 打卡-员工离职预测分析/       # 离职预测项目
 │   ├── Case-二手车价格预测-DataWhale/ # 原始版本
-│   ├── Case-二手车价格预测-P1/    # 优化版本
-│   └── CASE-资金流入流出预测-P1/   # 时间序列项目
+│   ├── Case-二手车价格预测-P1/     # 优化版本(29个迭代)
+│   └── CASE-资金流入流出预测-P1/    # 时间序列项目
 └── public/                         # 公共资源
 ```
 
@@ -101,17 +92,18 @@ build-your-own-ai/
 
 **运行方式**:
 ```bash
-cd projects/Case-二手车价格预测-P1
-python model/modeling_v28.py  # 最佳性能版本
+cd practice/Case-二手车价格预测-P1
+python model/modeling_v29.py  # 最新版本
 ```
 
 **性能成果**:
 - **最佳成绩**: MAE = 487.7112 (modeling_v28.py)
+- **最新目标**: V29版本目标突破475分以内
 - **目标达成**: 成功突破MAE < 500的目标
 - **竞赛排名**: 多个版本进入竞赛前列
-- **版本迭代**: 从v1的1000+分优化到v28的487分
+- **版本迭代**: 从v1的1000+分优化到v29，持续优化中
 
-### 📈 资金流入流出预测 (projects/CASE-资金流入流出预测-P1)
+### 📈 资金流入流出预测 (practice/CASE-资金流入流出预测-P1)
 
 时间序列预测项目，应用Prophet等先进模型：
 
@@ -120,6 +112,16 @@ python model/modeling_v28.py  # 最佳性能版本
 - 多种预测模型对比
 - 季节性和趋势分析
 - 商业场景应用
+
+### 🎯 员工离职预测分析 (practice/打卡-员工离职预测分析)
+
+员工离职预测分析项目，应用机器学习技术预测员工流失：
+
+**项目特点**:
+- 人力资源数据分析
+- 离职风险因素识别
+- 预测模型构建与验证
+- 业务决策支持系统
 
 ### 🤖 Dify平台集成 (courseware/6-Dify本地化部署和应用)
 
@@ -185,6 +187,38 @@ cd courseware/18-LangChain：多任务应用开发/CASE-搭建故障诊断Agent
 python diagnostic_agent.py
 ```
 
+### 🎫 Function Calling工单系统 (courseware/19-Function Calling与协作)
+
+基于Function Calling的智能工单处理系统：
+
+**项目特点**:
+- 智能工单分类与处理
+- 多Agent协作机制
+- 收入预测机器人
+- 完整的工单生命周期管理
+
+**运行方式**:
+```bash
+cd courseware/19-Function Calling与协作/CASE-ticket-agent
+python assistant_ticket_bot-3.py
+```
+
+### 🔌 MCP与A2A应用 (courseware/20-MCP与A2A的应用)
+
+Model Context Protocol和Agent-to-Agent协作技术实战：
+
+**项目特点**:
+- MCP协议实现与应用
+- 高德地图智能助手
+- 文本处理工具集成
+- Agent间通信与协作机制
+
+**运行方式**:
+```bash
+cd courseware/20-MCP与A2A的应用/CASE-MCP Demo-1
+python assistant_mcp_amap_bot.py
+```
+
 ## 学习路径
 
 ### 初学者路径
@@ -211,6 +245,7 @@ python diagnostic_agent.py
 3. **17-Text2SQL：自助式数据报表开发**: 自然语言转SQL实战
 4. **18-LangChain：多任务应用开发**: 复杂AI应用构建
 5. **19-Function Calling与协作**: 函数调用与多Agent协作
+6. **20-MCP与A2A的应用**: 模型上下文协议与Agent协作
 
 ## 开发规范
 
@@ -427,19 +462,23 @@ for stat in top_stats[:10]:
 - **自动化工作流**: Dify工作流引擎集成
 - **RAG技术**: 完整的检索增强生成技术栈，包括ChatPDF和知识库处理
 - **Text2SQL**: Vanna和LangChain SQL工具链，支持自然语言转SQL
-- **Function Calling**: 函数调用与多Agent协作框架
+- **Function Calling**: 函数调用与多Agent协作框架，包含工单处理系统
+- **MCP与A2A**: Model Context Protocol和Agent-to-Agent协作技术
 - **GraphRAG**: 图数据库增强的RAG技术
 - **Query改写**: 智能查询重写和优化技术
+- **qwen-agent**: 通义千问Agent框架集成
 
 ### 项目优化成果
-- **二手车价格预测**: 从v1迭代到v29，MAE从1000+优化到487.71，竞赛级性能
+- **二手车价格预测**: 从v1迭代到v29，MAE从1000+优化到487.71，V29目标突破475分
+- **员工离职预测**: 新增人力资源分析项目，完善预测模型体系
 - **特征工程**: 建立了完整的特征分析和自动化流程
 - **模型集成**: 实现了多模型Stacking和动态权重调整
 - **校准技术**: 开发了智能校准算法提升预测精度
 - **RAG应用**: 构建了多个生产级RAG应用案例
 - **Text2SQL系统**: 实现了完整的自助式数据报表开发平台
 - **LangChain应用**: 开发了故障诊断、工具链组合等复杂应用
-- **Function Calling**: 构建了多Agent协作和工单处理系统
+- **Function Calling**: 构建了多Agent协作和工单处理系统，包含收入预测机器人
+- **MCP与A2A**: 实现高德地图智能助手和Agent间协作机制
 - **竞赛优化**: 多个版本在阿里云天池等竞赛中获得优异成绩
 
 ## 联系支持
@@ -451,4 +490,4 @@ for stat in top_stats[:10]:
 ---
 
 *本IFLOW指南将随项目发展持续更新，建议定期查看最新版本。*
-*最后更新: 2025年11月1日*
+*最后更新: 2025年11月3日*
