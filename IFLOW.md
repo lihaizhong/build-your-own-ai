@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、RAG技术、Text2SQL、向量数据库、MCP与A2A等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含20个核心课程模块和丰富的实战案例，形成了从基础到专家的完整学习路径。项目以实战为导向，通过大量真实项目和竞赛案例，帮助学习者掌握AI技术的实际应用能力。
+这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、RAG技术、Text2SQL、向量数据库、MCP与A2A等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含21个核心课程模块和丰富的实战案例，形成了从基础到专家的完整学习路径。项目以实战为导向，通过大量真实项目和竞赛案例，帮助学习者掌握AI技术的实际应用能力。
 
 ## 核心技术栈
 
@@ -10,6 +10,7 @@
 - **机器学习**: scikit-learn, pandas, numpy, scipy, statsmodels, mlxtend
 - **深度学习**: PyTorch, Transformers, accelerate, peft
 - **大模型集成**: OpenAI, Dashscope, ModelScope, cozepy, qwen-agent
+- **向量数据库**: FAISS, ChromaDB
 - **可视化**: matplotlib, seaborn, plotly
 - **Web服务**: FastAPI, Flask, uvicorn
 - **数据分析**: ydata-profiling, missingno
@@ -18,6 +19,7 @@
 - **RAG技术**: LangChain, FAISS向量数据库
 - **Text2SQL**: vanna, SQL Copilot
 - **MCP与A2A**: Model Context Protocol, Agent-to-Agent协作
+- **本地大模型**: Ollama, DeepSeek
 - **开发工具**: loguru, tqdm, ipywidgets, basedpyright, joblib
 
 ## 环境配置
@@ -66,18 +68,21 @@ build-your-own-ai/
 │   ├── 17-Text2SQL：自助式数据报表开发/ # Text2SQL开发
 │   ├── 18-LangChain：多任务应用开发/   # LangChain框架
 │   ├── 19-Function Calling与协作/    # 函数调用与协作
-│   └── 20-MCP与A2A的应用/          # MCP与A2A技术
+│   ├── 20-MCP与A2A的应用/          # MCP与A2A技术
+│   └── 21-Agent智能体系统的设计与应用/ # Agent系统设计
 ├── practice/                       # 实践练习代码
 │   ├── 打卡-员工离职预测分析/       # 离职预测项目
 │   ├── Case-二手车价格预测-DataWhale/ # 原始版本
 │   ├── Case-二手车价格预测-P1/     # 优化版本(29个迭代)
 │   └── CASE-资金流入流出预测-P1/    # 时间序列项目
-└── public/                         # 公共资源
+├── notebook/                       # Jupyter笔记本
+├── public/                         # 公共资源
+└── typings/                        # 类型定义
 ```
 
 ## 核心项目案例
 
-### 🚗 二手车价格预测 (projects/Case-二手车价格预测-P1)
+### 🚗 二手车价格预测 (practice/Case-二手车价格预测-P1)
 
 这是一个完整的机器学习项目，展示了从数据预处理到模型优化的全流程：
 
@@ -219,6 +224,38 @@ cd courseware/20-MCP与A2A的应用/CASE-MCP Demo-1
 python assistant_mcp_amap_bot.py
 ```
 
+### 🧠 Agent智能体系统 (courseware/21-Agent智能体系统的设计与应用)
+
+Agent智能体系统的设计与应用：
+
+**项目特点**:
+- 反应式、混合式、深思熟虑型Agent设计
+- 私募基金运作指引问答助手
+- 投顾AI助手
+- 智能投研助手
+
+**运行方式**:
+```bash
+cd courseware/21-Agent智能体系统的设计与应用/CASE-智能投研助手（深思熟虑）
+python deliberative_research_qwen_agent.py
+```
+
+### 🔍 向量数据库实战 (courseware/14-Embeddings和向量数据库)
+
+Embeddings和向量数据库技术实战：
+
+**项目特点**:
+- FAISS向量索引构建
+- 多模态Embedding应用
+- 相似度搜索实现
+- ChatPDF完整案例
+
+**运行方式**:
+```bash
+cd courseware/14-Embeddings和向量数据库/CASE-向量数据库
+python 2-embedding-faiss-元数据.py
+```
+
 ## 学习路径
 
 ### 初学者路径
@@ -246,6 +283,7 @@ python assistant_mcp_amap_bot.py
 4. **18-LangChain：多任务应用开发**: 复杂AI应用构建
 5. **19-Function Calling与协作**: 函数调用与多Agent协作
 6. **20-MCP与A2A的应用**: 模型上下文协议与Agent协作
+7. **21-Agent智能体系统的设计与应用**: Agent系统架构设计
 
 ## 开发规范
 
@@ -307,6 +345,18 @@ uv run uvicorn main:app --reload
 
 # 启动Flask服务
 uv run python app.py
+```
+
+### Ollama本地大模型
+```bash
+# 启动Ollama服务
+ollama serve
+
+# 拉取DeepSeek模型
+ollama pull deepseek-r1:8b
+
+# 运行模型
+ollama run deepseek-r1:8b
 ```
 
 ## 数据处理最佳实践
@@ -375,6 +425,31 @@ def ensemble_models(models, X, weights=None):
     return np.average(predictions, axis=0, weights=weights)
 ```
 
+### 向量数据库操作
+```python
+import faiss
+import numpy as np
+
+# FAISS向量索引构建
+def create_faiss_index(embeddings, ids=None):
+    """创建FAISS向量索引"""
+    dimension = embeddings.shape[1]
+    index = faiss.IndexFlatL2(dimension)
+    
+    if ids is not None:
+        index = faiss.IndexIDMap(index)
+        index.add_with_ids(embeddings, ids)
+    else:
+        index.add(embeddings)
+    
+    return index
+
+def search_similar_vectors(index, query_embedding, k=5):
+    """搜索相似向量"""
+    distances, indices = index.search(query_embedding.reshape(1, -1), k)
+    return distances, indices
+```
+
 ## 性能优化建议
 
 ### 1. 数据优化
@@ -403,6 +478,7 @@ def ensemble_models(models, X, weights=None):
 - 动态权重调整
 - 分布式训练
 - 模型压缩和量化
+- 向量检索优化
 
 ## 故障排除
 
@@ -411,6 +487,7 @@ def ensemble_models(models, X, weights=None):
 2. **内存不足**: 减少数据样本或使用分块处理
 3. **模型过拟合**: 增加正则化或减少模型复杂度
 4. **环境问题**: 重新创建虚拟环境
+5. **Ollama连接失败**: 检查服务是否启动，端口是否正确
 
 ### 调试技巧
 ```python
@@ -456,8 +533,8 @@ for stat in top_stats[:10]:
 
 ### 最新技术集成
 - **大模型本地部署**: Ollama集成，支持本地运行DeepSeek等模型
-- **Agent开发**: Coze和Dify平台API集成
-- **向量数据库**: Faiss集成，支持ChatPDF等应用
+- **Agent开发**: Coze和Dify平台API集成，qwen-agent框架
+- **向量数据库**: FAISS和ChromaDB集成，支持ChatPDF等应用
 - **时间序列**: Prophet模型集成，专门处理时间序列预测
 - **自动化工作流**: Dify工作流引擎集成
 - **RAG技术**: 完整的检索增强生成技术栈，包括ChatPDF和知识库处理
@@ -466,7 +543,7 @@ for stat in top_stats[:10]:
 - **MCP与A2A**: Model Context Protocol和Agent-to-Agent协作技术
 - **GraphRAG**: 图数据库增强的RAG技术
 - **Query改写**: 智能查询重写和优化技术
-- **qwen-agent**: 通义千问Agent框架集成
+- **Agent系统设计**: 反应式、混合式、深思熟虑型Agent架构
 
 ### 项目优化成果
 - **二手车价格预测**: 从v1迭代到v29，MAE从1000+优化到487.71，V29目标突破475分
@@ -479,6 +556,7 @@ for stat in top_stats[:10]:
 - **LangChain应用**: 开发了故障诊断、工具链组合等复杂应用
 - **Function Calling**: 构建了多Agent协作和工单处理系统，包含收入预测机器人
 - **MCP与A2A**: 实现高德地图智能助手和Agent间协作机制
+- **Agent系统**: 设计了多种Agent架构模式，支持复杂业务场景
 - **竞赛优化**: 多个版本在阿里云天池等竞赛中获得优异成绩
 
 ## 联系支持
@@ -490,4 +568,4 @@ for stat in top_stats[:10]:
 ---
 
 *本IFLOW指南将随项目发展持续更新，建议定期查看最新版本。*
-*最后更新: 2025年11月3日*
+*最后更新: 2025年11月5日*
