@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、RAG技术、Text2SQL、向量数据库、MCP与A2A等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含21个核心课程模块和丰富的实战案例，形成了从基础到专家的完整学习路径。项目以实战为导向，通过大量真实项目和竞赛案例，帮助学习者掌握AI技术的实际应用能力。
+这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、RAG技术、Text2SQL、向量数据库、MCP与A2A、视觉大模型与多模态理解、微调技术等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含23个核心课程模块和丰富的实战案例，形成了从基础到专家的完整学习路径。项目以实战为导向，通过大量真实项目和竞赛案例，帮助学习者掌握AI技术的实际应用能力。
 
 ## 核心技术栈
 
@@ -69,7 +69,9 @@ build-your-own-ai/
 │   ├── 18-LangChain：多任务应用开发/   # LangChain框架
 │   ├── 19-Function Calling与协作/    # 函数调用与协作
 │   ├── 20-MCP与A2A的应用/          # MCP与A2A技术
-│   └── 21-Agent智能体系统的设计与应用/ # Agent系统设计
+│   ├── 21-Agent智能体系统的设计与应用/ # Agent系统设计
+│   ├── 22-视觉大模型与多模态理解/    # 视觉大模型与多模态理解
+│   └── 23-Fine-tuning微调艺术/     # 微调技术与应用
 ├── practice/                       # 实践练习代码
 │   ├── 打卡-员工离职预测分析/       # 离职预测项目
 │   ├── Case-二手车价格预测-DataWhale/ # 原始版本
@@ -215,6 +217,7 @@ Model Context Protocol和Agent-to-Agent协作技术实战：
 **项目特点**:
 - MCP协议实现与应用
 - 高德地图智能助手
+- A2A协作案例
 - 文本处理工具集成
 - Agent间通信与协作机制
 
@@ -229,15 +232,50 @@ python assistant_mcp_amap_bot.py
 Agent智能体系统的设计与应用：
 
 **项目特点**:
-- 反应式、混合式、深思熟虑型Agent设计
-- 私募基金运作指引问答助手
-- 投顾AI助手
-- 智能投研助手
+- 反应式Agent：私募基金运作指引问答助手
+- 混合式Agent：投顾AI助手
+- 深思熟虑型Agent：智能投研助手
+- 多种Agent架构模式对比
+- 复杂业务场景应用
 
 **运行方式**:
 ```bash
 cd courseware/21-Agent智能体系统的设计与应用/CASE-智能投研助手（深思熟虑）
 python deliberative_research_qwen_agent.py
+```
+
+### 🖼️ 视觉大模型与多模态理解 (courseware/22-视觉大模型与多模态理解)
+
+视觉大模型与多模态理解技术实战：
+
+**项目特点**:
+- VLM（视觉语言模型）应用
+- 多模态理解技术
+- Qwen-VL图像理解
+- 保险场景VLM应用案例
+- 汽车剐蹭视频理解案例
+
+**运行方式**:
+```bash
+cd courseware/22-视觉大模型与多模态理解/CASE-VLM在车险中的应用
+python "1-Qwen-VL-保险识别-cn.ipynb"
+```
+
+### 🎨 微调技术与艺术 (courseware/23-Fine-tuning微调艺术)
+
+深度学习模型微调技术的全面实战：
+
+**项目特点**:
+- LoRA、QLoRA等高效微调技术
+- PEFT (Parameter-Efficient Fine-Tuning) 实践
+- 推荐系统微调案例 (MovieLens数据集)
+- SVD图像处理应用
+- 参数高效微调策略
+
+**运行方式**:
+```bash
+cd courseware/23-Fine-tuning微调艺术/MovieLens
+python ALS.py
 ```
 
 ### 🔍 向量数据库实战 (courseware/14-Embeddings和向量数据库)
@@ -284,6 +322,8 @@ python 2-embedding-faiss-元数据.py
 5. **19-Function Calling与协作**: 函数调用与多Agent协作
 6. **20-MCP与A2A的应用**: 模型上下文协议与Agent协作
 7. **21-Agent智能体系统的设计与应用**: Agent系统架构设计
+8. **22-视觉大模型与多模态理解**: 视觉大模型与多模态技术应用
+9. **23-Fine-tuning微调艺术**: 参数高效微调与模型优化技术
 
 ## 开发规范
 
@@ -450,6 +490,30 @@ def search_similar_vectors(index, query_embedding, k=5):
     return distances, indices
 ```
 
+### 微调技术最佳实践
+```python
+# PEFT微调示例
+from peft import LoraConfig, get_peft_model, TaskType
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+def setup_lora_model(model_name, lora_config):
+    """设置LoRA微调配置"""
+    model = AutoModelForCausalLM.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    
+    peft_model = get_peft_model(model, lora_config)
+    return peft_model, tokenizer
+
+# LoRA配置
+lora_config = LoraConfig(
+    task_type=TaskType.CAUSAL_LM,
+    r=8,
+    lora_alpha=32,
+    lora_dropout=0.1,
+    target_modules=["q_proj", "v_proj"]
+)
+```
+
 ## 性能优化建议
 
 ### 1. 数据优化
@@ -479,6 +543,13 @@ def search_similar_vectors(index, query_embedding, k=5):
 - 分布式训练
 - 模型压缩和量化
 - 向量检索优化
+
+### 5. 微调优化策略
+- 使用LoRA、QLoRA等参数高效微调方法
+- 实施梯度检查点以节省内存
+- 使用混合精度训练提升效率
+- 采用PEFT (Parameter-Efficient Fine-Tuning) 策略
+- 利用提示学习 (Prompt Tuning) 和前缀学习 (Prefix Tuning)
 
 ## 故障排除
 
@@ -544,6 +615,8 @@ for stat in top_stats[:10]:
 - **GraphRAG**: 图数据库增强的RAG技术
 - **Query改写**: 智能查询重写和优化技术
 - **Agent系统设计**: 反应式、混合式、深思熟虑型Agent架构
+- **视觉大模型与多模态理解**: VLM（视觉语言模型）应用，Qwen-VL图像理解技术
+- **微调技术**: LoRA、QLoRA、PEFT等参数高效微调技术，MovieLens推荐系统案例
 
 ### 项目优化成果
 - **二手车价格预测**: 从v1迭代到v29，MAE从1000+优化到487.71，V29目标突破475分
@@ -557,6 +630,8 @@ for stat in top_stats[:10]:
 - **Function Calling**: 构建了多Agent协作和工单处理系统，包含收入预测机器人
 - **MCP与A2A**: 实现高德地图智能助手和Agent间协作机制
 - **Agent系统**: 设计了多种Agent架构模式，支持复杂业务场景
+- **视觉大模型与多模态理解**: 实现了VLM在保险和汽车领域的应用案例
+- **微调技术**: 掌握了参数高效微调技术，包括LoRA和PEFT应用
 - **竞赛优化**: 多个版本在阿里云天池等竞赛中获得优异成绩
 
 ## 联系支持
@@ -568,4 +643,4 @@ for stat in top_stats[:10]:
 ---
 
 *本IFLOW指南将随项目发展持续更新，建议定期查看最新版本。*
-*最后更新: 2025年11月5日*
+*最后更新: 2025年11月12日*
