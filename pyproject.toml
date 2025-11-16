@@ -43,7 +43,8 @@ dependencies = [
     "joblib>=1.5.2",
     "pandas-stubs>=2.3.2.250926",
 ]
-
+[tool.uv.extra-build-dependencies]
+    fbprophet = ["pystan"]
 [dependency-groups]
 dev = [
     "ipykernel>=6.30.1",
