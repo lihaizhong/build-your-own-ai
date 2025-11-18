@@ -1,4 +1,4 @@
-# 四、Coze工作原理与应用实例
+# Coze工作原理与应用实例
 
 ## Agent 与 Copilot 的区别
 

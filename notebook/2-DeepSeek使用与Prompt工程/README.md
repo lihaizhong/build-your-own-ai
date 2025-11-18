@@ -1,4 +1,4 @@
-# 二、DeepSeek使用和提示词工程
+# DeepSeek使用和提示词工程
 
 ## DeepSeek的创新
 
