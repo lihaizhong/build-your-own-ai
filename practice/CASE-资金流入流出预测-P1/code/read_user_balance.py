@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pandas as pd
 import os
+import pandas as pd
+from get_project_path import get_project_path
+
 
 def read_user_balance_data():
     """
     读取user_balance_table.csv文件的前5行数据，显示全部列
     """
     # 数据文件路径
-    data_file = "/Users/lihaizhong/Documents/Project/build-your-own-x/build-your-own-ai/practice/CASE-资金流入流出预测-P1/data/user_balance_table.csv"
+    data_file = get_project_path('..', 'data', 'user_balance_table.csv')
     
     # 检查文件是否存在
     if not os.path.exists(data_file):
