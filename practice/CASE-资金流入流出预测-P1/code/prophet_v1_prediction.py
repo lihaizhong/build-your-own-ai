@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+Prophet预测模型 v1.0 - 基础版本
+基于Prophet算法的基础时间序列预测
+版本特性：基础Prophet配置，无额外优化
+用途：作为Prophet工具的基础版本，用于性能对比
+"""
 
 import pandas as pd
 import numpy as np
@@ -67,9 +73,6 @@ def train_prophet_model(df, model_name, target_column):
         mcmc_samples=0
     )
     
-    # 添加自定义假日（可选）
-    # model.add_country_holidays(country_name='China')
-    
     # 训练模型
     model.fit(df)
     
@@ -80,7 +83,7 @@ def train_prophet_model(df, model_name, target_column):
     forecast = model.predict(future)
     
     # 保存模型
-    model_path = get_project_path('..', 'model', f'{target_column}_prophet_model.pkl')
+    model_path = get_project_path('..', 'model', f'{target_column}_prophet_v1_model.pkl')
     import pickle
     with open(model_path, 'wb') as f:
         pickle.dump(model, f)
@@ -112,7 +115,7 @@ def generate_predictions(purchase_model, redeem_model, forecast_purchase, foreca
     predictions['redeem_upper'] = future_redeem['yhat_upper']
     
     # 保存预测结果（考试格式）
-    prediction_file = get_project_path('..', 'prediction_result', 'prophet_predictions_201409.csv')
+    prediction_file = get_project_path('..', 'prediction_result', 'prophet_v1_predictions_201409.csv')
     exam_format = predictions[['date']].copy()
     exam_format['date'] = exam_format['date'].dt.strftime('%Y%m%d')
     exam_format['purchase'] = predictions['purchase_forecast'].round(0).astype(int)
@@ -121,7 +124,7 @@ def generate_predictions(purchase_model, redeem_model, forecast_purchase, foreca
     # 保存为CSV（考试格式：YYYYMMDD,申购金额,赎回金额）
     exam_format.to_csv(prediction_file, header=False, index=False)
     
-    print(f"预测结果已保存到: {prediction_file}")
+    print(f"基础预测结果已保存到: {prediction_file}")
     print(f"预测期间: {predictions['date'].min()} 至 {predictions['date'].max()}")
     print(f"预测平均申购额: ¥{predictions['purchase_forecast'].mean():,.0f}")
     print(f"预测平均赎回额: ¥{predictions['redeem_forecast'].mean():,.0f}")
@@ -133,8 +136,7 @@ def create_visualization(purchase_df, redeem_df, forecast_purchase, forecast_red
     """创建可视化图表"""
     print("\n=== 生成可视化图表 ===")
     
-    # 设置图表风格（会影响全局字体设置）
-    # plt.style.use('default')
+    # 创建分析图表
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
     fig.suptitle('Prophet时间序列预测分析', fontsize=16, fontweight='bold')
     
@@ -192,7 +194,7 @@ def create_visualization(purchase_df, redeem_df, forecast_purchase, forecast_red
     
     print(f"可视化图表已保存到: {chart_file}")
     
-    # 创建单独的预测对比图
+    # 创建对比图
     fig, ax = plt.subplots(1, 1, figsize=(12, 8))
     
     # 绘制预测期间的申购赎回对比
@@ -227,16 +229,16 @@ def create_visualization(purchase_df, redeem_df, forecast_purchase, forecast_red
     plt.tight_layout()
     
     # 保存对比图
-    comparison_file = get_project_path('..', 'user_data', 'prophet_forecast_comparison.png')
+    comparison_file = get_project_path('..', 'user_data', 'basic_prophet_forecast_comparison.png')
     plt.savefig(comparison_file, dpi=300, bbox_inches='tight')
     plt.close()
     
-    print(f"对比图表已保存到: {comparison_file}")
+    print(f"基础对比图表已保存到: {comparison_file}")
 
 
-def analyze_model_performance(forecast_purchase, forecast_redeem, purchase_df, redeem_df):
-    """分析模型性能"""
-    print("\n=== 模型性能分析 ===")
+def analyze_basic_model_performance(forecast_purchase, forecast_redeem, purchase_df, redeem_df):
+    """分析基础模型性能"""
+    print("\n=== 基础模型性能分析 ===")
     
     # 分离训练期和预测期
     train_size = len(purchase_df)
@@ -256,12 +258,12 @@ def analyze_model_performance(forecast_purchase, forecast_redeem, purchase_df, r
     redeem_rmse = np.sqrt(mean_squared_error(redeem_df['y'], test_redeem['yhat']))
     redeem_mape = np.mean(np.abs((redeem_df['y'] - test_redeem['yhat']) / redeem_df['y'])) * 100
     
-    print(f"申购模型性能:")
+    print(f"基础申购模型性能:")
     print(f"  MAE: ¥{purchase_mae:,.0f}")
     print(f"  RMSE: ¥{purchase_rmse:,.0f}")
     print(f"  MAPE: {purchase_mape:.2f}%")
     
-    print(f"\n赎回模型性能:")
+    print(f"\n基础赎回模型性能:")
     print(f"  MAE: ¥{redeem_mae:,.0f}")
     print(f"  RMSE: ¥{redeem_rmse:,.0f}")
     print(f"  MAPE: {redeem_mape:.2f}%")
@@ -278,7 +280,8 @@ def analyze_model_performance(forecast_purchase, forecast_redeem, purchase_df, r
 
 def main():
     """主函数"""
-    print("=== Prophet资金流入流出预测分析 ===")
+    print("=== 基础Prophet资金流入流出预测分析 ===")
+    print("📝 本版本为基础Prophet模型，用于性能对比")
     
     try:
         # 1. 加载数据
@@ -293,22 +296,23 @@ def main():
         predictions = generate_predictions(purchase_model, redeem_model, forecast_purchase, forecast_redeem)
         
         # 4. 分析模型性能
-        performance = analyze_model_performance(forecast_purchase, forecast_redeem, purchase_df, redeem_df)
+        performance = analyze_basic_model_performance(forecast_purchase, forecast_redeem, purchase_df, redeem_df)
         
         # 5. 创建可视化
         create_visualization(purchase_df, redeem_df, forecast_purchase, forecast_redeem, predictions)
         
         print(f"\n=== 预测完成 ===")
-        print(f"模型训练成功，预测结果已保存")
-        print(f"可查看文件:")
-        print(f"- 预测结果: prediction_result/prophet_predictions_201409.csv")
-        print(f"- 分析图表: user_data/prophet_forecast_analysis.png")
-        print(f"- 对比图表: user_data/prophet_forecast_comparison.png")
+        print(f"✅ 基础Prophet模型训练成功")
+        print(f"📊 预测结果已保存")
+        print(f"📈 可查看文件:")
+        print(f"   - 预测结果: prediction_result/prophet_v1_predictions_201409.csv")
+        print(f"   - 分析图表: user_data/prophet_forecast_analysis.png")
+        print(f"   - 对比图表: user_data/prophet_forecast_comparison.png")
         
         return True
         
     except Exception as e:
-        print(f"预测过程中发生错误: {e}")
+        print(f"基础预测过程中发生错误: {e}")
         import traceback
         traceback.print_exc()
         return False

@@ -2,16 +2,17 @@
 
 ## 项目概述
 
-这是一个完整的金融科技机器学习项目，专注于预测用户的资金流入流出行为。项目基于284万条真实用户行为数据，构建了时间序列预测模型来预测用户在特定时间点的资金流动情况。项目已完全完成Prophet和ARIMA两种先进预测模型的开发和部署，成功实现了对未来30天（2014年9月）的资金流入流出预测。
+这是一个完整的金融科技机器学习项目，专注于预测用户的资金流入流出行为。项目基于284万条真实用户行为数据，构建了多版本时间序列预测模型来预测用户在特定时间点的资金流动情况。项目已完全完成Prophet v1/v2和ARIMA v1三种预测模型的开发和部署，成功实现了对未来30天（2014年9月）的资金流入流出预测。
 
-**项目已完全符合天池竞赛要求，可直接参加比赛提交。**
+**项目已完全符合天池竞赛要求，Prophet v2版本性能最优，可直接参加比赛提交。**
 
 ## 项目现状
 
 ✅ **已完成阶段**: 数据分析 → 模型开发 → 预测生成 → 结果输出 → 竞赛就绪  
 📊 **当前状态**: 完整的预测系统，包含训练好的模型文件和专业分析报告  
 🎯 **预测目标**: 2014年9月1日至9月30日的每日申购和赎回金额预测  
-🏆 **竞赛状态**: 完全符合天池资金流入流出预测竞赛要求
+🏆 **竞赛状态**: 完全符合天池资金流入流出预测竞赛要求  
+📈 **最新版本**: Prophet v2（节假日+周末效应版），性能提升12.1%
 
 ## 天池竞赛符合性分析
 
@@ -35,14 +36,19 @@ CASE-资金流入流出预测-P1/          # 当前项目目录
 ├── 资金流入流出预测.ipynb          # 主要分析笔记本（Jupyter Notebook）
 ├── README.md                       # 项目说明文档
 ├── IFLOW.md                        # 本文件，项目交互指南
-├── code/                           # 核心代码脚本目录
-│   ├── arima_prediction.py         # ARIMA时间序列预测脚本
-│   ├── daily_flow_analysis.py      # 每日资金流动分析脚本
-│   ├── generate_prediction.py      # 预测结果生成脚本
-│   ├── prophet_prediction.py       # Prophet预测模型脚本 ⭐
-│   ├── read_user_balance.py        # 高级数据读取脚本
-│   ├── stationarity_analysis.py    # 平稳性分析脚本
-│   └── visualize_trends.py         # 趋势可视化脚本
+├── code/                           # 预测模型脚本目录 ⭐
+│   ├── arima_v1_prediction.py      # ARIMA时间序列预测脚本 v1.0
+│   ├── prophet_v1_prediction.py    # Prophet预测模型脚本 v1.0 (基础版) ⭐
+│   ├── prophet_v2_prediction.py    # Prophet预测模型脚本 v2.0 (节假日+周末版) ⭐⭐
+│   └── test_prediction.py          # 预测结果验证脚本
+├── feature/                        # 分析工具和特征工程目录 ⭐
+│   ├── analyze_weekend_effect.py   # 周末效应分析工具
+│   ├── prophet_model_comparison.py # Prophet模型版本对比工具
+│   ├── test_holiday_impact.py      # 节假日影响测试工具
+│   ├── data_analysis.py            # 数据分析工具
+│   ├── data_loader.py              # 数据加载工具
+│   ├── time_series_analysis.py     # 时间序列分析工具
+│   └── visualization.py            # 可视化工具
 ├── data/                           # 原始数据文件目录
 │   ├── user_profile_table.csv      # 用户画像数据表（30,000用户）
 │   ├── user_balance_table.csv      # 用户余额交易数据表（284万记录）
@@ -51,29 +57,43 @@ CASE-资金流入流出预测-P1/          # 当前项目目录
 │   └── comp_predict_table.csv      # 考试预测格式参考
 ├── docs/                           # 项目文档目录
 │   └── Prophet预测分析报告.md       # Prophet模型专业分析报告
-├── feature/                        # 特征工程目录（待扩展）
-├── model/                          # 训练好的模型文件目录
-│   ├── purchase_arima_model.pkl    # 申购ARIMA模型文件
-│   ├── purchase_prophet_model.pkl  # 申购Prophet模型文件 ⭐
-│   ├── redeem_arima_model.pkl      # 赎回ARIMA模型文件
-│   └── redeem_prophet_model.pkl    # 赎回Prophet模型文件 ⭐
-├── prediction_result/              # 最终预测结果目录
-│   ├── arima_predictions_201409.csv # ARIMA模型预测结果
-│   ├── prophet_predictions_201409.csv # Prophet模型预测结果 ⭐
-│   └── tc_comp_predict_table.csv   # 考试提交的最终预测文件
+├── model/                          # 训练好的模型文件目录 ⭐
+│   ├── purchase_prophet_v1_model.pkl     # 申购Prophet模型 v1.0 ⭐
+│   ├── purchase_prophet_v2_model.pkl     # 申购Prophet模型 v2.0 (最佳) ⭐⭐
+│   ├── purchase_arima_v1_model.pkl       # 申购ARIMA模型 v1.0
+│   ├── redeem_prophet_v1_model.pkl       # 赎回Prophet模型 v1.0 ⭐
+│   ├── redeem_prophet_v2_model.pkl       # 赎回Prophet模型 v2.0 (最佳) ⭐⭐
+│   └── redeem_arima_v1_model.pkl         # 赎回ARIMA模型 v1.0
+├── prediction_result/              # 预测结果目录 ⭐
+│   ├── prophet_v2_predictions_201409.csv # Prophet v2预测结果 (最佳) ⭐⭐
+│   ├── prophet_v1_predictions_201409.csv # Prophet v1预测结果 ⭐
+│   ├── arima_v1_predictions_201409.csv   # ARIMA v1预测结果
+│   └── tc_comp_predict_table.csv         # 考试提交的最终预测文件
 └── user_data/                      # 数据分析和可视化结果目录
-    ├── arima_predictions_201409.png        # ARIMA预测可视化
-    ├── chart_data.json                      # 图表数据文件
-    ├── daily_flow_trend.png                 # 申购赎回趋势图
-    ├── daily_summary.csv                    # 每日数据汇总
+    ├── enhanced_prophet_forecast_analysis.png     # Prophet v2增强分析图表 ⭐⭐
+    ├── enhanced_prophet_forecast_comparison.png   # Prophet v2对比图表 ⭐⭐
+    ├── prophet_forecast_analysis.png              # Prophet v1分析图表 ⭐
+    ├── prophet_forecast_comparison.png            # Prophet v1对比图表 ⭐
+    ├── arima_predictions_201409.png               # ARIMA预测可视化
+    ├── weekend_effect_analysis.png                # 周末效应分析图表 ⭐
+    ├── chart_data.json                            # 图表数据文件
+    ├── daily_flow_trend.png                       # 申购赎回趋势图
+    ├── daily_summary.csv                          # 每日数据汇总
     ├── differencing_analysis_20140301_20140831.png # 差分分析图
-    ├── filtered_data_20140301_20140831.csv  # 过滤后数据
-    ├── prophet_forecast_analysis.png        # Prophet分析图表 ⭐
-    ├── prophet_forecast_comparison.png      # Prophet对比图表 ⭐
-    ├── redeem_diff_20140301_20140831.csv    # 赎回差分数据
+    ├── filtered_data_20140301_20140831.csv        # 过滤后数据
+    ├── redeem_diff_20140301_20140831.csv          # 赎回差分数据
     ├── stationarity_analysis_20140301_20140831.png # 平稳性分析
-    └── stationarity_descriptive_stats.csv   # 平稳性统计数据
+    └── stationarity_descriptive_stats.csv         # 平稳性统计数据
 ```
+
+## 🏆 核心优势
+
+- **多模型架构**: Prophet v1/v2 + ARIMA v1 三重验证
+- **专业分析**: 完整的数据分析和可视化
+- **生产就绪**: 训练好的模型可直接用于生产
+- **业务洞察**: 资金流向分析和风险管理建议
+- **代码规范**: 按[工具]_[版本号]格式规范命名
+- **分析工具**: 7个专业分析工具，支持深度分析
 
 ## 核心技术栈
 
@@ -288,52 +308,75 @@ uv sync
 ```bash
 # 查看最终竞赛提交文件（已完成，符合天池竞赛格式）
 cat prediction_result/tc_comp_predict_table.csv
-# 格式：20140901,50000000,35000000（日期,申购金额,赎回金额）
+# 格式：20140901,320352638,333977305（日期,申购金额,赎回金额）
 
-# 查看Prophet详细预测结果（更精确的预测值）
-cat prediction_result/prophet_predictions_201409.csv
-# 格式：20140901,317180483,335181243（详细预测值）
+# 查看Prophet v2详细预测结果（最佳性能版本）
+cat prediction_result/prophet_v2_predictions_201409.csv
+# 格式：20140901,320352638,333977305（节假日+周末效应优化）
 
-# 查看ARIMA对比预测结果
-cat prediction_result/arima_predictions_201409.csv
+# 查看Prophet v1对比预测结果
+cat prediction_result/prophet_v1_predictions_201409.csv
+# 格式：20140901,270441385,296022721（基础版本对比）
+
+# 查看ARIMA v1对比预测结果
+cat prediction_result/arima_v1_predictions_201409.csv
+
+# 查看周末效应分析结果
+cat user_data/weekend_effect_analysis.png
+# 周末效应：申购-37.4%，赎回-35.2%，统计显著性p<0.0001
 
 # 查看Prophet模型详细分析报告
 cat docs/Prophet预测分析报告.md
 
 # 查看可视化结果
-open user_data/prophet_forecast_analysis.png    # Prophet预测分析图
-open user_data/daily_flow_trend.png            # 每日申购赎回趋势图
-open user_data/stationarity_analysis_20140301_20140831.png # 平稳性分析图
+open user_data/enhanced_prophet_forecast_analysis.png    # Prophet v2增强分析图
+open user_data/prophet_forecast_analysis.png             # Prophet v1分析图
+open user_data/daily_flow_trend.png                      # 每日申购赎回趋势图
+open user_data/weekend_effect_analysis.png               # 周末效应分析图
 ```
 
 #### 📊 运行时间序列预测脚本
 
 ```bash
-# Prophet时间序列预测（推荐）
-uv run python code/prophet_prediction.py
-# 生成: prediction_result/prophet_predictions_201409.csv
+# Prophet v2时间序列预测（推荐 - 最佳性能）
+uv run python code/prophet_v2_prediction.py
+# 生成: prediction_result/prophet_v2_predictions_201409.csv
+# 性能: 申购MAE=46.4M (+12.1%), 赎回MAE=40.1M (+9.0%)
 
-# ARIMA时间序列预测
-uv run python code/arima_prediction.py
-# 生成: prediction_result/arima_predictions_201409.csv
+# Prophet v1时间序列预测（基准版本）
+uv run python code/prophet_v1_prediction.py
+# 生成: prediction_result/prophet_v1_predictions_201409.csv
+# 性能: 申购MAE=52.8M, 赎回MAE=44.1M
 
-# 平稳性分析
-uv run python code/stationarity_analysis.py
-# 生成: user_data/stationarity_*.png, user_data/stationarity_*.csv
-
-# 生成最终考试提交文件
-uv run python code/generate_prediction.py
-# 生成: prediction_result/tc_comp_predict_table.csv
+# ARIMA v1时间序列预测（对比验证）
+uv run python code/arima_v1_prediction.py
+# 生成: prediction_result/arima_v1_predictions_201409.csv
+# 性能: 传统ARIMA(5,0,5)和ARIMA(5,1,5)模型
 ```
 
-#### 📈 数据分析和可视化
+#### 📈 分析工具和特征工程
 
 ```bash
-# 每日资金流动分析
-uv run python code/daily_flow_analysis.py
+# 周末效应分析（发现显著性周末效应）
+uv run python feature/analyze_weekend_effect.py
+# 发现: 周末申购-37.4%，赎回-35.2%，p<0.0001统计显著
 
-# 趋势可视化分析
-uv run python code/visualize_trends.py
+# Prophet模型版本对比分析
+uv run python feature/prophet_model_comparison.py
+# 对比: v1基础版 vs v2节假日版的详细性能对比
+
+# 节假日影响测试
+uv run python feature/test_holiday_impact.py
+# 验证: 49个节假日对模型性能的影响
+
+# 数据分析工具
+uv run python feature/data_analysis.py
+
+# 时间序列分析工具
+uv run python feature/time_series_analysis.py
+
+# 可视化工具
+uv run python feature/visualization.py
 
 # 启动Jupyter Notebook进行交互式分析
 jupyter notebook 资金流入流出预测.ipynb
@@ -341,25 +384,38 @@ jupyter notebook 资金流入流出预测.ipynb
 
 #### 📁 核心输出文件说明
 
-**预测结果**:
-- `prediction_result/tc_comp_predict_table.csv` - 最终考试提交预测文件 ⭐
-- `prediction_result/prophet_predictions_201409.csv` - Prophet模型预测详细结果
-- `prediction_result/arima_predictions_201409.csv` - ARIMA模型预测详细结果
+**预测结果**（已规范化命名）:
+- `prediction_result/prophet_v2_predictions_201409.csv` - Prophet v2预测结果（最佳性能）⭐⭐
+- `prediction_result/prophet_v1_predictions_201409.csv` - Prophet v1预测结果（基础版）⭐
+- `prediction_result/arima_v1_predictions_201409.csv` - ARIMA v1预测结果（对比）
+- `prediction_result/tc_comp_predict_table.csv` - 最终考试提交预测文件
 
-**模型文件**:
-- `model/purchase_prophet_model.pkl` - 申购Prophet模型（已训练）⭐
-- `model/redeem_prophet_model.pkl` - 赎回Prophet模型（已训练）⭐
-- `model/purchase_arima_model.pkl` - 申购ARIMA模型（已训练）
-- `model/redeem_arima_model.pkl` - 赎回ARIMA模型（已训练）
+**模型文件**（已规范化命名）:
+- `model/purchase_prophet_v2_model.pkl` - 申购Prophet模型 v2.0（最佳）⭐⭐
+- `model/redeem_prophet_v2_model.pkl` - 赎回Prophet模型 v2.0（最佳）⭐⭐
+- `model/purchase_prophet_v1_model.pkl` - 申购Prophet模型 v1.0（基准）⭐
+- `model/redeem_prophet_v1_model.pkl` - 赎回Prophet模型 v1.0（基准）⭐
+- `model/purchase_arima_v1_model.pkl` - 申购ARIMA模型 v1.0（对比）
+- `model/redeem_arima_v1_model.pkl` - 赎回ARIMA模型 v1.0（对比）
+
+**分析工具**（新增feature目录）:
+- `feature/analyze_weekend_effect.py` - 周末效应分析工具 ⭐
+- `feature/prophet_model_comparison.py` - Prophet模型版本对比工具 ⭐
+- `feature/test_holiday_impact.py` - 节假日影响测试工具
+- `feature/data_analysis.py` - 数据分析工具
+- `feature/visualization.py` - 可视化工具
 
 **分析报告**:
 - `docs/Prophet预测分析报告.md` - Prophet模型专业分析报告 ⭐
 - `user_data/stationarity_descriptive_stats.csv` - 平稳性分析统计数据
 - `user_data/daily_summary.csv` - 427天每日数据汇总
 
-**可视化图表**:
-- `user_data/prophet_forecast_analysis.png` - Prophet预测分析图表 ⭐
-- `user_data/prophet_forecast_comparison.png` - Prophet预测对比图 ⭐
+**可视化图表**（新增增强版）:
+- `user_data/enhanced_prophet_forecast_analysis.png` - Prophet v2增强分析图表 ⭐⭐
+- `user_data/enhanced_prophet_forecast_comparison.png` - Prophet v2对比图表 ⭐⭐
+- `user_data/prophet_forecast_analysis.png` - Prophet v1分析图表 ⭐
+- `user_data/prophet_forecast_comparison.png` - Prophet v1对比图表 ⭐
+- `user_data/weekend_effect_analysis.png` - 周末效应分析图表 ⭐
 - `user_data/daily_flow_trend.png` - 每日申购赎回趋势图
 - `user_data/stationarity_analysis_20140301_20140831.png` - 平稳性分析图
 
@@ -389,23 +445,39 @@ ls -lh user_data/   # 查看分析结果和图表
 
 ### 🎯 核心成果
 - **预测目标**: 成功预测未来30天的资金流入流出
-- **模型精度**: Prophet模型申购预测MAPE=48.10%，赎回预测MAPE=98.49%
-- **竞赛就绪**: 完全符合天池竞赛要求，可直接提交
-- **业务洞察**: 预测2014年9月净流出约2,558万元，需关注流动性风险
+- **最佳性能**: Prophet v2模型申购MAE=46.4M，赎回MAE=40.1M
+- **性能提升**: Prophet v2相比v1申购提升12.1%，赎回提升9.0%
+- **竞赛就绪**: 完全符合天池竞赛要求，v2版本可直接提交
+- **业务洞察**: 预测2014年9月净流出约-25.6万元，需关注流动性风险
 - **技术架构**: 完整的端到端时间序列预测流水线
+- **分析工具**: 7个专业分析工具，支持深度业务洞察
 
 ### 🏆 竞赛成果文件
-**最终提交文件**:
-- `prediction_result/tc_comp_predict_table.csv` - 竞赛提交文件 ⭐
-- `prediction_result/prophet_predictions_201409.csv` - Prophet详细预测结果
+**最终提交文件**（已规范化）:
+- `prediction_result/prophet_v2_predictions_201409.csv` - Prophet v2详细预测结果 ⭐⭐
+- `prediction_result/tc_comp_predict_table.csv` - 竞赛提交文件
 
-**竞赛对比预测**:
-- `prediction_result/arima_predictions_201409.csv` - ARIMA对比预测结果
+**模型对比预测**:
+- `prediction_result/prophet_v1_predictions_201409.csv` - Prophet v1对比预测结果
+- `prediction_result/arima_v1_predictions_201409.csv` - ARIMA v1对比预测结果
 
-**性能分析**:
-- Prophet申购模型: MAE=¥52,796,094, MAPE=48.10%
-- Prophet赎回模型: MAE=¥44,118,556, MAPE=98.49%
-- 赎回模型波动性较高，需要谨慎解读
+**性能分析**（更新为实际数据）:
+**Prophet v2模型（最佳性能）**:
+- 申购模型: MAE=¥46,417,189, MAPE=41.29%, RMSE=¥64,218,162
+- 赎回模型: MAE=¥40,143,754, MAPE=91.09%, RMSE=¥53,232,332
+
+**Prophet v1模型（基准性能）**:
+- 申购模型: MAE=¥52,796,094, MAPE=48.10%, RMSE=¥79,695,049
+- 赎回模型: MAE=¥44,118,556, MAPE=98.49%, RMSE=¥59,013,493
+
+**ARIMA v1模型（对比验证）**:
+- 申购模型: MAE=¥51,742,084, RMSE=¥67,785,465
+- 赎回模型: MAE=¥55,799,565, RMSE=¥75,453,842
+
+**关键发现**:
+- Prophet v2节假日+周末效应版本性能最优
+- 节假日建模显著提升预测精度
+- 周末效应分析：周末申购-37.4%，赎回-35.2%，p<0.0001统计显著
 
 ### 📊 项目特点
 - **专业金融建模**: 集成Prophet和ARIMA双模型预测框架
@@ -430,25 +502,36 @@ ls -lh user_data/   # 查看分析结果和图表
 - 统一的路径管理方法
 
 ### 文件组织
-- **code/**: 存放可执行的Python脚本
-  - `prophet_prediction.py`: Prophet模型训练和预测 ⭐
-  - `arima_prediction.py`: ARIMA模型训练和预测
-  - `generate_prediction.py`: 生成最终提交结果
+- **code/**: 存放预测模型脚本，按[工具]_[版本号]_prediction.py格式命名
+  - `prophet_v2_prediction.py`: Prophet v2模型训练和预测（最佳性能）⭐⭐
+  - `prophet_v1_prediction.py`: Prophet v1模型训练和预测（基准版本）⭐
+  - `arima_v1_prediction.py`: ARIMA v1模型训练和预测（对比验证）
+  - `test_prediction.py`: 预测结果验证脚本
+- **feature/**: 存放分析工具和特征工程代码
+  - `analyze_weekend_effect.py`: 周末效应分析工具 ⭐
+  - `prophet_model_comparison.py`: Prophet模型版本对比工具 ⭐
+  - `test_holiday_impact.py`: 节假日影响测试工具
+  - `data_analysis.py`: 数据分析工具
+  - `data_loader.py`: 数据加载工具
+  - `time_series_analysis.py`: 时间序列分析工具
+  - `visualization.py`: 可视化工具
 - **data/**: 存放原始数据文件和竞赛格式参考
   - `comp_predict_table.csv`: 竞赛预测文件格式参考
   - `user_balance_table.csv`: 用户余额交易数据（284万记录）
   - `user_profile_table.csv`: 用户画像数据（30,000用户）
-- **model/**: 存放训练好的模型文件
-  - `purchase_prophet_model.pkl`: 申购Prophet模型 ⭐
-  - `redeem_prophet_model.pkl`: 赎回Prophet模型 ⭐
-  - `purchase_arima_model.pkl`: 申购ARIMA模型
-  - `redeem_arima_model.pkl`: 赎回ARIMA模型
-- **prediction_result/**: 存放竞赛提交的预测结果
-  - `tc_comp_predict_table.csv`: 天池竞赛最终提交文件 ⭐
-  - `prophet_predictions_201409.csv`: Prophet详细预测结果 ⭐
-  - `arima_predictions_201409.csv`: ARIMA对比预测结果
+- **model/**: 存放训练好的模型文件，按[工具]_[版本号]_model.pkl格式命名
+  - `purchase_prophet_v2_model.pkl`: 申购Prophet模型 v2.0（最佳）⭐⭐
+  - `redeem_prophet_v2_model.pkl`: 赎回Prophet模型 v2.0（最佳）⭐⭐
+  - `purchase_prophet_v1_model.pkl`: 申购Prophet模型 v1.0（基准）⭐
+  - `redeem_prophet_v1_model.pkl`: 赎回Prophet模型 v1.0（基准）⭐
+  - `purchase_arima_v1_model.pkl`: 申购ARIMA模型 v1.0（对比）
+  - `redeem_arima_v1_model.pkl`: 赎回ARIMA模型 v1.0（对比）
+- **prediction_result/**: 存放预测结果文件，按[工具]_[版本号]_predictions_201409.csv格式命名
+  - `prophet_v2_predictions_201409.csv`: Prophet v2详细预测结果（最佳）⭐⭐
+  - `prophet_v1_predictions_201409.csv`: Prophet v1预测结果（基准）⭐
+  - `arima_v1_predictions_201409.csv`: ARIMA v1预测结果（对比）
+  - `tc_comp_predict_table.csv`: 天池竞赛最终提交文件
 - **user_data/**: 存放数据处理结果、中间文件和可视化图表
-- **feature/**: 存放特征工程相关代码（当前为空，保持简洁）
 - **docs/**: 存放项目文档
   - `Prophet预测分析报告.md`: Prophet模型专业分析报告 ⭐
 
@@ -534,43 +617,77 @@ print(df.info())
 - **数据完整性**: 99.8%数据质量，无重大缺失
 - **时间跨度**: 完整覆盖427天，无断档
 
-### 🎯 Prophet模型预测结果（2014年9月）
+### 🎯 Prophet v2模型预测结果（2014年9月） - 最佳性能版本
 
 #### 预测概览
 - **预测期间**: 2014年9月1日 至 2014年9月30日（30天）
-- **预测平均申购**: ¥270,441,385（比历史增长24.7%）
-- **预测平均赎回**: ¥296,022,721（比历史增长73.8%）
-- **预测净流入**: -¥25,581,336（净流出，需关注流动性风险）
+- **预测平均申购**: ¥274,158,484（比历史增长26.4%）
+- **预测平均赎回**: ¥296,171,211（比历史增长73.9%）
+- **预测净流入**: -¥22,012,727（净流出，需关注流动性风险）
+- **模型特性**: 包含49个节假日 + 122个周末的完整建模
 
-#### 模型性能评估
+#### Prophet v2模型性能评估（最佳版本）
+**申购模型性能**:
+- **MAE**: ¥46,417,189（比v1提升12.1%）
+- **RMSE**: ¥64,218,162（比v1提升19.4%）
+- **MAPE**: 41.29%（比v1提升14.2%）
+
+**赎回模型性能**:
+- **MAE**: ¥40,143,754（比v1提升9.0%）
+- **RMSE**: ¥53,232,332（比v1提升9.8%）
+- **MAPE**: 91.09%（比v1提升7.5%）
+
+#### Prophet v1模型性能评估（基准版本）
 **申购模型性能**:
 - **MAE**: ¥52,796,094
 - **RMSE**: ¥79,695,049
-- **MAPE**: 48.10%（中等精度）
+- **MAPE**: 48.10%
 
 **赎回模型性能**:
-- **MAE**: ¥44,118,556  
+- **MAE**: ¥44,118,556
 - **RMSE**: ¥59,013,493
-- **MAPE**: 98.49%（高波动性，需谨慎解读）
+- **MAPE**: 98.49%
+
+#### ARIMA v1模型性能评估（对比验证）
+**申购模型性能**:
+- **MAE**: ¥51,742,084
+- **RMSE**: ¥67,785,465
+
+**赎回模型性能**:
+- **MAE**: ¥55,799,565
+- **RMSE**: ¥75,453,842
 
 ### 📁 完整输出文件体系
 
-#### 🎯 核心预测文件
+#### 🎯 核心预测文件（已规范化命名）
+- `prediction_result/prophet_v2_predictions_201409.csv` - Prophet v2详细预测结果（最佳）⭐⭐
+- `prediction_result/prophet_v1_predictions_201409.csv` - Prophet v1预测结果（基准）⭐
+- `prediction_result/arima_v1_predictions_201409.csv` - ARIMA v1预测结果（对比）
 - `prediction_result/tc_comp_predict_table.csv` - 最终考试提交文件
-- `prediction_result/prophet_predictions_201409.csv` - Prophet详细预测结果
-- `prediction_result/arima_predictions_201409.csv` - ARIMA对比预测结果
 
-#### 🤖 训练好的模型文件
-- `model/purchase_prophet_model.pkl` - 申购Prophet模型（可直接加载预测）
-- `model/redeem_prophet_model.pkl` - 赎回Prophet模型（可直接加载预测）
-- `model/purchase_arima_model.pkl` - 申购ARIMA模型
-- `model/redeem_arima_model.pkl` - 赎回ARIMA模型
+#### 🤖 训练好的模型文件（已规范化命名）
+- `model/purchase_prophet_v2_model.pkl` - 申购Prophet模型 v2.0（最佳，可直接加载预测）⭐⭐
+- `model/redeem_prophet_v2_model.pkl` - 赎回Prophet模型 v2.0（最佳，可直接加载预测）⭐⭐
+- `model/purchase_prophet_v1_model.pkl` - 申购Prophet模型 v1.0（基准）⭐
+- `model/redeem_prophet_v1_model.pkl` - 赎回Prophet模型 v1.0（基准）⭐
+- `model/purchase_arima_v1_model.pkl` - 申购ARIMA模型 v1.0（对比）
+- `model/redeem_arima_v1_model.pkl` - 赎回ARIMA模型 v1.0（对比）
 
-#### 📈 可视化分析图表
-- `user_data/prophet_forecast_analysis.png` - Prophet预测分析图（包含置信区间）
-- `user_data/prophet_forecast_comparison.png` - Prophet预测对比图
+#### 📈 可视化分析图表（包含增强版）
+- `user_data/enhanced_prophet_forecast_analysis.png` - Prophet v2增强预测分析图（节假日+周末效应）⭐⭐
+- `user_data/enhanced_prophet_forecast_comparison.png` - Prophet v2增强预测对比图 ⭐⭐
+- `user_data/prophet_forecast_analysis.png` - Prophet v1预测分析图（包含置信区间）⭐
+- `user_data/prophet_forecast_comparison.png` - Prophet v1预测对比图 ⭐
+- `user_data/weekend_effect_analysis.png` - 周末效应分析图（申购-37.4%，赎回-35.2%）⭐
 - `user_data/daily_flow_trend.png` - 427天历史趋势图
 - `user_data/stationarity_analysis_20140301_20140831.png` - 平稳性分析图
+
+#### 📊 分析工具（新增feature目录）
+- `feature/analyze_weekend_effect.py` - 周末效应分析工具 ⭐
+- `feature/prophet_model_comparison.py` - Prophet模型版本对比工具 ⭐
+- `feature/test_holiday_impact.py` - 节假日影响测试工具
+- `feature/data_analysis.py` - 数据分析工具
+- `feature/visualization.py` - 可视化工具
 
 #### 📊 数据分析结果
 - `user_data/daily_summary.csv` - 427天每日数据汇总
@@ -581,58 +698,91 @@ print(df.info())
 
 #### 🚀 立即查看预测结果
 ```bash
-# 1. 查看最终预测文件（30天预测结果）
+# 1. 查看Prophet v2最佳预测文件（30天预测结果）
+head prediction_result/prophet_v2_predictions_201409.csv
+# 输出示例: 20140901,320352638,333977305
+
+# 2. 查看最终竞赛提交文件
 head prediction_result/tc_comp_predict_table.csv
 
-# 2. 查看Prophet分析报告
-open docs/Prophet预测分析报告.md
+# 3. 查看周末效应分析结果
+open user_data/weekend_effect_analysis.png
+# 周末效应: 申购-37.4%，赎回-35.2%，统计显著p<0.0001
 
-# 3. 查看可视化图表
-open user_data/prophet_forecast_analysis.png
+# 4. 查看Prophet v2增强分析报告
+open user_data/enhanced_prophet_forecast_analysis.png
+
+# 5. 查看Prophet模型分析报告
+open docs/Prophet预测分析报告.md
 ```
 
 #### 🔄 模型重新训练
 ```bash
-# 重新运行Prophet预测（如需更新模型）
-uv run python code/prophet_prediction.py
+# 重新运行Prophet v2预测（最佳性能版本）
+uv run python code/prophet_v2_prediction.py
+# 性能: 申购MAE=46.4M (+12.1%), 赎回MAE=40.1M (+9.0%)
 
-# 重新运行ARIMA预测（对比分析）
-uv run python code/arima_prediction.py
+# 重新运行Prophet v1预测（基准版本）
+uv run python code/prophet_v1_prediction.py
+# 性能: 申购MAE=52.8M, 赎回MAE=44.1M
+
+# 重新运行ARIMA v1预测（对比分析）
+uv run python code/arima_v1_prediction.py
+# 性能: 申购MAE=51.7M, 赎回MAE=55.8M
 ```
 
 #### 📊 深度数据分析
 ```bash
-# 平稳性分析（了解数据特征）
-uv run python code/stationarity_analysis.py
+# 周末效应分析（发现显著性周末效应）
+uv run python feature/analyze_weekend_effect.py
+# 输出: 周末效应分析图表和详细统计数据
 
-# 趋势可视化
-uv run python code/visualize_trends.py
+# Prophet模型版本对比分析
+uv run python feature/prophet_model_comparison.py
+# 输出: v1 vs v2 详细性能对比报告
+
+# 节假日影响测试
+uv run python feature/test_holiday_impact.py
+# 验证: 49个节假日对模型性能的影响
+
+# 时间序列分析
+uv run python feature/time_series_analysis.py
+
+# 数据分析和可视化
+uv run python feature/data_analysis.py
+uv run python feature/visualization.py
 ```
 
 #### 🎯 业务应用
 1. **风险管理**: 关注预测的净流出趋势，提前准备流动性
-2. **资金规划**: 基于日均2.7亿申购、2.96亿赎回预测进行资金配置
+2. **资金规划**: 基于Prophet v2日均2.74亿申购、2.96亿赎回预测进行资金配置
 3. **模型监控**: 跟踪实际值与预测值的偏差，持续优化模型
-4. **业务决策**: 结合季节性因素制定营销和运营策略
+4. **业务决策**: 结合节假日和周末效应制定营销和运营策略
+5. **精细化管理**: 利用周末效应分析优化工作日和周末的资金配置策略
 
 #### 🏆 天池竞赛应用
-1. **直接提交**: 使用 `prediction_result/tc_comp_predict_table.csv` 作为最终提交文件
-2. **双模型验证**: Prophet和ARIMA结果对比，提高预测可靠性
-3. **权重策略**: 申购预测权重45%，赎回预测权重55%（赎回精度需重点关注）
+1. **直接提交**: 使用 `prediction_result/prophet_v2_predictions_201409.csv` 作为最终提交文件 ⭐⭐
+2. **三模型验证**: Prophet v2/v1 + ARIMA结果对比，提高预测可靠性
+3. **权重策略**: 申购预测权重45%，赎回预测权重55%（Prophet v2赎回精度已提升）
 4. **实时监控**: 建立竞赛评分体系的模型性能监控
+5. **性能保证**: Prophet v2相比基础版本性能提升12.1%/9.0%
 
 ---
 
 ## 技术亮点
 
-- **🎯 专业时间序列**: 集成Prophet和ARIMA双模型预测框架
+- **🎯 多模型时间序列**: 集成Prophet v1/v2 + ARIMA v1三重预测框架
 - **📈 生产就绪**: 训练好的模型可直接用于生产环境预测  
 - **📊 完整评估**: 多维度模型性能评估和可视化分析
 - **🔄 可重现性**: 完整代码和文档支持模型复现和迭代
 - **💼 业务价值**: 直接可用的金融风险管理和资金规划工具
-- **🏆 竞赛就绪**: 完全符合天池竞赛要求，可直接参加比赛
-- **⚡ 双模型对比**: Prophet精确预测 + ARIMA验证，提供可靠的结果
+- **🏆 竞赛就绪**: Prophet v2版本性能最优，完全符合天池竞赛要求
+- **⚡ 三模型对比**: Prophet v2精确预测 + Prophet v1/ARIMA验证，提供可靠结果
 - **📋 标准输出**: 严格按照竞赛格式输出，便于提交和评估
+- **🛠️ 分析工具**: 7个专业分析工具，支持深度业务洞察
+- **🎭 节假日建模**: 49个主要节假日显式建模，性能提升12.1%/9.0%
+- **📊 周末效应**: 统计分析发现显著周末效应，p<0.0001统计显著
+- **💻 代码规范**: 按[工具]_[版本号]格式规范命名，易于维护
 
 ---
 
@@ -658,7 +808,30 @@ uv run python code/visualize_trends.py
 
 ---
 
+## 🏆 最新版本更新 (2025年11月24日)
+
+### 版本演进历程
+- **v1.0**: 基础Prophet和ARIMA模型
+- **v2.0**: Prophet节假日+周末效应版，性能显著提升
+- **当前**: Prophet v2为最佳版本，推荐用于竞赛
+
+### 主要更新内容
+- ✅ **Prophet v2节假日建模**: 49个主要节假日，申购性能提升12.1%
+- ✅ **周末效应分析**: 统计分析发现周末申购-37.4%，赎回-35.2%
+- ✅ **代码结构规范化**: 按[工具]_[版本号]格式重命名
+- ✅ **分析工具扩展**: 新增7个专业分析工具
+- ✅ **可视化增强**: Prophet v2增强版分析图表
+- ✅ **性能优化**: v2版本相比v1基础版申购MAE从52.8M降至46.4M
+
+### 竞赛就绪状态
+- 🎯 **最佳模型**: Prophet v2 (节假日+周末效应版)
+- 📊 **预测结果**: prediction_result/prophet_v2_predictions_201409.csv
+- 🏆 **竞赛文件**: prediction_result/tc_comp_predict_table.csv
+- 🔧 **分析工具**: feature/目录下7个专业工具
+
+---
+
 *本指南反映了项目的完整开发和竞赛部署状态，已实现端到端的时间序列预测解决方案。*
-*项目完全符合天池竞赛要求，可直接参加比赛。*
+*项目完全符合天池竞赛要求，Prophet v2版本性能最优，可直接参加比赛。*
 *最后更新: 2025年11月24日*  
-*完成Prophet和ARIMA双模型预测系统，成功生成2014年9月预测结果，竞赛就绪*
+*完成Prophet v1/v2 + ARIMA v1三模型预测系统，成功生成2014年9月预测结果，竞赛就绪*

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ARIMA Time Series Prediction
-使用ARIMA模型预测申购总额和赎回总额
+ARIMA时间序列预测模型 v1.0
+基于传统ARIMA算法的时间序列预测方法
+版本特性：平稳性检验+差分处理+ARIMA建模
+用途：与Prophet模型进行对比验证
 """
 
 import pandas as pd
@@ -204,7 +206,7 @@ def main():
         return
     
     # 训练申购总额的ARIMA(5,0,5)模型（不需要差分）
-    purchase_model_path = get_project_path('..', 'model', 'purchase_arima_model.pkl')
+    purchase_model_path = get_project_path('..', 'model', 'purchase_arima_v1_model.pkl')
     purchase_model = train_arima_model(
         train_data['purchase_amt'], 
         '申购总额', 
@@ -217,7 +219,7 @@ def main():
         return
     
     # 训练赎回总额的ARIMA(5,1,5)模型（需要差分）
-    redeem_model_path = get_project_path('..', 'model', 'redeem_arima_model.pkl')
+    redeem_model_path = get_project_path('..', 'model', 'redeem_arima_v1_model.pkl')
     redeem_model = train_arima_model(
         train_data['redeem_amt'], 
         '赎回总额', 
@@ -269,7 +271,7 @@ def main():
     create_prediction_plots(train_data, purchase_plot_data, redeem_plot_data)
     
     # 保存最终预测结果到CSV
-    output_file = get_project_path('..', 'prediction_result', 'arima_predictions_201409.csv')
+    output_file = get_project_path('..', 'prediction_result', 'arima_v1_predictions_201409.csv')
     save_prediction_results(purchase_predictions, redeem_predictions, output_file)
     
     print(f"\n=== 预测完成 ===")
