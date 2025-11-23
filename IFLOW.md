@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、RAG技术、Text2SQL、向量数据库、MCP与A2A、视觉大模型与多模态理解、微调技术等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含25个核心课程模块和丰富的实战案例，形成了从基础到专家的完整学习路径。项目以实战为导向，通过大量真实项目和竞赛案例，帮助学习者掌握AI技术的实际应用能力。
+这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、RAG技术、Text2SQL、向量数据库、MCP与A2A、视觉大模型与多模态理解、微调技术等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含26个核心课程模块和丰富的实战案例，形成了从基础到专家的完整学习路径。项目以实战为导向，通过大量真实项目和竞赛案例，帮助学习者掌握AI技术的实际应用能力。
 
 ## 核心技术栈
 
@@ -24,6 +24,7 @@
 - **微调框架**: unsloth, peft, trl, vllm
 - **文档解析**: docling, mineru
 - **API集成**: dashscope, coze
+- **BI分析**: SQLAlchemy, 交互式BI报表, 股票数据分析
 
 ## 环境配置
 
@@ -44,6 +45,9 @@ uv sync
 source .venv/bin/activate  # Linux/Mac
 # 或
 .venv\Scripts\activate     # Windows
+
+# 开发环境安装
+uv sync --group dev
 ```
 
 ## 项目结构
@@ -76,20 +80,23 @@ build-your-own-ai/
 │   ├── 22-视觉大模型与多模态理解/    # 视觉大模型与多模态理解
 │   ├── 23-Fine-tuning微调艺术/     # 微调技术与应用
 │   ├── 24-Fine-tuning实操/        # 微调实操案例
-│   └── 25-项目实战：企业知识库/     # 企业知识库实战
+│   ├── 25-项目实战：企业知识库/     # 企业知识库实战
+│   └── 26-项目实战：交互式BI报表/    # 交互式BI报表实战
 ├── practice/                       # 实践练习代码
-│   ├── 打卡-员工离职预测分析/       # 离职预测项目
-│   ├── Case-二手车价格预测-DataWhale/ # 原始版本
-│   ├── Case-二手车价格预测-P1/     # 优化版本(29个迭代)
-│   └── CASE-资金流入流出预测-P1/    # 时间序列项目
-├── notebook/                       # Jupyter笔记本
+│   ├── CASE-员工离职预测分析/       # 离职预测项目
+│   ├── CASE-二手车价格预测-DataWhale/ # 原始版本
+│   ├── CASE-二手车价格预测-P1/     # 优化版本(29个迭代)
+│   ├── CASE-资金流入流出预测-P1/    # 时间序列项目
+│   ├── CASE-股票分析助手/           # 股票分析项目
+│   └── CASE-ChatBI报表/           # ChatBI报表项目
+├── notebook/                       # Jupyter笔记本 (26个模块完整覆盖)
 ├── public/                         # 公共资源
 └── typings/                        # 类型定义
 ```
 
 ## 核心项目案例
 
-### 🚗 二手车价格预测 (practice/Case-二手车价格预测-P1)
+### 🚗 二手车价格预测 (practice/CASE-二手车价格预测-P1)
 
 这是一个完整的机器学习项目，展示了从数据预处理到模型优化的全流程：
 
@@ -104,7 +111,7 @@ build-your-own-ai/
 
 **运行方式**:
 ```bash
-cd practice/Case-二手车价格预测-P1
+cd practice/CASE-二手车价格预测-P1
 python model/modeling_v29.py  # 最新版本
 ```
 
@@ -126,7 +133,43 @@ python model/modeling_v29.py  # 最新版本
 - 季节性和趋势分析
 - 商业场景应用
 
-### 🎯 员工离职预测分析 (practice/打卡-员工离职预测分析)
+### 📊 交互式BI报表 (courseware/26-项目实战：交互式BI报表)
+
+最新的交互式BI报表项目，专注于构建智能化的商业数据分析系统：
+
+**项目特点**:
+- **ChatBI助手**: 基于自然语言的BI查询系统
+- **股票数据分析**: 股票历史价格、成交量、趋势分析
+- **SQL自动生成**: 智能SQL生成和数据查询
+- **数据可视化**: 动态图表生成和交互式展示
+- **预测分析**: ARIMA、Prophet等时间序列预测模型
+- **交互式界面**: WebUI界面，支持实时查询和展示
+
+**核心技术栈**:
+- **数据处理**: SQLAlchemy, pandas数据操作
+- **可视化**: matplotlib图表生成
+- **AI引擎**: qwen-agent智能助手
+- **数据库**: MySQL/SQLite股票数据存储
+- **预测模型**: ARIMA、Prophet时间序列分析
+- **Web界面**: 交互式查询和结果展示
+
+**应用场景**:
+- 股票价格查询和分析
+- 财务数据智能分析
+- 商业报表自动生成
+- 数据驱动的决策支持
+
+**运行方式**:
+```bash
+cd courseware/26-项目实战：交互式BI报表/【完成参考】CASE-ChatBI助手
+python stock_query_assistant-5.py  # 最新版本ChatBI助手
+
+# 或运行其他版本
+python stock_query_assistant.py    # 基础版本
+python stock_query_assistant-3.py  # 增强版本
+```
+
+### 🎯 员工离职预测分析 (practice/CASE-员工离职预测分析)
 
 员工离职预测分析项目，应用机器学习技术预测员工流失：
 
@@ -399,6 +442,7 @@ python 2-embedding-faiss-元数据.py
 9. **23-Fine-tuning微调艺术**: 参数高效微调与模型优化技术
 10. **24-Fine-tuning实操**: 深度实操案例与最佳实践
 11. **25-项目实战：企业知识库**: 企业级RAG系统实战开发
+12. **26-项目实战：交互式BI报表**: 交互式商业智能分析系统
 
 ## 开发规范
 
@@ -502,6 +546,17 @@ streamlit run rag_app.py
 python api_server.py
 ```
 
+### ChatBI报表系统
+```bash
+# 启动ChatBI助手
+cd courseware/26-项目实战：交互式BI报表/【完成参考】CASE-ChatBI助手
+python stock_query_assistant-5.py
+
+# 或运行不同版本
+python stock_query_assistant.py      # 基础版本
+python stock_query_assistant-3.py    # 增强版本
+```
+
 ## 数据处理最佳实践
 
 ### 数据加载
@@ -566,6 +621,39 @@ def ensemble_models(models, X, weights=None):
         weights = [1/len(models)] * len(models)
     
     return np.average(predictions, axis=0, weights=weights)
+```
+
+### BI数据分析
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+from sqlalchemy import create_engine
+import io
+import base64
+
+# BI报表数据处理
+def create_interactive_chart(data, chart_type='line'):
+    """创建交互式图表"""
+    plt.figure(figsize=(12, 6))
+    
+    if chart_type == 'line':
+        plt.plot(data.index, data.values)
+    elif chart_type == 'bar':
+        plt.bar(data.index, data.values)
+    
+    plt.title('BI数据分析图表')
+    plt.xlabel('日期')
+    plt.ylabel('数值')
+    plt.grid(True, alpha=0.3)
+    
+    # 转换为base64用于Web显示
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png', dpi=300, bbox_inches='tight')
+    buffer.seek(0)
+    image_base64 = base64.b64encode(buffer.getvalue()).decode()
+    plt.close()
+    
+    return f"data:image/png;base64,{image_base64}"
 ```
 
 ### 向量数据库操作
@@ -665,6 +753,13 @@ lora_config = LoraConfig(
 - 实施父页面检索增强上下文完整性
 - 采用思维链推理提升复杂问题解答能力
 
+### 7. BI报表系统优化
+- 数据库索引优化和查询缓存
+- 图表渲染性能优化和懒加载
+- 数据分页和虚拟滚动处理大数据集
+- 实时数据流和增量更新机制
+- Web界面响应式设计和用户交互优化
+
 ## 故障排除
 
 ### 常见问题
@@ -673,6 +768,7 @@ lora_config = LoraConfig(
 3. **模型过拟合**: 增加正则化或减少模型复杂度
 4. **环境问题**: 重新创建虚拟环境
 5. **Ollama连接失败**: 检查服务是否启动，端口是否正确
+6. **BI报表数据连接**: 检查数据库连接配置和SQLAlchemy设置
 
 ### 调试技巧
 ```python
@@ -699,6 +795,22 @@ snapshot = tracemalloc.take_snapshot()
 top_stats = snapshot.statistics('lineno')
 for stat in top_stats[:10]:
     print(stat)
+
+# BI系统调试
+import pandas as pd
+from sqlalchemy import create_engine
+
+# 测试数据库连接
+def debug_database_connection():
+    """调试数据库连接"""
+    try:
+        engine = create_engine('sqlite:///stock_data.db')
+        df = pd.read_sql("SELECT * FROM stock_price LIMIT 5", engine)
+        print(f"数据库连接成功，数据量: {len(df)}")
+        return True
+    except Exception as e:
+        print(f"数据库连接失败: {e}")
+        return False
 ```
 
 ## 贡献指南
@@ -716,7 +828,8 @@ for stat in top_stats[:10]:
 
 ## 新增功能与更新
 
-### 最新技术集成
+### 最新技术集成 (2025年11月更新)
+- **交互式BI报表**: 新增第26个模块，构建ChatBI智能助手系统
 - **大模型本地部署**: Ollama集成，支持本地运行DeepSeek等模型
 - **Agent开发**: Coze和Dify平台API集成，qwen-agent框架
 - **向量数据库**: FAISS和ChromaDB集成，支持ChatPDF等应用
@@ -733,6 +846,7 @@ for stat in top_stats[:10]:
 - **微调技术**: LoRA、QLoRA、PEFT等参数高效微调技术，MovieLens推荐系统案例
 - **深度微调实操**: Unsloth高效微调、GRPO强化学习、多模态微调等前沿技术
 - **企业知识库**: RAG冠军方案实战，企业级知识库系统构建与部署
+- **BI智能分析**: SQLAlchemy数据库操作、交互式图表、股票数据智能分析
 
 ### 项目优化成果
 - **二手车价格预测**: 从v1迭代到v29，MAE从1000+优化到487.71(V28最佳)，持续优化中
@@ -749,8 +863,25 @@ for stat in top_stats[:10]:
 - **视觉大模型与多模态理解**: 实现了VLM在保险和汽车领域的应用案例
 - **微调技术**: 从理论到实践的完整微调技术栈，包含LoRA、QLoRA、GRPO等前沿方法
 - **企业知识库**: 实现了基于RAG冠军方案的企业级知识库系统，支持生产环境部署
+- **ChatBI报表**: 新增交互式BI报表模块，支持股票数据智能分析和可视化
 - **竞赛优化**: 多个版本在阿里云天池等竞赛中获得优异成绩，技术实力持续提升
-- **技术扩展**: 项目从23个模块扩展到25个模块，技术覆盖范围不断扩大
+- **技术扩展**: 项目从25个模块扩展到26个模块，技术覆盖范围不断扩大
+
+### 最新模块详解：交互式BI报表 (模块26)
+
+**项目特色**:
+- **智能SQL生成**: 基于自然语言自动生成SQL查询语句
+- **股票数据处理**: 完整的股票历史价格数据存储和查询系统
+- **动态可视化**: 实时生成交互式图表和数据展示
+- **预测分析**: 集成ARIMA、Prophet等时间序列预测模型
+- **多版本演进**: 从基础版本到完整ChatBI助手的完整开发历程
+
+**技术亮点**:
+- **qwen-agent集成**: 智能对话式查询界面
+- **SQLAlchemy数据库操作**: 企业级数据库连接和管理
+- **matplotlib可视化**: 高质量图表生成和样式定制
+- **WebUI界面**: 现代化的用户交互体验
+- **时间序列预测**: 专业的金融数据预测算法
 
 ## 联系支持
 
@@ -761,4 +892,5 @@ for stat in top_stats[:10]:
 ---
 
 *本IFLOW指南将随项目发展持续更新，建议定期查看最新版本。*
-*最后更新: 2025年11月19日*
+*最后更新: 2025年11月24日*
+*新增模块26：交互式BI报表实战*
