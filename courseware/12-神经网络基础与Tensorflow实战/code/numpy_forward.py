@@ -14,7 +14,7 @@ def init_network():
 # sigmoid激活函数
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
-  
+
 # 恒等函数，作为输出层的激活函数
 def identity_function(x):
     return x
@@ -29,7 +29,7 @@ def forward(network, x):
     z1 = sigmoid(a1)
 
     # hidden layer 2
-    a2 = np.dot(z1, W2) + b2
+    a2 = np.dot(z1, W2) + b2˜
     z2 = sigmoid(a2)
 
     # output layer
