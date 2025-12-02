@@ -23,7 +23,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # 设置中文字体支持
-plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei']  # macOS使用Arial Unicode MS
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']  # macOS使用Arial Unicode MS
 plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 def get_project_path(*paths):

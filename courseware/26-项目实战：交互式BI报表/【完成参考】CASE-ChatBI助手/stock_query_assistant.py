@@ -14,7 +14,7 @@ import time
 import numpy as np
 
 # 解决中文显示问题
-plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'SimSun', 'Arial Unicode MS']
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
 
 # ====== 股票查询助手 system prompt 和函数描述 ======

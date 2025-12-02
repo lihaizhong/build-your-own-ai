@@ -16,7 +16,7 @@ def plot_learning_curve_from_data(csv_path, save_path, model_version="V6"):
     data = pd.read_csv(csv_path)
     
     # 设置中文字体
-    plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei']
+    plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
     plt.rcParams['axes.unicode_minus'] = False
     
     # 绘制学习曲线

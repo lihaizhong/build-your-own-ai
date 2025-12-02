@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # 设置matplotlib支持中文显示
-plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']  # 用来正常显示中文标签
 plt.rcParams['axes.unicode_minus'] = False    # 用来正常显示负号
 
 def run_script(script_name):

@@ -5,7 +5,7 @@ from matplotlib.patches import FancyBboxPatch
 import matplotlib.patheffects as path_effects
 
 # 设置中文字体和样式
-plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans']
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
 
 def sigmoid(x):

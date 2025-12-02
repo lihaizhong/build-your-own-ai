@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib as mpl
 
 # 设置全局字体，解决中文显示问题
-plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'SimSun', 'Arial Unicode MS']  # 优先使用的字体列表
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']  # 优先使用的字体列表
 plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
 
 def read_excel_data(file_path):

@@ -24,7 +24,7 @@ def load_learning_curve_data(version):
 def plot_learning_curve_comparison():
     """绘制各版本模型学习曲线对比图"""
     # 设置中文字体
-    plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei']
+    plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
     plt.rcParams['axes.unicode_minus'] = False
     
     # 创建图表
@@ -93,7 +93,7 @@ def generate_gap_analysis():
             print(f"{version.upper()}版本最后一点MAE差距: {gap:.2f}")
     
     # 绘制差距对比图
-    plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei']
+    plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
     plt.rcParams['axes.unicode_minus'] = False
     
     plt.figure(figsize=(10, 6))

@@ -29,7 +29,7 @@ def forward(network, x):
     z1 = sigmoid(a1)
 
     # hidden layer 2
-    a2 = np.dot(z1, W2) + b2˜
+    a2 = np.dot(z1, W2) + b2
     z2 = sigmoid(a2)
 
     # output layer

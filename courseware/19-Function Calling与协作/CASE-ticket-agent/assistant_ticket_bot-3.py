@@ -14,7 +14,7 @@ import time
 import numpy as np
 
 # 解决中文显示问题
-plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'SimSun', 'Arial Unicode MS']  # 优先使用的中文字体
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']  # 优先使用的中文字体
 plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 # 定义资源文件根目录

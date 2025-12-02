@@ -22,7 +22,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # 设置中文显示
-plt.rcParams['font.sans-serif'] = ['SimHei']
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
 
 def load_data():

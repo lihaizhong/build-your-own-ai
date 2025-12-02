@@ -53,7 +53,7 @@ def load_predictions():
 
 def plot_prediction_distribution(train_data, test_predictions, save_path):
     """绘制训练集真实值和测试集预测值的分布对比图"""
-    plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei']  # 用来正常显示中文标签
+    plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']  # 用来正常显示中文标签
     plt.rcParams['axes.unicode_minus'] = False    # 用来正常显示负号
     
     fig, axes = plt.subplots(1, 2, figsize=(15, 6))
@@ -78,7 +78,7 @@ def plot_prediction_distribution(train_data, test_predictions, save_path):
 
 def plot_prediction_scatter(train_data, test_predictions, save_path):
     """绘制预测值散点图"""
-    plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei']
+    plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
     plt.rcParams['axes.unicode_minus'] = False
     
     # 创建价格分段用于颜色区分
@@ -136,7 +136,7 @@ def calculate_statistics(train_data, test_predictions):
 
 def plot_learning_curve(train_df, save_path):
     """绘制学习曲线"""
-    plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei']
+    plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
     plt.rcParams['axes.unicode_minus'] = False
     
     # 准备特征

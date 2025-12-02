@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 设置中文字体，解决中文显示乱码问题
-plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'DejaVu Sans']  # 设置中文字体
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']  # 设置中文字体
 plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 # n为样本大小，d_in为输入维度,h为隐藏层维度,d_out为输出维度

@@ -6,7 +6,7 @@ import re
 pd.options.display.max_columns = 30
 import matplotlib.pyplot as plt
 # 支持中文
-plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']  # 用来正常显示中文标签
 df = pd.read_csv('Seattle_Hotels.csv', encoding="latin-1")
 # 数据探索
 print(df.head())
