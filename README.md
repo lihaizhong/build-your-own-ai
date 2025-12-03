@@ -12,10 +12,49 @@
 
 - [uv 教程](https://hellowac.github.io/uv-zh-cn/)
 - [使用 uv 管理 Python 環境](https://dev.to/codemee/shi-yong-uv-guan-li-python-huan-jing-53hg)
+
+---
+
 - [Python3 教程](https://www.runoob.com/python3/python3-tutorial.html)
-- [PyTorch 教程](https://pytorch.org/)
-- [Transformers 教程](https://huggingface.co/docs/transformers/v4.56.0/zh/index)
+
+---
+
+- [Numpy 教程](https://www.runoob.com/numpy/numpy-tutorial.html)
+- [Numpy 官方文档](https://numpy.org/doc/stable/user/index.html)
+- [Numpy 中文文档](https://numpy.com.cn/doc/2.3/index.html)
+
+---
+
 - [Pandas 教程](https://www.runoob.com/pandas/pandas-tutorial.html)
+- [Pandas 官方文档](https://pandas.pydata.org/docs/)
+
+---
+
 - [Matplotlib 教程](https://www.runoob.com/matplotlib/matplotlib-tutorial.html)
+- [Matplotlib 官方文档](https://matplotlib.org/stable/users/index)
+
+---
+
 - [SciPy 教程](https://www.runoob.com/scipy/scipy-tutorial.html)
-- [Numpy 教程](https://numpy.com.cn/doc/2.3/index.html)
+- [SciPy 官方文档](https://docs.scipy.org/doc/scipy/tutorial/index.html)
+
+---
+
+- [Sklearn 教程](https://www.runoob.com/sklearn/sklearn-tutorial.html)
+- [Sklearn 官方文档](https://scikit-learn.org/stable/user_guide.html)
+
+---
+
+- [Tensorflow 教程](https://www.runoob.com/tensorflow/tensorflow-tutorial.html)
+- [Tensorflow 官方文档](https://www.tensorflow.org/?hl=zh-cn)
+
+---
+
+- [PyTorch 教程](https://www.runoob.com/pytorch/pytorch-tutorial.html)
+- [PyTorch 官方文档](https://pytorch.org)
+
+---
+
+- [NLP 教程](https://www.runoob.com/nlp/nlp-tutorial.html)
+- [Transformers 教程](https://huggingface.co/docs/transformers/v4.56.0/zh/index)
+

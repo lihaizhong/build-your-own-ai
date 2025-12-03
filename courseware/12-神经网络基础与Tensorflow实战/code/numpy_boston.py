@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd  # 新增pandas导入
 
 # 数据加载（从housing.csv读取，无表头，空格分隔）
-data = pd.read_csv('housing.csv', header=None, delim_whitespace=True)
+data = pd.read_csv('housing.csv', header=None, sep='\s+')
 X = data.iloc[:, :-1].values  # 前13列为特征
 y = data.iloc[:, -1].values  # 最后一列为目标
 # 将y转为列向量，方便后续矩阵运算
