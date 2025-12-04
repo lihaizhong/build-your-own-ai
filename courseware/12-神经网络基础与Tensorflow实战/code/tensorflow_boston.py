@@ -14,10 +14,12 @@ print(y.shape)
 
 # 将y转换形状
 y = y.reshape(-1, 1)
+print(y.shape)
 
 # 数据规范化
 ss_input = MinMaxScaler()
 x = ss_input.fit_transform(x)
+print(x)
 
 # 划分训练集和测试集
 train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=0.25)

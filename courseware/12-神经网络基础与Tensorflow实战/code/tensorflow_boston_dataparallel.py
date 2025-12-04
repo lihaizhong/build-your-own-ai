@@ -14,10 +14,12 @@ print(y.shape)
 
 # 将y转换形状
 y = y.reshape(-1, 1)
+print(y.shape)
 
 # 数据规范化
 ss_input = MinMaxScaler()
 x = ss_input.fit_transform(x)
+print(x)
 
 # 划分训练集和测试集
 train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=0.25)
@@ -29,12 +31,12 @@ print('设备数量:', strategy.num_replicas_in_sync)
 with strategy.scope():
     # 构建神经网络（TensorFlow Sequential API）
     model = tf.keras.Sequential([
-        tf.keras.layers.Dense(10, activation='relu', input_shape=(13,)),
+        tf.keras.layers.Input(shape=(13,)),
+        tf.keras.layers.Dense(10, activation='relu'),
         tf.keras.layers.Dense(1)
     ])
     # 定义损失函数和优化器
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.01),
-                  loss='mse')
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.01),loss='mse')
 
 # 训练
 max_epoch = 300
