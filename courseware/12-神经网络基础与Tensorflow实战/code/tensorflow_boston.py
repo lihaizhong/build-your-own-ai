@@ -24,7 +24,8 @@ train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=0.25)
 
 # 构建神经网络（TensorFlow Sequential API）
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(10, activation='relu', input_shape=(13,)),
+    tf.keras.layers.Input(shape=(13,)),
+    tf.keras.layers.Dense(10, activation='relu'),
     tf.keras.layers.Dense(1)
 ])
 
