@@ -30,8 +30,7 @@ model = tf.keras.Sequential([
 ])
 
 # 定义损失函数和优化器
-model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.01),
-              loss='mse')
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.01), loss='mse')
 
 # 训练
 max_epoch = 300
