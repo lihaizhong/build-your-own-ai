@@ -1,0 +1,87 @@
+Q：大模型内部是怎么实现记忆的？ 这块需要看什么文章
+
+LLM 本身没有记忆，需要通过 memory模块，比如在 LangChain中有 memory
+在 Qwen-Agent中也有memory的实现
+
+Q：Top P是什么阶段设置的？
+在大模型的API中
+
+跑代码经常报错：not module named dashscope 该怎么办？
+输入cmd 进入到命令行
+然后 pip install dashscope -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+比较常见的model设置：
+qwen-flash, qwen-turbo-latest, deepseek-v3
+
+role:
+system 系统
+user 用户
+assistant 助手回复
+
+Q：macbook打开自动就是正向的。没有找到api key输入的地方
+jupyter 是有记忆的，你能看到 上次我运行的结果。
+但是如果你重新运行，可能会报错（因为你没有配置 API KEY）
+
+anaconda
+https://bailian.console.aliyun.com/?tab=model#/model-market/detail/qwen3?modelGroup=qwen3
+
+response= {"status_code": 200, "request_id": "53a21700-8759-9ef5-b0b9-77c9a4b4c492", "code": "", "message": "", "output": {"text": null, "finish_reason": null, "choices": [{"finish_reason": "function_call", "message": {"role": "assistant", "content": "", "function_call": {"name": "get_current_weather", "arguments": "{\"location\": \"大连, 辽宁\", \"unit\": \"celsius\"}"}}}]}, "usage": {"input_tokens": 206, "output_tokens": 29, "total_tokens": 235, "prompt_tokens_details": {"cached_tokens": 0}}}
+message= {"role": "assistant", "content": "", "function_call": {"name": "get_current_weather", "arguments": "{\"location\": \"大连, 辽宁\", \"unit\": \"celsius\"}"}}
+arguments= {'location': '大连, 辽宁', 'unit': 'celsius'}
+
+Q: 请问trae 还有阿里那个Qoder后面会涉及到嘛 有没有不用魔法但是能用cladu
+的ai代码助手呀
+cursor, trae, lingma
+免费：trae, lingma, kilo, codebuddy
+
+Q：运维分析中，大模型可以直接调用函数，查硬件属性吗？或如何实现调用硬件函数呢？
+大模型的作用是理解，和调用
+function 这个函数可以访问到硬件的资源
+
+Q: 老师这些代码可以用Pycharm或者vs code运行吗
+可以的
+
+
+deepseek怎么获取密钥？
+https://bailian.console.aliyun.com/?tab=model#/api-key
+获取阿里云百炼的API KEY即可，里面可以用deepseek
+
+
+Q：怎样调用多个函数呢
+定义多个函数
+
+Q：大模型怎么知道调用什么函数，如果不是在代码里面写死。比如chatgpt调用哪些函数，也是代码里写死吗？还是有个函数列表，他自己知道调用哪个函数？
+
+函数是注册给大模型
+
+Q：在trae上跑通了也是一样的学习效果是吗？不一定要在jupyter上是吗
+是的
+
+函数参数可以是自定义数据类型吗
+
+Q：函数是固定的吗，比如我注册时把tools换成aabb,也能实现调用吗
+函数名称 是自己启
+
+Q：环境变量定义后代码后密钥是怎么填？
+dashscope.api_key = os.getenv("DASHSCOPE_API_KEY")
+
+跑通 + AI改写
+
+Q：真实场景里面，像是天气函数的实现也是调用付费的天气api吗？ 那这里面还要做接口的管理
+一般可以调用第三方的服务
+
+Q：今天的作业主要就是部署环境和跑通代码么
+是的，可以本地跑通
+
+Q：刚刚说的天气API服务 是模型所在的地方去调用的吗？
+可以调用 墨迹天气MCP
+
+Q：dashcope 的key是千问，怎么model 是deepseek?
+是的，都有的
+
+https://help.aliyun.com/zh/model-studio/use-qwen-by-calling-api?disableWebsiteRedirect=true
+
+现在这样调用
+API 和我们直接。。。 => API 调用更灵活，而且如果你们公司有业务需求需要批量用到大模型，没理由说让业务人员去打开deepseek 去问吧
+
+https://tiktokenizer.vercel.app/ 

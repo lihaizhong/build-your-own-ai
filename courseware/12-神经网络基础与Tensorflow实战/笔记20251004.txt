@@ -1,0 +1,50 @@
+权重系数 是神经网络要学习的参数，一开始初始化的时候，几乎为0
+我们可以设定一个网络结构，比如 这里是一个4层的神经网络，神经元数量为 2,3,2,2
+
+我们有3个激活函数，分别是 sigmoid, tanh, relu，帮我在一张图中画出这3个函数的曲线，编写Python
+
+这3个激活函数，通过一个示例来进行比较，更好的理解这3个激活函数的作用，帮我制作可视化svg
+
+GPU VS CPU
+GPU一般会有1000+个核
+CPU 8核
+核是并行处理单元
+
+1、使用Tensorflow构建 隐藏层有10个神经元的浅层神经网络，对Boston房价进行预测，编写 .py
+2、绘制一张波士顿房价预测的流程图svg
+
+scikit-learn  是因为伦理问题，没有这个数据集了
+但是keras下面还有这个数据集
+
+npm install -g @wucai/wucai-code
+
+五彩在windows10系统兼容性好像不太好，复制黏贴不上
+
+vibe working, 氛围工作，心流工作
+=> 每个人都是全栈工程师
+
+产品经理，项目经理，
+
+国外：Cursor, Claude Code, Codex 
+国内：Trae, CodeBuddy, Lingma, Qoder （客户端）
+Wucai （命令行） 使用Qwen OAuth 每天有2000次的免费交互
+
+Qwen3-Coder-30B-A3B
+开发规范 MCP
+
+Q：不同的场景的神经网络构建的思考起点是什么？而不是说利用已有的神经网络，自己只是来训练。
+一般个人可以搭建一些 浅层的神经网络
+对于复杂的神经网络，最好用现成的网络结构，比如 ResNet
+
+Q: Qwen3-Coder-30B-A3B？
+1、在modelscope上下载参数 https://modelscope.cn/models/Qwen/Qwen3-Coder-30B-A3B-Instruct
+2、使用vllm 进行部署，得到一个url
+可以通过这个url，访问该模型
+
+
+
+打卡：
+方法1：直接截屏发微信群
+方法2：使用wucai，选择打卡，会自动创建打卡文件夹，记录 AI对话
+/class 提交打卡的时候，会将 结果图片 + AI对话 上传
+

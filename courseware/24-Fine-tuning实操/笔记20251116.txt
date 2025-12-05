@@ -1,0 +1,364 @@
+Q：老师好！我按照要求安装了magic-pdf后，运行magic-pdf命令显示”'magic-pdf' 不是内部或外部命令…
+也就是没有生成magic-pdf可执行文件。可能是什么原因？
+就是按这个ppt安装的
+
+
+Q：老师我在本地跑langchain的时候，发现架构发生了很大的变化，代码也需要做比较大的改写
+
+Q：老师，这几节课要用到的gpu,AUTdl上需要怎样的配置？
+
+
+老师，我今天看到智识神工有"书山"这一功能，五彩是不是也有类似的功能？
+
+
+智能客服 => RAG
+微调
+
+
+是的，Qwen在识别轮毂的效果很一般，不准
+
+Q：没问清楚，缺乏背景知识，能力不足，怎么精准判断这3种情况
+依次执行，先用简单的方法来试
+
+
+Q：rag和微调什么区别呀，不都是喂给大模型数据么？
+模型的参数权重是否发生变化
+RAG => 参数权重是不变的
+微调 => 改变模型的参数权重
+
+
+1）S1模型的基座： Qwen2.5-32B-Instruct
+2）训练数据：59K => 1K
+数据标注：Gemini 2.0 Flash Thinking
+<Q, A>
+query => Gemini 
+=>
+<think> </think>
+<answer> </answer>
+
+预训练： 给它互联网上的海量数据 => 学习基本的句子补全能力
+Instruct：根据我们的问题，回答
+
+
+用户的问题：帮我写一个二分法 .py
+你需要按照以下的格式进行回答：
+<think>你的推理过程 </think>
+<answer>你的答案</answer>
+
+26分钟，50美金
+
+https://modelscope.cn/datasets/simplescaling/s1K
+https://huggingface.co/datasets/simplescaling/s1K-1.1
+
+Qwen2.5-32B 非推理模型，掌握 <think> </think>
+S1 => 推理模型
+
+Unsloth
+RAG：给客户做营销，RAG可以提供一些客户的基本信息
+微调大模型：营销对话能力增强
+
+Q：我觉得1000个问题的内容不重要，是不是教给这个小模型思考和回答问题的方式更重要
+《textbook are all you need》
+
+Q：直接拿 gemini 的<think>和<answer> 给自己的模型？
+
+Q：在反作弊领域让大模型辅助审核判定，适合rag还是微调
+先用RAG => 如果能解决，OK
+如果不行 => 大模型的能力问题，通过更多的垂直数据，进行模型微调
+
+https://modelscope.cn/datasets/AI-ModelScope/alpaca-cleaned
+SFT（Q, A）人工标注，通过监督学习的方法进行训练
+
+
+使用autodl.com 的时候，模型要下载到 autodl-tmp （相当于你的D盘，而不是C盘）
+from modelscope import snapshot_download
+model_dir = snapshot_download('iic/gte_Qwen2-1.5B-instruct', cache_dir='/root/autodl-tmp/models')
+
+model, tokenizer（分词，AI大模型的字典，人的文字 => 计算里面的ID编码
+model：4B的参数
+r LoRA秩，建议使用8、16、32、64、128
+
+batch_size：一次GPU的计算，会同时运行 batch_size 个数据
+        max_steps = 60,  # 最大训练步数
+        learning_rate = 2e-4,  # 学习率
+2*10^(-4）= 0.0004
+
+
+
+31.5M/3.86G [03:19<6:46:46, 157kB/s model下载速度很慢，各位怎么样
+
+
+Q：如何判断训练出的模型的质量，如果改进呢？
+测试集<100>
+Loss
+
+
+FastLanguageModel是什么
+
+
+Q：微调前后用啥比对微调的结果
+
+
+
+训练好后，如何使用微调后的模型
+    from unsloth import FastLanguageModel
+    model, tokenizer = FastLanguageModel.from_pretrained(
+        model_name = "lora_model",  # 训练时使用的模型
+        max_seq_length = max_seq_length,
+        dtype = dtype,
+        load_in_4bit = load_in_4bit,
+    )
+    FastLanguageModel.for_inference(model)  # 启用原生2倍速推理
+
+
+Q：这里的数据集的input为啥都是空的
+有些不为空
+
+能看一下没微调之前是怎么输出的吗
+
+没有对比，如何知道效果
+
+@Data_数据 这里面有6个数据集，我想按照 @Qwen2_5_(7B)_Alpaca.py 改成写医疗领域的垂直模型的训练，帮我编写新的Python
+
+max_steps = -1
+num_train_epochs = 3 # 如果你使用的是  epochs，需要将 max_steps设置为-1
+
+Q：不知道怎么下载到autoDL
+from modelscope import snapshot_download
+model_dir = snapshot_download('Qwen/Qwen2.5-7B-Instruct', cache_dir='/root/autodl-tmp/models')
+
+Q：通过微调，同一领域的知识学习，有没有可能对一些问题集效果增强，另一些效果反而变差，老师有没有碰到类似案例，如何优化？
+会的
+可以训练数据进行配比，比如 中文医疗大模型，那么 中文医疗的数据 + 通用数据 = 1:1
+
+
+Q：loss是什么？
+
+
+老师，在算这个loss的时候是不是得有一个标准答案，y‘-y来计算，那就是说有一个标准答案？
+
+
+loss 收敛不够需要调整代码吗
+
+
+如何将已开的内核关掉以突出显存？
+
+
+
+Q：“合同分析”、“360度客户画像分析”这两个场景适合模型微调吗？
+如果有新的领域知识，可以进行模型微调
+
+Q：Qwen/Qwen2.5-7B与unsloth/Qwen2.5-7B有啥区别吗？
+模型都是 Qwen/Qwen2.5-7B
+
+
+微调后的插件，怎么引用到阿里百炼或者coze
+
+
+Q：微调有可能会降智，RAG听起来没有负面影响，为什么还一定要微调，能力不足能举个例子吗
+医学能力 要不要学？
+如果你是一个医学专业毕业的学生，那么再回答 医学问题的时候，得分是否会更高
+
+陈博士:21:18:04
+from modelscope import snapshot_download model_dir = snapshot_download('Qwen/Qwen2.5-7B-Instruct', cache_dir='/root/autodl-tmp/models')
+
+
+Q：老师，课上的例子都是很顺利完成微调的例子，你可以给我讲一下微调过程中需要注意写什么吗？哪些环节容易出错？
+1）unsloth 跑通后，可以直接复用
+2）准备数据集
+统一格式，比如
+    {
+        "instruction": "",
+        "input": "",
+        "output": "" 
+     }
+
+数据质量，Garbage in Garbage out
+Gemini, 其他大模型帮你筛选数据，帮你标注数据
+多样性
+
+3）medical_prompt = """你是一个专业的医疗助手。请根据患者的问题提供专业、准确的回答。
+
+### 问题：
+{}
+
+### 回答：
+{}"""
+
+
+Q：假如我微调了，如何证明更好了，假如测试跟我说，测试自己出了五个问题，回答结果并没有明显更好，我应该如何回怼？
+金标准，准备一个数据集（多样性，难度）
+
+Q：中文医疗示例感觉使用RAG也可以实现吧？补全大模型的知识不是也能回答相关的问题吗
+RAG可以，但是RAG不能得分高
+微调是系统的学习，学习更全面的知识
+
+Q：关于数据配比通用知识，这个通用知识数据网上也有开源的数据可用吗？
+1:1, 4:1, 9:1
+
+
+Q：loss收敛不够就是看到刚才的中间结果，loss来回起伏，有时候变小，有时候变大，并没有大趋势地往变小地方向走
+
+
+Q：我们做微调不就是想让微调的模型因为新的数据的进入，在某方面的能力超过通用模型吗。如果再用通用模型来标注的话，能达到这个目的吗？
+我们一般用更好的大模型 作为老师，可以进行标注
+我们训练的模型可能是小模型
+
+
+<reasoning></reasoning>
+<answer></answer>
+
+方法1：使用Gemini进行标注，得到以下格式的 训练数据
+<reasoning></reasoning>
+<answer></answer>
+=> 进行SFTrainer
+
+方法2：没有人工的标注，只有 <Q, A>
+需要让AI通过强化学习，找到 <reasoning></reasoning>的规律
+GRPO强化学习
+
+DPO，GRPO
+
+Q：老师文件夹的数据怎么传到autodl
+打包成zip => 上传到autodl，再解压
+
+huggingface peft
+
+Q：今天说的微调训练参数可以再讲一下吗，尤其控制训练时间的参数，因为跑代码经常出错，别跑了几个小时白跑了
+save_steps = 250
+    learning_rate = 5e-6,  # 学习率
+
+Q：如何部署
+Step1，加载模型到GPU （加载 model, tokenizer）
+    from unsloth import FastLanguageModel
+    model, tokenizer = FastLanguageModel.from_pretrained(
+        model_name = "lora_model_medical",  # 训练时使用的模型
+        max_seq_length = max_seq_length,
+        dtype = dtype,
+        load_in_4bit = load_in_4bit,
+    )
+    FastLanguageModel.for_inference(model)  # 启用原生2倍速推理
+
+vllm
+
+Step2，flask或者 fastapi对接口接口封装
+/v1 (POST 传入query)
+# 模型推理示例
+def generate_medical_response(question):
+    """生成医疗回答"""
+    FastLanguageModel.for_inference(model)  # 启用原生2倍速推理
+    inputs = tokenizer(
+        [medical_prompt.format(question, "")],
+        return_tensors="pt"
+    ).to("cuda")
+    
+    from transformers import TextStreamer
+    text_streamer = TextStreamer(tokenizer)
+    _ = model.generate(
+        **inputs,
+        streamer=text_streamer,
+        max_new_tokens=256,
+        temperature=0.7,
+        top_p=0.9,
+        repetition_penalty=1.1
+    )
+
+
+
+Q：让gemini标注 为啥不直接调用gemini是做实际的业务 还要自己微调训练吗
+
+
+Q：第一个微调，像李飞飞，如果以后有一个更好数据集比那1000个更好的，有更好的模型gemini5.0. 可以提供更好的推理标注，我的模型是不是也可以这样更新？
+是的，使用SFT的性价比还是比较高
+
+Q：unsloth的框架需要安装到autoDL上，在autoDL上跑老师给的代码
+
+
+Q：老师中间终止训练，如果测试结果不好，想要继续后面的轮次，还可以从中断处继续训练吗？还是要从头开始？
+中间，save_steps = 250
+从中间步骤的模型保存结果中进行加载
+# 加载预训练模型
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name = "/root/autodl-tmp/models/model_save_中间结果",
+
+
+
+这个论文在哪里找
+https://arxiv.org/pdf/2402.03300
+
+
+
+Q：sft 和grpo 什么场景适用
+SFT 监督微调，如果你有标准答案了，就直接用SFT，速度快，上限相对不高
+GRPO 强化学习，如果你没有标准答案，让AI自己学习，速度慢，上限高
+
+gemini 官方生成图片平均时长在1分钟以上， 我们接了一个三方的 只需要0.3分钟生成gemini falsh image
+
+
+Q：陈博，如果本地部署的模型微调了，如何调用呢？
+用unsloth加载已经训练好的微调模型，比如 lora_model_medical
+    from unsloth import FastLanguageModel
+    model, tokenizer = FastLanguageModel.from_pretrained(
+        model_name = "lora_model_medical",  # 训练时使用的模型
+        max_seq_length = max_seq_length,
+        dtype = dtype,
+        load_in_4bit = load_in_4bit,
+    )
+    FastLanguageModel.for_inference(model)  # 启用原生2倍速推理
+
+
+
+
+https://modelscope.cn/models/Qwen/Qwen2.5-VL-3B-Instruct
+
+
+
+Q：huggingface下载太慢了，Qwen2___5-7B-Instruct有人下好可以发一下吗？或者老师可以放在网盘里吗？
+modelscope
+
+Q：做测试，监控墨水屏设备页面根据下发模板渲染页面的效果，一次下发到一批设备，希望能够发现页面异常的问题，有什么好用的模型吗？
+qwen-vl, yolo
+
+Q：微调模型可能不是一次就能训练出来效果比较好的模型，那如果改参数迭代优化呢？什么情况改什么参数做迭代呢？可以讲一下你微调过程的经验吗？
+纯英文模型 => 学习中文的能力
+Step1，准备数据集 4(英文):1（中文）=> 新的数据集，中文作为辅助
+Step2，准备数据集 1(英文):1（中文）
+learning_rate = 1e-4, 1e-5
+epochs = 4-6个
+batch_size = 只要显存能放下，尽可能大，一般是2的倍数
+
+老师，其实微调最重要的就是如何调整参数，了解参数的含义，可以着重讲一下各个参数的含义吗？什么时候需要调整什么参数？
+max_seq_length = 2048
+load_in_4bit = True
+r = 16, # LoRA
+
+
+Q：微调后的模型保存到本地，相较于微调前的基座模型多了什么内容（本地）
+大概多了1%的模型参数，就是 LoRA的参数（A和B 两个矩阵的参数）
+
+
+Q：陈博士，如果是纯英文模型训练中文语料，我认为需要更改词汇表
+是的
+
+Q：需要做一个交通大模型，识别高速公路上是否出现事故，这个训练过程如何实现，训练数据是一些标注后的图片吗
+SFT，需要进行图标的标注
+qwen-vl 进行标注，人工进行修正
+
+
+
+Q：SFT训练后的模型，是不是模型总是回答训练时用的Answer，我的意思一字不差的输出给用户？还是每次输出的回答大致意思一致，措辞不一样？
+会每次不一样
+
+
+instruction, input, output
+
+图片人工标注需要用什么软件，如果你做的是缺陷检测 LabelImg
+https://github.com/HumanSignal/labelImg
+
+我看有些博主弄激光打蚊子，采集各种蚊子图片，就是用来训练大模型的吧？ 不是yolo那种吧？ 还有就是那种自动填写验证码的，也是一样的大模型学习吧？不是yolo吧
+
+在做一个生成小学数学模型题目的模型时，推理模型可以解决答案正确性问题，但难以解决题目出得场景是否符合实际的常识性问题，这个可以如何优化
+正确性 + 合理性
+
+
+

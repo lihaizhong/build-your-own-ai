@@ -1,0 +1,251 @@
+npm install -g @wucai/wucai-code@0.0.28
+
+
+1、公司的IT会部署，直接使用
+2、使用 https://cloud.dify.ai/apps
+3、自己用docker部署，然后启动
+
+https://www.tavily.com/
+
+
+qwen-turbo-latest
+qwen-flash
+
+黄金涨跌和哪些因素有关？
+
+2核 4G
+推荐：4核 8G以上
+
+Dify 和  Coze相比：
+1）API获取方便
+2）自动生成网页URL
+https://udify.app/workflow/NGBIAH5RuEDwYHsA
+
+
+知识库：
+1）chunk 切片 => chunk_size=1024, overlap =50
+2）Embedding模型
+3）Rerank模型
+
+
+
+你是一个智能信息提取助手。
+你的任务是从用户提供的文本中准确地提取以下信息：
+1. user_id: 用户的唯一标识符。
+2. event_time: 事件发生的时间，改成日期格式
+3. event_type: 事件类型，包括：查看持仓、浏览产品、搜索、登录、委托交易、推送点击、查看行情、集合竞价、咨询客服、风险警示、查看收益、浏览广告、推送未读。
+
+请严格按照以下格式输出你提取到的信息，即
+user_id: {user_id}, event_time: {event_time}, event_type: {event_type}
+
+如果某个信息在用户文本中没有找到，请将对应的值设为 null
+
+# 角色定位: 
+- 专业投诉处理顾问
+# 背景: 
+- 需通过共情语言安抚客户情绪，积极解决问题。
+- 需核查关键信息，确保问题准确定位。
+# 目标: 
+1. 回应话术：以共情安抚客户，表达积极解决态度。
+2. 反馈你从数据库中查询到的情况（你需要筛选使用与该用户user_id匹配的信息，并告诉用户相关的情况，说明具体的event_detail。与该user_id无关信息不要回答）
+3. 针对用户的问题给出建议
+4. 回答文字简洁，通常不超过200字
+# 以下是从 用户数据库中 检索出的信息，需要筛选对应的user_id数据
+{{#context#}}
+
+
+我的用户id：7501690985227960354，我在5月4日登录了软件，但是没有成功
+
+
+user_id: 7501690985227960354, event_time: 2024-05-04, event_type: 登录
+
+{
+  "result": [
+    {
+      "metadata": {
+        "_source": "knowledge",
+        "dataset_id": "447bd626-c371-4a59-adb5-dcc9e35664cd",
+        "dataset_name": "用户行为",
+        "document_id": "47e9ecf6-7518-4f2d-8c6d-41d938e3747c",
+        "document_name": "user_behavior_event.xlsx",
+        "data_source_type": "upload_file",
+        "segment_id": "10617f0e-94fc-468a-91d7-a7244d4084b0",
+        "retriever_from": "workflow",
+        "score": 0.48776539620836223,
+        "child_chunks": [],
+        "segment_hit_count": 1,
+        "segment_word_count": 107,
+        "segment_position": 7,
+        "segment_index_node_hash": "d593c9268b847db64605dce168471eb49b5e76182037f75921bbcf4dda1c37c1",
+        "doc_metadata": null,
+        "position": 1
+      },
+      "title": "user_behavior_event.xlsx",
+      "content": "event_time\":\"2025-05-04 10:05:00\";\"event_type\":\"登录\";\"event_detail\":\"面容ID登录\";\"user_id\":\"7501690985227960354\""
+    },
+    {
+      "metadata": {
+        "_source": "knowledge",
+        "dataset_id": "447bd626-c371-4a59-adb5-dcc9e35664cd",
+        "dataset_name": "用户行为",
+        "document_id": "47e9ecf6-7518-4f2d-8c6d-41d938e3747c",
+        "document_name": "user_behavior_event.xlsx",
+        "data_source_type": "upload_file",
+        "segment_id": "825a2d53-17ed-4703-a62b-e9ff6a44ca9f",
+        "retriever_from": "workflow",
+        "score": 0.39526624252897435,
+        "child_chunks": [],
+        "segment_hit_count": 1,
+        "segment_word_count": 114,
+        "segment_position": 14,
+        "segment_index_node_hash": "e8066dfd272500f8c31ab022c7440dce035103079af45c5ec1cf371ee7141566",
+        "doc_metadata": null,
+        "position": 2
+      },
+      "title": "user_behavior_event.xlsx",
+      "content": "event_time\":\"2025-05-04 18:30:00\";\"event_type\":\"登录\";\"event_detail\":\"密码登录（上次登录7天前）\";\"user_id\":\"7501690675818315816\""
+    },
+    {
+      "metadata": {
+        "_source": "knowledge",
+        "dataset_id": "447bd626-c371-4a59-adb5-dcc9e35664cd",
+        "dataset_name": "用户行为",
+        "document_id": "47e9ecf6-7518-4f2d-8c6d-41d938e3747c",
+        "document_name": "user_behavior_event.xlsx",
+        "data_source_type": "upload_file",
+        "segment_id": "10a58db8-80a0-46d9-8a04-4fd8ec9d9708",
+        "retriever_from": "workflow",
+        "score": 0.377418608402578,
+        "child_chunks": [],
+        "segment_hit_count": 1,
+        "segment_word_count": 110,
+        "segment_position": 19,
+        "segment_index_node_hash": "067c9dae129e6b5f735918087c4eff79fc07eb901c2713e6fcacd87af2059f61",
+        "doc_metadata": null,
+        "position": 3
+      },
+      "title": "user_behavior_event.xlsx",
+      "content": "event_time\":\"2025-05-04 09:30:00\";\"event_type\":\"登录\";\"event_detail\":\"通过手机验证码登录\";\"user_id\":\"7501691024880730112\""
+    },
+    {
+      "metadata": {
+        "_source": "knowledge",
+        "dataset_id": "447bd626-c371-4a59-adb5-dcc9e35664cd",
+        "dataset_name": "用户行为",
+        "document_id": "47e9ecf6-7518-4f2d-8c6d-41d938e3747c",
+        "document_name": "user_behavior_event.xlsx",
+        "data_source_type": "upload_file",
+        "segment_id": "e7273d70-9348-4d6c-935f-fdca0e026a96",
+        "retriever_from": "workflow",
+        "score": 0.3696632621900495,
+        "child_chunks": [],
+        "segment_hit_count": 1,
+        "segment_word_count": 110,
+        "segment_position": 18,
+        "segment_index_node_hash": "8f6cb94cab6612422a79d41619d6da7b7775e0d6946301ec6fda95f560fb4e2c",
+        "doc_metadata": null,
+        "position": 4
+      },
+      "title": "user_behavior_event.xlsx",
+      "content": "event_time\":\"2025-05-06 21:00:00\";\"event_type\":\"登录\";\"event_detail\":\"快捷登录后直接退出\";\"user_id\":\"7501690675818315816\""
+    }
+  ]
+}
+
+{
+  "class_name": "投诉处理，产品使用不成功",
+  "class_id": "2",
+  "usage": {
+    "prompt_tokens": 843,
+    "prompt_unit_price": "0.0003",
+    "prompt_price_unit": "0.001",
+    "prompt_price": "0.0002529",
+    "completion_tokens": 38,
+    "completion_unit_price": "0.0006",
+    "completion_price_unit": "0.001",
+    "completion_price": "0.0000228",
+    "total_tokens": 881,
+    "total_price": "0.0002757",
+    "currency": "RMB",
+    "latency": 1.4366504060000125
+  }
+}
+
+Q：很多企业选择dify是不是之前coze没有开源，但现在coze开源，也能私有化部署，所以还未做ai智能体企业可考虑用coze，是吗
+是的！
+Coze 插件
+
+Agent开发：
+1）流程编排（Coze, Dify）
+2)  插件完善程度
+3）知识库 （在表格处理上，Coze好于Dify）
+4）前端界面
+5）API
+
+Dify中自定义的插件，可以使用 HTTP请求
+
+
+
+Q：MinerU 能把拍照的电子书pdf OCR 识别出 text文本？
+可以的，里面有OCR识别
+
+Q：系统提示词和用户体质词有区别吗？
+系统提示词：AI的角色
+用户提示词：用户的问题
+
+
+Q：召回的切片之中有score相同的，但最符合答案的切片可能排在第二或第三，导致召回效果不好，有什么建议嘛？
+召回的作用：快速进行筛选，10万个chunks => 100个chunk
+重排：在召回的基础上，进行打分（更精确）=> 10个chunk
+
+
+Q：我想把我所有的confluence文档，大概300篇，20万字，让大模型帮我总结我对公司的核心贡献，请问有什么工作流/方法推荐吗
+1）文档需要预处理 => 得到 .md 格式
+2）可以将300篇分成2批，分别作为上下文，让LLM进行推理
+以下是我的confluence文档内容：
+XXXX
+==
+请总结我对公司的核心贡献
+
+deepseek, qwen-flash, qwen-turbo 文本大模型
+图像，表格进行识别
+
+
+Q：可以把mineru换成qwenVL吗
+可以，但是mineru更精确，就是PDF的文本转化
+qwenVL 是视觉理解
+
+
+Q：如果我想把不同的PDF文件整合到一个预定义好的word文档，大概的逻辑要怎么做呢？
+pdf读取 
+=> 变量A
+content = content + A
+content 写入到 word文档
+
+如果我想把不同的PDF文件整合到一个预定义好模板的word文档，只是提取一些关键参数或者实验结果到word 文档中，大概的逻辑要怎么做呢？
+
+pdf读取 => 变量content
+LLM根据上下文content，回答word中的问题，答案以JSON格式进行数据
+
+
+
+7507272032905199655
+
+为该客户设计营销策略。用户 id：7501691024880730112
+
+
+
+
+老师，现在有一批word格式的文档，需要录入系统中，有两种策略，一是使用ai模拟人工录入，二是使用ai分析项目代码生成不同业务的录入程序，这两者哪一个更靠谱
+
+1）一是使用ai模拟人工录入 => RPA
+
+wucai code
+
+我想做一个算命智能体
+https://github.com/cystanford/wucai-code
+需要配置 DASHSCOPE_API_KEY 作为你的环境变量
+
+
+
+

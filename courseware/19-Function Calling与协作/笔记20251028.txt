@@ -1,0 +1,346 @@
+前面paddle认不出的图片，DSocr能认出一部分
+还是有部分乱码
+
+Q：陈博士在部署一些本地化的工程的时候，一般的流程大概是怎样的
+1）大模型本地化
+Qwen3-32B
+2）数据库连接
+MySQL8.0, Redis, ES
+3）单点登录
+
+Q：老师，你写wucai的时候，一般同时几个agent在工作呢？分别做写什么任务呢？方便透明吗？
+1-3个，如果想要快一些的话，可以开2-3个
+1）前端页面
+2）后端逻辑
+
+Q：老师，是不是可以用AI学习CASE里面代码结构是怎么编写的
+是的
+ts => vue
+
+
+Q：老师有用到AI网关吗？有什么好的推荐？比如Vercel AI Gateway之类
+
+
+Q：陈博，我想开发智能客服，用于电商售后，现有学习的知识可以做吗，还需要哪些技术点
+可以！
+RAG，大模型选择 qwen-flash，业务场景（和AI进行交流，梳理业务场景和方案）
+
+Q：老师，可以再说说上节课在6-product_llm.py 这个例子里，为什么会查找不到 Model Y 吗？
+函数 严格匹配，
+Model Y，我们可以加上一些print，会看到传入的 product_name = Model Y/n Observation
+
+Q：我们老板太忙，嫌公司的IM麻烦，想做智能回复
+
+
+以前很难一个人搞定前后端，有了ai编程，就可以了
+
+Q：为什么要开发 LLM应用，而不是直接用 DeepSeek网页
+Function Call （高德天气、联网搜索、画图，... ）
+
+
+
+AI代码上生产必须一行一行审才放心
+
+
+把下面那个英文单词打包到提示词里头一起塞给LLm了。把英文改成中文就行
+
+model context protocol 模型上下文协议
+给大模型 提供共同的接口，让大模型知道 有哪些tool/services 可以调用，怎么调用
+
+Q：为什么不直接调用。反而交给大模型调用
+直接调用，传什么参数呢？（我们需要根据用户的提问，理解提取这个参数）
+明天北京天气怎么样？
+今天大连天气怎么样？
+
+location, start_time => 大模型提参
+大模型在Function Call中的作用：
+1）理解用户的需求，选择适合的 Function Call
+2）提取适合参数
+
+
+Q：我问的其实就是说我们用function calling的时候都要去各种接口去申请账号吗
+1）第三方服务，需要的
+比如高德地图，墨迹天气
+2）自己定义
+send_email
+
+个人调用不收，有免费限制
+
+让大模型做决定，而不是写死
+
+
+Q：这种调用和api调用有什么区别吗？
+api调用 就是 LLM Function call中的一部分
+LLM 交互，项目经理
+
+可以用大模型再做二次的处理？
+
+
+Q：LangChain 的tools就像包装好的functions 对吗？
+是的
+
+Q：大模型能自己联网查，再增加funcationcall，都能查到结果大模型会怎么选择
+如果我们有多个function call，用途差不多
+比如 墨迹天气，高德天气
+
+LLM 看成一个人
+
+Q：准备这些参数，可以交给大模型根据人类的自然语言提问来
+自动补全完成吗？
+是的
+
+Q：老师，function call需要模型支持，意思是不是需要大模型经过强化学习，返回function call需要的格式才叫做支持。是这样理解的吗
+DeepSeek-V3, DeepSeek-R1 最早的版本是不支持Function Call
+ChatGPT,
+LangChain提出了function call, tool call
+
+https://lbs.amap.com/
+
+
+北京现在天气怎么样？
+
+LLM相当于 项目经理
+
+{"role": "assistant", "content": "", "tool_calls": [{"function": {"arguments": "{\"location\": \"北京\"}", "name": "get_current_weather"}, "id": "call_3e3af40544c947d5b1f506", "index": 0, "type": "function"}]}, "index": 0}
+
+真正调用工具，是代码调用（SDK qwen-agent）
+
+tool_call= {'function': {'arguments': '{"location": "北京"}', 'name': 'get_current_weather'}, 'id': 'call_3e3af40544c947d5b1f506', 'index': 0, 'type': 'function'}
+
+
+Q：大模型先语义理解，然后加工成json格式，接着传参么
+对的
+
+Jupyter识别不到系统变量啊
+
+
+Q：function call与MCP在使用上有什么区别？
+function call是给指定大模型提供的内部接口
+MCP 是所有大模型提供的公共服务
+
+Q：Jupyter本地能识别系统变量的
+
+
+Q：这个工具实在本地调用的还是在大模型那端调用的？
+LLM帮你解析，得到："tool_calls": [{"function": {"arguments": "{\"location\": \"北京\"}", "name": "get_current_weather"},
+
+在本地我们用代码，解析了LLM的response，然后调用了工具
+
+Q：为什么要让LLM自己决定调用工具？这样会不会每次的输出不稳定？
+LLM的好处和不足：
+1）不足：
+不稳定，这次调用 高德天气，下次可能调用 墨迹天气
+2）好处：
+因为用户的需求不是固定，问的问题 各种各样
+LLM 泛化能力强
+
+temperature=0.01
+报错：报错重试
+
+
+Q：只会返回调用一个接口吗
+LLM可以返回多个调用接口
+
+
+Q：funcation call 过程中，api返回内容会消耗token额度吗？
+
+
+Q：和agent tool区别是啥
+都是tool，LLM输出的reponse，需要自己解析
+agent tool，在agent中 已经封装好了解析
+
+
+Q：大模型怎么知道需要返回什么参数代表调用什么模型，是约定好了的吗？
+输入参数 是需要告诉LLM
+输出参数 LLM不需要提前知道，只要你将结果（可以是String，也可以是JSON）返回给LLM即可
+
+Q：老师设置了环境变量 没生效，咋回事，win10系统 输出：高德API Key: None
+
+
+不稳定， 随机掉一个，没什么问题
+
+
+Q：是不是langchain开发，就没有必要用function call了，就用langchain自身的tools。
+langchain自己的tools是已经开发好的工具
+如果我们想要打造自己的tool，需要自己定义
+
+
+也可以用prompt稳定
+
+
+Q：没有实现的tools怎么办，比如自己做的本地方法
+高代码 开发这个 tool
+比如 你想做股票价格的预测，你可以写一个 股票价格预测的函数，传入 股票代码，未来N天
+
+定义函数的 输入和输出
+
+Q：Temperature 设置得越低，是不是得到的置信度越高？
+是的
+大模型是一个概率性的生成工具，它学习了非常多的样本
+
+Temperature 设置得越低答案越保守
+
+
+Q：这些mcp都是免费的吗
+不一定，api key 就是你的身份鉴权
+
+Q：LangChain 的tools就像包装好的functions 对吗？
+是的
+
+Q：有function call的话要比没有多一次API call到大模型吧
+AI native
+
+
+应该是注册到当前进程把？
+
+
+Q：正常业务复杂点，查询肯定需要查视图，提示词里面怎么处理
+将创建好的视图SQL 放到system prompt中
+
+Q：调用千问和调用千问agent 主要区别是什么，没注意到
+qwen LLM 就是一堆参数，文本进，文本出
+qwen-agent：理解成为一个"人"，它的大脑（做决策，做理解）由qwen LLM来负责
+tool
+qwen-agent = qwen+ (tool + 知识库+开场白+gui)
+
+这个例子中怎么没看到DASHSCOPE_API_KEY
+
+
+千问agent长什么样？
+
+
+陈博，更新的课件和代码请也分享给我们
+
+
+gui是调用了哪个包？
+
+
+Q：千问agent可以调用其他网站的API吗？
+可以的
+
+
+gradio
+
+
+数据库如果有权限设置应该加在什么地方？
+
+
+sql语句是大模型写的吗
+
+
+Q：查到数据以后的话术是LLM自己组织的语言吗？还是代码里要求LLM去解读数据
+自己组织，LLM = 项目经理
+
+未选择任何文件对 所有
+
+
+Q：functioncall和mcp格式都是固定的吗
+
+
+Q：function call算不算简单的agent
+Agent = 大而全的人
+function call 是其中的一种能力
+
+
+大模型能通过api key去调取另外一个LLM
+
+
+Q：exc_sql 与EXCTOOLSQL类是什么关系
+exc_sql 是一个名称，在qwen-agent中的 工具名
+EXCTOOLSQL 是代码实现
+
+老师，我的意思是问我写了功能，有2个agent，一个主agent完成读取网页，然后完成登录，
+
+
+
+另一个agent负责返回当前的第一个agent下一步做什么。那wucai在用ai写代码的时候，用了几个agent来相互协同工作呢
+
+
+在哪个环节判断权限？
+
+
+PyCharm能运行今天讲的例子吗
+
+
+
+那这一个单独的py程序，就可以理解为是一个Agent
+么
+
+
+雨村读书:21:42:17
+大模型会死循环吗？好像有时候用vibe coding不断在查看文件a和文化b之间切换，死循环了
+
+
+====
+@assistant_ticket_bot-1.py  理解这个项目，我在用qwen-agent，我想在exc_sql中增加一个 图表可视化，这样在exc_sql中可以同时返回markdown的结果，以及图表的jpg给用户
+你可以思考下如何选择图表中的x轴，和y轴，比如 x轴一般是类别，y轴一般是数值
+帮我查看代码，先不修改代码
+
+Q：陈博士，Bash(pip install "qwen-agent[gui]" (安装 qwen-agent 的 GUI 依赖))
+⎿
+这个已经执行40分钟了
+
+你可以多按几次ESC，然后和它说 使用清华园镜像
+
+
+graphrag我也没跑出来。感觉这个挺有用的
+
+
+Q：陈博士，这几天火爆的：
+https://nof1.ai deepseek qwen gpt 炒股比赛，用咱们目前学到的知识可以实现吗？简单讲一下架构和实现。
+1) 环境准备，量化交易的接口
+2) 算法 （买点、卖点）
+tool 
+
+
+Q：在示例中， QWen好像也封装了一个类似LangChain的功能，QWen作为核心LLM，再附加一些工具类/LLM，内部实现是不是也是基于LangChain的？
+功能和LangChain类似，但是不是LangChain
+
+Q：AI经常写着写着给你个final版本，但还是有问题，怎样避免AI把不完整的版本当成最终版本？
+你写到 WUCAI.md 进行AI rules
+不要写一个新的 .py，而是在原有的 .py上进行修改
+
+
+Q：模型微调后面还会细讲吗
+会的
+
+“Tabulate” 我这刚才也报错，我让AI自己修复安装的
+
+如果调用了千问agent以后，是不是没必要去调用langchain 了
+
+
+Q：会死循环，刚才老师的sql就死循环了
+
+
+Q：AI炒股真的靠谱吗？
+
+要做信息收集和信息分析的吧
+
+
+Q：量化交易动不动就是投入几十亿，不是有了AI大模型就行吧
+量化交易 是通过数据决策的，这里是传统AI
+AI大模型 帮我们分析理解新闻
+
+Q：不同的大模型 调用 function calling 的写法 格式 是不是不一样？如果不用dashscop 调用api 而是调用我本地部署的qwen 怎么写
+qwen 都是一样的
+openai 里面的function call的写法按照openai的写法（JSON格式的约束不同）
+
+deepseek 断层领先了
+千问第二
+
+
+Q：每次调用大模型的时候都需要把所有的工具传给他吗？那不是很费token
+传给它的是 工具的名称，参数的定义
+
+每次调用大模型都把tools参数送给大模型，这个参数会占用上下文长度吗？如果function太多。是把所有的function call说明都上送给大模型吗？
+
+
+Q：微服务的开发中，一般都要求功能解耦，方便维护。刚刚的例子表明大模型的开发中这种模式未必最优。那未来的开发中，如何平衡功能解耦与减少用大模型传递大量参数呢？
+1）功能相对独立
+2）如果功能A => 功能B，那么可以把 功能A和功能B 合并变成一个大的功能
+
+Tool1：大而全的工具 （exc_sql + 可视化）
+Tool2：exc_sql
+Tool3: 可视化
+prompt说明优先级：
+

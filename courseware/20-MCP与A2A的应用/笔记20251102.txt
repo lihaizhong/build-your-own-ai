@@ -1,0 +1,376 @@
+Q：我用wucai编程，它修改完第一个错误之后，修改第二个错误的时候，第一个改好的错误又改回错的了，而且经常这样。请问怎么规避？
+没有100%的规避办法
+1）你给它需求，然后让它查看代码，先不修改代码 => 让它帮你实现
+2）写的提示词，记录到一个 .txt
+3) WUCAI.md
+可以在 安装目录，或者项目目录中，创建一个 WUCAI.md
+
+Q：rules有时候不管用，怀疑被压缩了
+是的，就算没有被压缩，可能也不是100%起作用
+
+Q：langchain有什么智能体工具能在官网上看到吗
+字节跳动做了一个基于 LangGraph的 DeerFlow
+
+Q：老师请问，如果我有多个表结构，是否使用text2DB的方式更好一些？上节课那样DDL那样写入系统提示词的方式适合表的数量比较少的情况？
+可以借鉴LangChain里面的SQL Agent，自己来决定使用哪些表
+
+Q：老师，客户的需求都是在哪些方面，AI能做什么，除了知识问答、智能客服以外都还有哪些需求吗
+研发，能否用AI进行辅助，比如 CAD的设计选型；Code Agent 基于内部开发规范的，比如 内部的组件库进行搭建
+销售的预测，OA流程的助手，价格的预测
+
+
+MiniMax M2 这个模型怎么样呀，老师
+
+
+和skills有区别吗
+
+
+我们讲过的LangChain部分有很多过时了，新版变了很多
+
+Q：老师，小白听课要听懂到什么程度才算可以
+带着问题来听，比如结合你的业务场景；
+
+
+Q：老师，特征工程不会写，每次得分都不太理想
+基于业务的经验，
+和时间相关的特征工程，
+和target相关的特征工程
+特征之间的 加减乘除 
+时序特征
+
+能讲一讲最新的AI前言信息吗，AAAI，SIGKDD
+
+
+lbs.amap.com
+
+mcp.json 
+
+需要找一个具备Agent能力的客户端，比如 Cursor, VS Code
+
+{
+    "mcpServers": {
+        "amap-maps": { // mcp的名称
+            "command": "npx",  // 启动的方式 npx, npm install -g @wucai/wucai-code
+            "args": [
+                "-y",
+                "@amap/amap-maps-mcp-server"  // https://www.npmjs.com/package/@amap/amap-maps-mcp-server, SDK
+            ],
+            "env": {
+                "AMAP_MAPS_API_KEY": "XX" // API KEY身份鉴权
+            }
+        }
+  }
+}
+
+
+
+用高德MCP，做青岛一天旅游攻略
+cherry studio
+
+
+老师可以具体解释一下mcp配置的command和args吗？这个好像是可以在命令行里面跑的？
+
+
+https://www.npmjs.com/package/@amap/amap-maps-mcp-server
+
+
+
+{
+  "origins": "121.468662,31.208197",
+  "destination": "121.492466,31.225879",
+  "type": "1"
+}
+
+{
+  "results": [
+    {
+      "origin_id": "1",
+      "dest_id": "1",
+      "distance": "3803",
+      "duration": "906"
+    }
+  ]
+}
+
+
+Step1，需要找一个Agent （能自主规划的，有LLM），比如 Cursor
+Step2，配置MCP，在 mcp.json中
+Step3，在Agent中，输入需求
+=> 主动调用MCP Tool 完成规划
+=> 形成 .html 
+
+（基于以上的规划，帮我制作一个 html）
+
+
+
+
+Q：整个攻略都是在搞的侧昨晚了，直接返回的吗？还是AI与高德多次互动后返回数据LLM再整合的？
+AI会多次调用高德的MCP Tool
+
+
+Q：美食 门票这些数据也都是高德的服务提供的 还是大模型自己去网上检索的
+刚才那个是 高德地图的（因为它只调用了 高德的MCP Tool）
+
+包括时间路线行程
+这几个地方，都不需要买票的。
+
+
+Q：Cursor 在 Windows 上加载 MCP 环境变量时存在已知缺陷，尤其在使用 npx 启动时，不会继承系统环境变量。
+重启Cursor
+
+Q：整个攻略都是在高德侧完成的，直接返回的吗？还是AI与高德多次互动后返回数据LLM再整合的？
+多次互动
+
+
+东方明珠进去不是要买票的么
+
+跑的到底是CASE-MCP Demo-1文件夹里面的那个py文件？
+不是这个.py，就是用Cursor 本身的Agent来进行互动
+
+
+这个Agent工具还有什么那？ 怎么感觉最通用的就是编程IDE那
+
+
+Q：所以MCP开发是开发服务器能力，给别人调用的。开发function call是给自己的app 调用外部服务。
+是的，所以说MCP 类似一种创业，对外的service
+
+第二步再快速过一下可以吗？
+
+
+输入一个MCP后，自动出来12个tools吗？
+是的，因为高德地图这里包含了12个tools
+
+可以自己写一个前端，把获得的回参渲染到前端上
+
+modelscope.cn
+
+
+qwen-agent 中内置了Gradio图形化的界面
+qwen-agent VS cursor VS trae 
+
+Agent 调用 MCP
+MCP 是给所有Agent使用的
+
+
+Q：传递给MCP的 内容，也是可以用提示词来约束 所需内容的返回格式把。
+是的，我们使用Agent，就是通过提示词的方式来完成的
+
+Q：景点图片怎么显示出来
+如果你有景点图片的MCP，就会给你返回
+
+
+Q：如果要本地化部署mcp的话,是不是智能体要自己通过function calling的方式弄
+也不一定是function calling，可以是 stdio，比如也可以用python
+
+
+让agent下载图片？
+
+
+Q：sse 方式MCP 也能用吧，只有绿色联通就行了吧
+是的
+
+Q：一个公司只会出一个mcp，所有api都封装在里面吗
+不一定，可以是多个MCP
+一个MCP，可以封装多个tool
+
+
+tools = [
+    'get_current_weather', # function calling
+    {
+    "mcpServers": {
+        "amap-maps": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@amap/amap-maps-mcp-server" #mcp
+            ],
+            "env": {
+                "AMAP_MAPS_API_KEY": "XX"
+            }
+        }
+        }
+    }
+]
+
+用Fetch MCP，将 https://k.sina.com.cn/article_7732457677_1cce3f0cd01901eeeq.html 网页转化为Markdown格式
+
+Q：这个调用工具是程序执行的顺序决定吧？如果有两个相同功能的工具
+对，AI自己决定的，比如：有两个天气
+
+
+Q：IDE中设置MCP 是用在什么场景里的
+Agent 不一定是自己搭建的代码
+Cursor 如果能直接完成，那么你不写自己的代码，也是可以的；比如 上海一日游的旅行攻略
+
+IDE + MCP => 基于公司内部的开发规范，进行标准化编程
+
+
+Q：agent 选择get weather 方法还是MCP 事如何选择的？是用的get weather 的description 和MCP 的啥的来决定的？？？？
+function description
+MCP 也有description
+
+
+mcp dev txt_counter.py
+
+Starting MCP inspector...
+⚙️ Proxy server listening on localhost:6277
+🔑 Session token: 6f6f4f0f462b6a244e2d330f5da9e8a34fbc2f0593dde361b2d34dccef269601
+   Use this token to authenticate requests or set DANGEROUSLY_OMIT_AUTH=true to disable auth
+
+🚀 MCP Inspector is up and running at:
+   http://localhost:6274/?MCP_PROXY_AUTH_TOKEN=6f6f4f0f462b6a244e2d330f5da9e8a34fbc2f0593dde361b2d34dccef269601
+
+🌐 Opening browser...
+
+====
+
+@txt_counter.py @assistant_mcp_txt_bot.py 帮我理解这两个代码，我想创建一个 本地的开发规范文档，传入语言参数，然后返回该语言的开发规范说明。
+帮我编写这两个 .py，一个是用于 mcp server，提供开发规范文档的，另一个是 qwen-agent，调用这个mcp的
+
+
+MCP 可以知识库管理，对外提供服务，比如这里的开发规范文档
+
+
+Q：如果自己想写一个agent来调用mcp，是怎么调用呢？
+qwen-agent 来调用tools
+    tools = [{
+        "mcpServers": {
+            "dev-spec": {
+                "command": "python",
+                "args": ["dev_spec_mcp.py"],
+                "port": 6277
+            }
+        }
+    }]
+
+
+
+
+
+
+如果想把知识库封装成MCP
+
+
+Q：embeding的向量数据库，能封装为mcp对外发布么？
+可以的
+
+应该是用类似langgraph的各种工具封装在一起，实现某些功能，就实现了一个agent了吧
+
+
+Q：如果把MCP服务部署到网络上，QwenAgent还是这样子定义tools吗？ 应该使用SSE方式连接server吧？
+
+QwenAgent是Host + Client
+MCP 才是 Server
+
+
+Q：自己创建一个mcp服务，跟自己写个function调用，不一样吗？
+
+
+mcp是给其他人一起用，function只能自己用
+
+
+千问agent是在本地运行的还是百炼平台中？
+在本地，qwen-agent是开源的
+
+这里的MCP描述和参数这些解释是在那个注释里吗
+
+MCP 中可以加RAG功能吗
+
+pycharm 运行txt_counter.py 怎么跑的这么慢
+
+
+MCP 如果被很多Agent 同时访问，需要考虑分流吗？
+
+
+Q：如何创建一个mcp服务并且上线让其他人也可以调用?
+方法1：放到服务器上
+方法2：npm 
+
+Q：MCP可以储存在亚马逊云吗
+可以
+
+
+一个agent可以封装为MCP嘛
+
+a2a传输效率如何？要传很多上下文吗？
+
+还是A2A协议=MCP协议+AI CARD
+
+A2A 是你的转嫁给其他人来完成；
+MCP = 工具箱，需要你多次沟通使用MCP来完成；
+
+
+A是不是也通过盲查方式查到B支持结构化呢？
+
+
+可以这么理解吗？任何Agent都
+可以注册成MCP进行‘销售’
+
+
+还是不懂差别是啥
+
+
+给a2a传的是上下文
+
+以A2A的形式，对外说：我可以做旅行规划
+执行的时候，可以自己调用 高德MCP（可能会调用多次，天气、旅行、景点）
+
+
+
+能把a2a具体传的内容打印出来看看吗？
+
+localhost:8000/.well-known/agent.json
+
+
+你作为主人，只需要轻松地说一句：“今晚我想招待朋友，做一顿中西合璧的八菜一汤。”
+* MCP让厨房里的所有设备听候调遣。
+
+
+A2A的调用例子有吗？打错了
+
+
+怎么选定转嫁的对象呢？每个agent都有自己的card，别人怎么能判断选择
+
+
+* A2A让中餐厨师、西餐厨师、甜点师自动组成团队，商量菜单、分配任务、默契配合。
+
+
+所以我理解下来是MCP传输上下文，A2A不传输上下文
+
+ast MCP是通过注解产生一个MCPServer，但是例子中没有说明有啥功能
+
+
+
+
+agent怎么知道他有啥能力
+
+
+
+篮球安排结果: 拒绝链接
+
+感觉获取某个agent_card 以及对应的endpoind 都是写死的,意思是后面要加一个agent进来，需要给群聊里面所有的agent都加一些注册代码吗
+
+
+跟路由有关系吗
+
+INFO: 127.0.0.1:56013 - "GET / HTTP/1.1" 404 Not Found
+
+谁来判断是否atoa
+
+
+
+Q：决定调用哪个 tools是由llm决定后再通知agent来调用的吗
+Agent = 人
+MCP = 工具
+
+感觉mcp,更突出可预测性和控制
+
+
+Q: 我的例子中，预约agent 是直接代码逻辑判断的，实际应用中，也是通过大模型决定调用哪个 agent ？
+是的
+
+
+Claude Code写代码，分成多个TODO list来完成任务，是A2A吗？
+subagent：
+Agent1：编码智能体（可以自己plan, todo list）
+Agent2：测试智能体（todo list）

@@ -1,0 +1,384 @@
+Q：fetch MCP 遇到反爬虫怎么办？
+
+Q：老师您的多个智能体项目页面是怎么实现的？能说一下吗？
+qwen-agent，里面有多智能体
+
+Q：资金预测的模型融合具体要怎么做，如何和ai交互，我做完发现分数只有60多分，比单个周期因子低很多
+周期因子 + LSTM
+
+
+今天的任务可以用Deepseek OCR吗？
+
+课件太大了，2个多G，还没下载下来。。
+
+Q：上节课中的投研报告CASE，如果以实时的数据生成，方案思路是怎样的？
+LLM enable_search 可以让大模型进行联网搜索
+
+Q：老师上节课的AI Agent,代码能跑通，但是对调用流程还是有点一知半解。
+Step1，先跑通
+Step2，画流程图
+让wucai 画出AI Agent的逻辑流程图，使用mermaid，写入到 .html
+
+Q：智能体的短期记忆和长期记忆有没case练习 分别具体要怎么设置
+短期记忆 = 上下文多轮对话
+长期记忆 = RAG
+
+Q：在运行课程py代码的时候，经常会碰到各种依赖包找不到或者版本号不对的问题，老师能发下你环境的pip list看下吗？
+
+
+Q：上界Agent课的案例，就三条硬编码知识问答，如果真实项目里有大量的知识问答，我应该放在哪里？让tool来匹配？
+向量数据库，ES
+
+Q：modelscope上的fetch mcp有限流之类的问题，有没有好点的mcp平台？
+tavily, bing
+
+Q：老师，我的打卡作业想做一个论文分析的agent，试运行的时候发现同样的提示词比网页版大模型速度慢很多。有什么办法提升agent的运行速度吗？
+1) LLM: qwen-flash
+2) agent 多轮对话，在prompt中约束下 回答的简洁性，以及我们压缩下 prompt的长度
+
+
+Q：我看到今天的文件有 exe 文件，我身边没有 windows 电脑怎么办
+https://mineru.net/
+
+Q：用户画像的数据算是长期记忆吗
+可以保存起来，是的
+
+
+Q：老师好！上节课智能投研助手程序deliberative_research_langgraph.py中，前面定义的几个阶段输出class
+(PerceptionOutput、ModelingOutput、ReasoningPlan、DecisionOutput)后续并没有被引用，
+
+Q：我想问一下这里定义这些class的作用是什么？谢
+
+Q：qwen-vl VS OCR
+Qwen-VL 图像理解
+OCR 图像提取
+
+
+Q：千问vl大模型，是不是也是先用ocr识别成文本，然后再交给文本大模型理解返回结果？
+不是，qwen-vl 是一个end-to-end 的大模型
+input：图像 + 你要提问的问题
+output：对于这个图像的回答
+
+
+Q：识别5张图片需要好几分钟吗 好慢
+
+
+park档
+
+
+Q：似乎没有识别出仪表板中一些的工况图标的信息。这个需要特别用某个工具去识别吗？
+
+
+p档和n还是有区别的
+
+
+一般车上不会写发动机温度
+
+
+Q：一般实际项目大模型分析出来图像信息后，下一步一般做什么应用呢？因为分析的不一定100%对，企业不可能用来做信息入库吧。
+保险反欺诈，车损严重程度预估
+生产安全
+
+
+直接用网上的千问回答的非常正确
+
+
+Q：太神了，不用OCR，直接识别图片，什么原理？
+神经网络超大参数，通过大量数据进行训练
+
+qwen vl 和deepseek ocr 还有paddle ocr 区别大么
+OCR 识别文本
+qwen-vl 回答图像问题
+
+Q：在做这类视觉理解的OCR识别的时候，因为模版和识别内容不同，
+在实际项目应用中如何结构化存储？
+给固定模版
+
+
+网页版qwen-vl
+
+要调用qwen-vl那只能用dashscope了？
+
+
+Q：除了文字，能识别出图片里特定的元素吗
+
+
+
+Q：如果要替换qwen-vl有什么替代大模型吗
+
+qwen-vl-max只能调dashscope，其他网站有开源版的
+
+怎么实现，怎么优化，具体到操作上。
+
+
+这如果是视频应该就能识别出来了
+
+
+红色车应该是前部损坏
+
+
+Q：使用视觉模型和使用深度学习模型，如何选择？区别感觉就是VL能问答，
+感觉在动作行为检测方面，深度学习模型更有优势。
+Qwen-Vl vs Yolo
+如果想要通用性，不需要自己来训练 => Qwen-VL 
+如果有大量的垂类数据，想要更准确的做标注 => Yolo （标注出来汽车受损的区域）
+
+
+Q：老师这个对于辅助盲人识别信息极有价值，可以将视觉转换成语音
+
+
+Q：RAG出信息已经是答案，人直接使用向量数据库检索是否比用大模型总结更高效和准确呢？大模型是本身就具有百科全书的全才能力，还是说仅仅是依赖RAG中的知识来接话茬？
+
+RAG是相关信息 => 百度搜索引擎帮你先找到有一定参考价值的文本
+
+Qwen-VL端侧部署是否可行？
+
+Q：复杂场景的图像识别，感觉yolo的效果不是很好
+yolo需要单独训练，预训练的yolo能识别出来的物体种类有限
+
+
+老师LAION是不是 midjourney用的训练集
+
+
+
+世界模型和多模态是一回事么
+
+Q：文生图 和文生视频 的大模型原理和生成的流程是怎样的 这个也是vlm吗
+vlm 图像理解
+文生图
+
+qwen-image-plus：文生图
+
+
+
+Q：gemini CODE ASSIST
+
+
+Claude最近国内很多平台禁用了
+
+
+Q：豆包应该也是吧？
+
+
+Q：音频和语音不是一个吗
+语音 ASR => 转成文本
+音频：
+
+
+Q：企业级一般用什么多模态的模型啊？
+开源，qwen3-vl-8b
+https://modelscope.cn/models/Qwen/Qwen3-VL-235B-A22B-Instruct
+
+Q：多模态大模型消耗token是不是要比文本大模型消耗的多得多？
+
+
+
+Q：gemni模型可以用来识别视频里的字幕和文字吗？
+
+Q：qwen3-coder-plus 能识别图像么？
+不能，不是多模态
+qwen3-vl
+
+https://modelscope.cn/models/OpenGVLab/InternVideo2_5_Chat_8B
+8B * 2.2= 17.6
+input： .mp4 （视频流）+ query
+output：
+
+
+from modelscope import snapshot_download
+model_dir = snapshot_download('OpenGVLab/InternVideo2_5_Chat_8B', cache_dir='/root/autodl-tmp/models')
+
+
+OpenGVLab/InternVideo2_5_Chat_8B 是模型的ID
+
+
+
+老周:21:24:07
+违章抓拍应该是的
+
+
+
+Q：老师刚提到EHS场景如明火识别等，这个用vl大模型还是用视觉算法呢，实际落地怎么考虑
+如果你要识别的种类不多，可以单独训练了一个 Yolo
+如果我们要识别的场景重要比较多，而且也没有那么多的数据用来训练 => 大模型
+
+
+
+Q：公司小规模验证模型，适合使用autoDL租用GPU吗？成本大概什么水平？
+有什么风险
+可以，RTX 4090 成本2元/小时 （如果是开源模型，而且不好用  DASHSCOPE_API_KEY 因为数据要上传到外网 => 可以在本地部署开源模型）
+
+vllm
+
+
+
+
+Q：感觉识别人身份的话还是得专门的图像识别模型
+对的，专业模型对于准确率很有帮助
+qwen-vl 大模型对于泛化能力很有帮助
+
+
+Q：qwen-vl只能理解图片文件么，如果文件在pdf
+https://help.aliyun.com/zh/model-studio/qwen-api-reference?disableWebsiteRedirect=true
+
+
+Q：哪里可以系统的看到各个模型的分类和建议呀，听了这么久的课，就只是知道用到了这些模型，那以后实践中如何选择正确的模型，这些方法也请老师介绍一下呢？
+https://help.aliyun.com/zh/model-studio/qwen-api-reference?disableWebsiteRedirect=true
+文本问答 => Qwen-Flash （性价比很高的模型），Qwen-Max 
+多模态问答 => Qwen-VL（理解）
+文生图 => Qwen-Image
+
+
+Q：至少要24G显卡吗？
+对的，我用的是 RTX 4090
+
+Q：视频一定要下载吗？可否让AI直接评估网站上的视频 ？
+可以试试，如果它能打开网址的话
+（网上有个视频的.url =>）
+
+
+Q：运行提示torchvisiom 没安装 但一直没安装成功
+
+
+
+Q：那个模型分析视频？
+internVideo，Qwen-VL
+
+Q：怎么配置，版本冲突在autodl上怎么调，有好一点的方法吗
+decord==0.6.0
+modelscope==1.25.0
+numpy==2.2.5
+Pillow==11.2.1
+torch==2.5.1+cu121
+torchvision==0.20.1+cu121
+
+看你的 cuda的版本
+
+
+Q：老师，这个是图像和视频大模型，也有音频大模型吗？或者千问和internvideo也可以当音频大模型使用吗？
+可以给音频的信号
+
+Q：老师帮推荐个AI学习主机的配置,现在电脑自从开始安装AI软件,老卡了
+surface => huawei 
+
+
+Q：多模态的模型 他的尺寸 2B 8B 等影响图像识别效果么？
+影响，压缩即智能
+8B的能力 > 2B的能力
+
+Q：博士老师，之前讲识别图片理解（比如之前的逆向行驶）不够准确，好像要做训练，这个是怎么做的 能够识别逆向
+Step1，准备数据集
+如果我们想要提升 vl 逆行识别的准确率 => 收集错题本，或者多找几个示例，让AI能学习到
+<Q, A>
+Step2，让qwen-vl 进行训练
+
+
+Q：但如果大模型本身就具有丰富的知识背景，为什么还需要RAG辅助
+呢？是说RAG出的上下文和提问仅仅是为了让大模型进行更精确的意图识别，理解用户到底是想问什么
+如果LLM本身有很好的知识，而且可以直接回答用户的问题，那么不需要RAG
+
+
+Q：视频大模型参数都是很小的吗
+
+
+Q：可以实时读取摄像头 进行车牌识别么
+
+
+Q：能不能让模型检测视频中的人说话口型与声音是否同步？
+
+
+
+Q：老师， 为什么modelscope又的模型下不下来， 比如：Qwen/Qwen3-VL-8B-Instruct
+
+
+Q：老师，音频大模型有哪些呢？千问vl和internvideo可以当音频大模型使用吗
+
+
+Q：InternVideo 我们是要自己在 DL 上部署下么
+可以部署
+
+Step1，安装magic-pdf
+pip install -U "magic-pdf[full]"
+Step2，下载依赖的models
+python download_models.py
+使用modelscope快速下载各种models
+
+
+Q：腾讯的那个类似的用过
+
+老师， DASHSCOPE_API_KEY 在哪获取
+http://class.wucai.com/docs/3-dashscope
+
+
+
+Q：PPT 可以识别吗
+支持的
+
+Q：请问MinerU是一个在线工具还是一个可以在本地安装但需要连接到公网大模型平台的工具？
+在线就用API
+离线，可以私有化部署 直接用（不联网的时候也可以）
+
+
+是不是还搞了个书生模型
+
+
+secondchance百炼申请一个
+
+paddleocr不用显卡
+
+
+没有显卡mineru能跑吗？
+可以，可以跑 api，也可以跑 本地私有化的模型
+
+
+
+Q：老师，RAG里的回答评估，比如忠诚度，上下文相关度，回答相关度这些指标，如果不达标的话，如何提升指标呢？
+
+
+
+Q：老师，第2个打卡任务的模型是先下载到本地，然后租显卡，运行代码吗？
+可以用autodl，直接用 modelscope进行下载
+
+
+
+
+Q：如果训练图片数据有限，要实现图片敏感内容检查（涉政、涉黄、涉恐、涉毒、敏感人物等），是否用qwen3-vl-8B做微调可以实现？
+可以
+
+t2v
+在视频生成里
+运行汽车剐蹭视频理解代码：提示NameError: name 'load_video' is not defined
+
+需求驱动
+学的过程中，可以实操下打卡
+如果你有实际业务的需求，比如 视频理解
+
+
+Q：如果使用internvideo去做其他功能，代码是需要重新编写吗？
+基本上不用
+
+
+Q：之前学习的课程没有实际业务怎么实操
+
+Q：我要做个工地上监控工人违章操作的摄像头，老师我该如何实现
+qwen-vl  => 图像，也可以是 .mp4
+internvideo2.5 =>  input .mp4
+
+Q：后面会出一期专门讲怎么选择合适的大模型的详细教学吗？比如同类型的大模型我们怎么确定使用哪一个大模型效果比较好
+
+ffmpg
+
+
+Q：识别图片中两个元素是否存在以及摆放位置，是否需要自己训练垂直模型，比如yolo
+问题的难以程度，如果qwen-vl能直接回答，不需要单独训练
+
+
+Q：对大模型的能力不太理解，之前说大模型在各个领域里比如SAT考试或者律师、会计师这些专业领域里的能力，都是他自己的能力，还是外挂的RAG或者其他插件给它的能力
+应该就是LLM本身回答的能力
+
+
+Q：实时的视频流应该怎样传给大模型进行解析呢
+视频理解大模型 internvideo
+qwen-vl
+直接给他 .mp4
+

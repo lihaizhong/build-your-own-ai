@@ -1,0 +1,461 @@
+Q：老师，我想问一下，你讲的大部分涉及开发的内容，如果做ai产品经理，需要
+理解到什么程度
+了解到技术架构的选型，解决方案
+RAG
+
+
+Q：陈博士 想咨询下，AI有哪些工具可以用啊？
+LLM：qwen, deepseek
+MCP/插件：高德地图MCP，tavily search
+qwen-agent, langchain/langgraph
+
+
+Q：经常会出现依赖冲突的问题，我看老师没有建立虚拟环境，我们必须建虚拟环境才能解决，老师是怎么做的的
+
+es
+99.9%
+2000 *0.1% = 2个
+首token，第一个token出现的时间，3-5秒 => 难
+
+你的问题很简单，也没有什么文件
+6-8秒，超过10秒
+
+99.9%
+1）必须准确，涉及产品的价格，营业的时间
+2）主观问题
+
+
+bot = Assistant(llm=llm_cfg,
+                system_message=system_instruction,
+                function_list=tools,
+                files=files)
+
+向量检索
+
+
+
+2、@qwen-agent-multi-files.py 理解这里的RAG实现过程，调用的qwen_agent工具，先将文档拆分成小块，存放到 workspace中的tools目录下，帮我查找在 qwen_agent中的具体实现代码在哪里
+
+
+3、docs 文件夹里面有很多平安雇主险的文档，帮我
+1）连接到ES
+2) 创建一个索引
+3）索引文档（添加这些数据）
+4）执行搜索
+search_query = "工伤保险和雇主险有什么区别？"
+5）显示搜索结果
+编写 .py
+4、es的用户名是： elastic 密码是：XXX
+
+docs 文件夹里面有很多平安雇主险的文档，帮我
+1）连接到ES
+2) 创建一个索引
+3）索引文档（添加这些数据）
+4）执行搜索
+search_query = "工伤保险和雇主险有什么区别？"
+5）显示搜索结果
+编写 .py
+es的用户名是： elastic 密码是：XXXX
+
+5、@ai_bot-1.py 这里的files是多个文件，会通过Assistant中的 memory.py（qwen_agent/memory/memory.py）加载两个工具：retrieval 和 doc_parser。
+retrieval：负责接收用户查询，并从文档中检索最相关的信息。
+doc_parser：负责解析不同格式的文档，并将其内容进行切分。
+===
+文档拆分代码: qwen_agent/tools/simple_doc_parser.py
+检索逻辑代码: qwen_agent/tools/retrieval.py
+===
+我想改成用 elasticsearch来进行文档片段chunks的索引和管理，提升检索性能。帮我扩展 qwen_agent文件夹中的代码，新增该功能实现，放到 qwen_agent对应的文件夹下面即可。
+然后让 Assistant中的memory，有一个选项是可以用es来实现检索和管理
+如果要改写 ai_bot-1.py，可以写入到新的 ai_bot-2.py
+
+
+6、  运行ai_bot-2.py 报错：
+File "D:\推荐系统\知乎\26-项目实战：AI搜索类应用\CASE-AI搜索问答-20251130\交付-1\qwen_agent\agent.py", line 124, in run
+    for rsp in self._run(messages=new_messages, **kwargs):
+  File "D:\推荐系统\知乎\26-项目实战：AI搜索类应用\CASE-AI搜索问答-20251130\交付-1\qwen_agent\memory\memory.py", line 155, in _run
+    if use_es:
+       ^^^^^^
+NameError: name 'use_es' is not defined
+
+7、@index_and_search.py 我想改成基于 embedding向量的召回，这里可以用text-embedding-v4  参考@qwen3-embedding.py
+帮我写入到 index_and_search-embedding.py
+
+8、在ai_bot-2.py的基础上，现在是使用的 es检索，可以用embedding的方式进行召回，这里使用 text-embedding-v4  参考@qwen3-embedding.py
+写入到 ai_bot-3.py
+https://localhost:9200/
+
+9、
+qwen-agent 会通过Assistant中的 memory.py（qwen_agent/memory/memory.py）加载两个工具：retrieval 和 doc_parser。
+retrieval：负责接收用户查询，并从文档中检索最相关的信息。
+doc_parser：负责解析不同格式的文档，并将其内容进行切分。
+===
+文档拆分代码: qwen_agent/tools/simple_doc_parser.py
+检索逻辑代码: qwen_agent/tools/retrieval.py
+===
+在ai_bot-2.py的基础上（理解如何在 qwen-agent中扩展的，使用的BM25），现在是还是要使用es检索，但是要用embedding的方式进行召回，这里使用 text-embedding-v4  参考@index_and_search-embedding.py
+写入到 ai_bot-3.py
+
+
+
+Q：我们公司技术老是夸赞向量检索效率多高，嘲笑大模型，他们这样对么？
+不对
+
+运行 ai_bot-3.py 报错：2025-11-30 22:10:25,226 - es_retrieval.py - 142 - INFO - Indexed 18 chunks for document: ./docs\平安附加疾病身故保险条款.pdf
+D:\AppData\Local\Programs\Python\Python311\Lib\site-packages\urllib3\connectionpool.py:1061: InsecureRequestWarning: Unverified HTTPS request is being made to host 'localhost'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/1.26.x/advanced-usage.html#ssl-warnings
+  warnings.warn(
+2025-11-30 22:10:25,297 - es_retrieval.py - 252 - ERROR - Error during Elasticsearch search: 'file_url'
+
+
+
+
+基于Embedding的搜索结果:
+得分: 1.7034409
+文件名: 2-雇主责任险.txt
+内容预览: 【雇主责任险】
+Q1 雇员意外事故给企业造成的损害有多大？甚至可能让一家公司倒闭！！
+员工出外勤不幸遇到车祸被撞高位截瘫
+公司赔偿近一百万
+抽干公司流动资金
+无力维持生产
+走破产程序...
+
+Q2 雇主责任险的保障范围和其他亮点
+1. 保障
+只要有用工需求的单位，都可以购买雇主责任险。
+2. 保障范围：
+死亡赔偿金
+伤残赔偿金
+医疗费用
+误工费用（C款不赔）
+法律诉讼费（C款不赔）
+3. 其他亮点...
+--------------------------------------------------------------------------------
+得分: 1.6842194
+文件名: 4-雇主安心保.txt
+内容预览: 【雇主安心保】
+Q1 什么是雇主安心保？
+工伤保险也能很简单
+一个小老板的心声……
+?       工伤保险待遇纠纷数占社会保险纠纷71.90%
+?       工伤事故处理不好，很有可能让一家小型企业倒闭！
+我最大的希望就是手下这群工人，每天都能平平安安的。无论是谁出了事故，都赔不起啊！
+雇主安心保，真正从雇主权益角度出发！
+?       投保免核、灵活定制，你担心的风险，全部由它买单！
+
+Q2 雇主安心保的赔偿范围
+雇主安心保...
+
+keywords_zh": ["雇主责任险", "保险", "责任"], "keywords_en": ["Employer's Liability Insurance", "insurance", "liability"], "text": "介绍下雇主责任险"}
+
+Q：老师 你在ide 中使用python 运行程序 是如何终止程序然后继续的 快捷键是什么
+Ctrl + C 终止程序
+按上 就相当于找到了上一次的指令
+
+
+Q：这个分数大小是相对的 还是绝对的
+BM25 计算出来的，在同样的标准下
+
+Q：老师，我在瓦楞纸箱行业，纸板经常堆在一起不知道数量，人工数很麻烦。您觉得通过训练一个模型来拍照给纸板点数可行吗？应该怎么样做？您能否给指点个大致思路？
+yolov12
+labelImg 打标记
+
+
+刚才有个分数是9分 这个是25分
+
+
+
+我用相同的提示词，生成的ai_bot-2.py，可是还是产生了workspace
+
+
+Q：es存储非结构化数据 mysql存储结构化数据 是吗
+是的！
+
+Q：如果只有几百份文件是不是不需要使用ES，直接用跑通的qwen-agent就行了
+对的
+
+Q：一直连接不到es，localhost:9200这个登录是有返回的，这个是为什么？
+无法连接到Elasticsearch，请检查配置
+
+
+Q:老师，我在vs上 对qwen-agent go to defination 显示No defination found
+pip install qwen-agent
+
+Q：这样不行吧 qwen agent 和交付-1不在一个目录
+对的 需要放到同一个目录下面
+
+我在本地安装了一个数据库
+
+
+我让工具增加ES读取并检索文件夹中PDF的功能， 它直接给我做了 pip install PyPDF2 pdfplumber
+
+
+Q：也执行成功了
+
+
+
+Q：qwen-agent 具备解析pdf的能力
+是的
+
+Q：PPT 11页, 有两个问题想问下:
+步骤一能不能直接输出字块的编号
+
+Q：步骤一的相关句子是字块的原文, 还是LLM生成的
+相关的原文
+
+
+Q：大模型跟这个es 如何配合的，他们分别是干什么的？不用es 差在哪里？用es 就是快？粗筛？
+ES 是数据库 =》 存储和检索数据 （21亿）
+
+
+
+Q：是生成了数据库了么？在哪里>
+
+
+ES和向量数据库有什么区别？
+
+
+Q：faiss也是个数据库吗
+faiss是一个库，工具，计算相似度很快
+如果你想要让faiss保存 元数据meta（文件名，页码，作者）
+
+Q：和FAISS有什么区别
+
+
+qwen-agent 的文件放到 workspace/tool下面
+qwen-agent 的文件放到 es
+
+===
+工伤保险和雇主险有什么区别？
+得分: 9.361887
+文件名: 2-雇主责任险.txt
+内容预览: 【雇主责任险】
+Q1 雇员意外事故给企业造成的损害有多大？甚至可能让一家公司倒闭！！
+员工出外勤不幸遇到车祸被撞高位截瘫
+公司赔偿近一百万
+抽干公司流动资金
+无力维持生产
+走破产程序...
+
+Q2 雇主责任险的保障范围和其他亮点
+1. 保障
+只要有用工需求的单位，都可以购买雇主责任险。
+2. 保障范围：
+死亡赔偿金
+伤残赔偿金
+医疗费用
+误工费用（C款不赔）
+法律诉讼费（C款不赔）
+3. 其他亮点...
+--------------------------------------------------------------------------------
+得分: 9.361887
+文件名: N/A
+内容预览: 【雇主责任险】
+Q1 雇员意外事故给企业造成的损害有多大？甚至可能让一家公司倒闭！！
+员工出外勤不幸遇到车祸被撞高位截瘫
+公司赔偿近一百万
+抽干公司流动资金
+无力维持生产
+走破产程序...
+
+Q2 雇主责任险的保障范围和其他亮点
+1. 保障
+只要有用工需求的单位，都可以购买雇主责任险。
+2. 保障范围：
+死亡赔偿金
+伤残赔偿金
+医疗费用
+误工费用（C款不赔）
+法律诉讼费（C款不赔）
+3. 其他亮点...
+
+====
+根据你的要求，我对 qwen-agent 中 RAG（检索增强生成）的实现过程进行了分析。以下是关键组件和流程的总结：
+
+  1. 入口点：`Assistant` 类
+   - 文件: qwen_agent/agents/assistant.py
+   - 作用: Assistant 类是集成 RAG 能力的主要代理(agent)。它继承自 FnCallAgent，在 _run 方法中，首先通过 _prepend_knowledge_prompt 方法处理知识库相关内容，然后调用父类的 _run
+     方法进行后续的对话和工具调用。
+
+  2. 知识准备：`_prepend_knowledge_prompt` 方法
+   - 文件: qwen_agent/agents/assistant.py
+   - 作用:
+     - 如果没有外部传入的知识 (knowledge 参数为空)，它会调用 self.mem.run(...) 来获取知识。这里的 self.mem 是一个 Memory 对象。
+     - 获取到知识后，将其格式化为包含来源和具体内容的片段 (format_knowledge_to_source_and_content)。
+     - 将这些知识片段拼接到系统提示词 (system_message) 中，作为上下文提供给 LLM。
+
+  3. 核心内存管理：`Memory` 类
+   - 文件: qwen_agent/memory/memory.py
+   - 作用: Memory 是专门用于文件管理和 RAG 的特殊 agent。
+     - 在初始化时，它会配置并注册两个核心工具：retrieval 和 doc_parser。
+     - 在 _run 方法中，它负责处理消息中的文件：
+       - 调用 get_rag_files 收集所有需要进行 RAG 的文件（来自 system_files 和当前消息中的 files）。
+       - 提取用户的最后一条查询 (query)。
+       - （可选）根据 rag_keygen_strategy 策略生成更优的检索关键词。
+       - 调用 retrieval 工具 (self.function_map['retrieval'].call(...))，传入查询和文件列表，执行实际的检索任务。
+       - 将检索到的相关内容 (content) 以响应的形式返回。
+
+  4. 文档处理与分块：`doc_parser` 工具
+   - 文件: qwen_agent/tools/doc_parser.py
+   - 作用: 这是 RAG 流程的第一步，负责解析和分块文档。
+     - 接收一个文件 URL (url)。
+     - 使用 SHA256 哈希值和分块大小 (parser_page_size) 生成缓存键，尝试从本地存储 (Storage) 中加载已分块的文档。这是你提到的“存放到 workspace 中的 tools 目录下”的实现。
+       - 缓存路径: workspace/tools/doc_parser/
+       - 缓存文件名: 以 hash_sha256(url)_suffix 命名。
+     - 如果缓存不存在，它会调用 SimpleDocParser (也在 simple_doc_parser.py 中) 来提取纯文本。
+     - 调用 split_doc_to_chunk 方法根据 max_ref_token 和 parser_page_size 将文档分割成较小的块 (Chunk)。
+     - 将分块结果 (Record) 序列化后存入 Storage 缓存。
+     - 返回整个文档的分块表示，供后续检索使用。
+
+  5. 检索与召回：`retrieval` 工具
+   - 文件: qwen_agent/tools/retrieval.py
+   - 作用: 这是 RAG 流程的核心，负责根据查询召回相关文档片段。
+     - 接收查询 (query) 和文件列表 (files)。
+     - 遍历文件列表，对每个文件调用 doc_parser 工具，确保文件已经被解析和分块。
+     - 根据配置的 rag_searchers（例如 ['keyword_search', 'front_page_search']）创建具体的搜索器 (search)。如果是单一搜索器，则直接使用；如果是多个，则使用 HybridSearch 进行混合搜索。
+     - 调用 self.search.call(...)，传入查询和所有已分块的文档 (records)，执行实际的召回逻辑（如 BM25 关键词匹配等）。
+     - 返回最相关的文档片段列表。
+
+  6. 数据存储：`Storage` 工具
+   - 文件: qwen_agent/tools/storage.py
+   - 作用: 为 doc_parser 等工具提供简单的键值对文件存储功能，用于缓存中间结果（如已分块的文档）。
+     - 数据根目录由 DEFAULT_WORKSPACE 和工具名决定，在你的例子中是 workspace/tools/doc_parser/。
+     - 通过 put, get, delete, scan 方法操作文件。
+
+  总结 RAG 实现流程
+
+   1. 初始化阶段:
+      - 创建 Assistant 实例时，会自动初始化一个 Memory 对象 (self.mem)。
+      - Memory 初始化时注册了 retrieval 和 doc_parser 工具。
+
+   2. 运行时（对话）阶段:
+      - 当用户发起一个带有文件的请求时，Assistant._run 被调用。
+      - Assistant._prepend_knowledge_prompt 调用 self.mem.run(messages)。
+      - Memory._run 开始处理：
+        - 收集文件: get_rag_files 整理出所有相关文件路径。
+        - 文档预处理（懒加载/缓存）: 对每个文件调用 doc_parser 工具。
+          - DocParser.call 检查 workspace/tools/doc_parser/ 下是否有对应文件的缓存。
+          - 如果没有，解析文件并分块，然后将结果存入缓存。
+          - 返回该文件的分块数据。
+        - 执行检索: 调用 retrieval 工具。
+          - Retrieval.call 使用配置的搜索策略（如 keyword_search）在所有文件的分块数据中查找与用户查询最相关的内容。
+        - Memory._run 将检索到的结果作为响应返回。
+      - Assistant._prepend_knowledge_prompt 接收到 Memory 返回的知识，将其格式化并追加到系统提示词中。
+      - Assistant 将包含背景知识的完整提示词发送给 LLM，LLM 生成最终回答。
+
+  这个过程清晰地展示了 qwen-agent 如何自动化地处理文档、建立索引（通过分块和缓存）并执行检索，从而实现 RAG 功能。你提到的“文档拆分成小块并存放到 workspace 中的 tools 目录下”正是在 DocParser
+  类中通过 Storage 工具完成的。
+
+
+
+query： 雇主责任险都有哪些
+file_chunks: BM25算法，打分
+
+coze, dify 现成的产品，直接RAG
+
+SEO
+
+https://www.elastic.co/cn/downloads/elasticsearch
+
+验证当前es账号的状态
+https://localhost:9200 
+用户名 elastic
+重置密码：bin/elasticsearch-reset-password -u elastic
+
+
+curl -k https://localhost:9200
+
+
+Q：老师，yolo 模型 + 大预言模型，嵌套用怎么做？我看资本家弄了个监控员工做咖啡的，是否划水的监控。实现思路是啥？
+Agent，配备yolo工具
+internvideo
+
+Q：如果找工作，我要表达我掌握的内容，和经验，我主要写啥？能给一些例子吗？
+《AI搜索类的应用》
+项目背景：XXX
+技术解决方案：qwen-agent, deepseek, elasticsearch, embedding, bm25
+效果：回答的准确率是多少，首token时间
+
+
+
+Q：gradio界面是改qwen-agent源代码还是当前这个程序的界面
+qwen-agent
+
+Q：老师，朋友是省金控集团的，想要做个内部的agent做金融宣传的ai视频，这个推荐什么插件呢
+即梦、SORA
+
+或者根本不推荐自己做 视频的agent
+
+
+
+Q：embedding和BM25什么关系？
+embedding向量：余弦相似度
+BM25：
+都是用于query 和 chunk之间的距离
+
+Q：老师，Alpha sense这样的金融工具产品，我们是不是也可以自己做？我找了他们的网站，但没买账号，向
+快速学习到他们的思维方法，
+逻辑 =>工作流
+
+
+Q：老师真正工作中，你给我们的这些工程可以拿来改改直接用的对吧，覆盖面较全吧，这是我们课程较大价值的内容吧？我们不需要全部理解吧，重点是知道所有的工具吧，
+
+
+Q：老师，AI Agent跑通后发布上线，是将.py文件打包发布即可吗？
+后端接口：flask, fastapi
+前端页面：vue, gradio, streamlit
+
+
+Q：这些项目做成企业生产级别的程序，需要注意什么，如何做
+业务沟通 => 
+
+
+
+Q：老师，我github上有个开源金融平台OpenBB，不知道怎么部署，这个怎么学呢
+
+Q：有人把Gemini连接到Claude 让前者写前端，后者做后端，用Claude.md提示词作的，这算不算多agent合作
+Claude Code本身是个Agent， 两个LLM
+Agent1：代码智能体 prompt
+Agent2：测试智能体 prompt
+
+Q：这个多模态助手练习，会消耗我们的百炼token吗？
+DASHSCOPE_API_KEY 会消耗我们的token
+
+
+Q：或者有没有开源的项目 推荐一下
+https://github.com/OpenBB-finance/OpenBB
+coze, dify, langchain, langgraph, qwen-agent
+deepseekocr,paddleocr
+mineru, docling
+
+MCP，Function Call, A2A
+Qwen-VL, internvideo
+模型微调
+
+RAG, Text2SQL
+
+分析式AI/决策式AI
+
+
+Agent = LLM + Function/MCP + RAG（流程）
+
+
+
+
+Q：上您的课只用过cursor,已经习惯了，后面有必要买账号么
+
+
+Q：如果api足够便宜，足够智能，就像你说的金融投顾用gpt,是不是没必要本地部署
+对的
+
+Q：确实，自己总结才更能掌握
+
+
+老师今天刚做资金流预测 
+我用较ARIMA(5,1,5)与SARIMA模型比较 您的110分，我的82分，但是AIC是反的A的分数高，S的低
+
+1）是不是说明AIC只能验证已有数据，但是未来数据没有参考性？
+（2）另外为什么（1,1,1）比（5,1,5）AIC好？我查了两个模型前面3个参数一个意思
+
+Q：现在智能体开发还是以代码开发为主么，对于低代码平台的落地是不是还不成熟
+
+

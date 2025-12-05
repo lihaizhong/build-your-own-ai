@@ -1,0 +1,283 @@
+Q：怎么避免大模型生成的代码“假装”实现某个功能？比如要调用大模型，它会编造大模型生成的结果而不实际调用。
+fallback 如果失败的话怎么办，模拟的一些数据，假装实现某个功能
+1）人工检查
+2）看下大模型完成后的回复总结
+
+
+Q：Text2SQL调用的模型多大比较合适？哪个模型比较好？
+qwen3-coder-plus 是目前最好的模型
+480B-A30B
+30B-A3B 
+
+wucai更新了一般，优化、新增了哪些功能呢
+智能体的搭建，wucai = 本地AI
+
+
+Q：small to big这种检索策略是不是很消耗token？经常是本地化部署使用吗？
+Serpapi工具是相当于爬虫吗？（网页搜索）
+
+
+Q：trae使用多了会降职吗
+
+
+Q：老师调用 SQLDatabaseToolkit 如何让它的回答中文，有没有地方设置 Prompt
+可以找到 langchain的源码，将prompt改成中文
+
+
+Q：老师，ML/DL是不是最好也掌握，感觉自己现在知识不扎实，都会一点都不精通？还是全部精力都放在LLM上？希望老师分享一下意见。
+ML/DL => 打造专业的工具，用垂直的样本进行训练，解决特定的问题
+（训练特定的模型，掌握特征工程）
+
+LLM => 更灵活的与用户沟通，调用专业的工具 （RAG, Text2SQL，Agent搭建）
+
+
+Q：博士软件文字需求 能用AI生成原型界面吗
+可以的
+
+Q：上节课的Text2SQL中，数据库有hero和heroscores两个表，LLM在理解的时候会混淆这2 个表，在不改变表名的情况下如何解决类似的问题？
+让LLM自己来解决，可以通过提示词，告诉大模型 这两个数据表分别是什么（给它建表语句）
+
+Q：可以使用GIT管理wucai写的功能吗
+可以的
+
+Function Call
+
+Q：如果wucai一直在跳转页面
+打开 https://chat.qwen.ai/ 先登录进去，就可以
+chain = prompt | llm
+prompt 拼接好，给到 llm 进行推理
+
+切换号
+
+Q：Zero-shot-react 应该怎么理解
+zero-shot 0样本，不需要通过示例进行学习（1-shot, few-shot）
+让LLM根据自己的经验来判断
+react = reasoning + action
+
+是agent先调用大模型，大模型通过调用serpAPI后，返回的结果？还是agent直接调用serpApi返回结果，再给到大模型，再返回结果
+
+
+Q：这么简单的问题都做不对，用这个怎么保证信息的正确性呢
+LLM产生的幻觉 在这个示例中，
+1）serpapi返回的信息的准确度
+2）llm-math 
+
+
+Q：国内到底用哪个？
+
+
+Q：直接调墨迹天气接口应该就好多了吧
+对的，可以用更专业的工具
+
+Q：除了serpapi，还有其他的选择吗？
+DuckDuckGO
+
+Q：deepseek的api可以使用吗？
+可以的
+
+Q：langchain和现在的ai agent有什么区别，agent也是LLM+一些列工具+记忆模块
+langchain 就是帮你打造AI Agent
+
+
+Q：感觉不太聪明的样子
+serpapi 网上搜索到的信息有些杂
+
+
+您帮忙回答一个特别简单的问题：我如果用langchain的话需要输入您这些程序吗？
+
+Langchain 使用的是现成的tool，直接使用，也可以自己定义工具
+
+Q：智能体是怎么发布到网上的
+1）服务器网站搭建
+2）利用平台
+coze, dify
+
+Q：服务多个用户的话 是只能用那个RAG模式吗？
+每个用户都有对应的实例
+
+
+Q：langchain、coze、dify都可以搭建智能体有什么区别？感觉langchain不能在网页搭建吗？只能在py里调用？
+langchain 不是搭建网页，是一个后端的应用
+coze, dify：低代码（拖拉拽在页面上可视化的方式进行编排）
+langchain：高代码
+
+
+工具是集成好的么？可以直接调包？
+
+
+Langchain是不是可以理解成类似Springboot这种框架？
+
+
+Q：差不多，就是个后端框架
+是的
+
+我如果还需要编程，那不是还是没有跨越程序员这个事情吗
+
+
+Q：coze底层是不是也是用langchain开发的？
+
+
+Q：langchain搭建RAG和搭建agent有啥区别，感觉是一回事呀，都要配置知识库？
+RAG 本身也是一种Agent类型
+Agent：
+1）基于知识库的回答智能体
+2）Text2SQL
+
+Q：实例也是云端存储？
+对的
+
+Q：langchain集成的工具会自动更新么？在哪里有使用说明？
+你如果pip install -U 更新langchain，工具可能会有更新
+
+
+代码里面model y是263900
+
+
+Q：这种模式会不会影响大模型的推理能力
+ReAct 是降低幻觉的一种方式
+
+还有哪些模式
+
+
+Q：陈博，langchain是个搭建agent的方法论还是个具体的软件包，怎么获取，需要本地化部署吗
+是工具箱，开源的，可以本地化部署
+https://github.com/langchain-ai/langchain
+
+
+
+Q：ReAct是已经集成在langchain里面了吗?有没有优劣之分呢？ReAct是调用哪个LLM？
+对的，已经集成了，实际上我们用 代码6就可以
+
+
+Q：5，6这个模型是不是可以与之前的text2SQL来查询数据库？
+
+
+Q：react 和大模型的推理过程是指的同一个事情吗
+对的额，ReAct是大模型推理的一种方式，先 Reasoning，再Action
+
+
+Q：如果我不记住longchain的工具名，只是在trae上告诉它我的逻辑，trae会自己调用这些工具吗
+有些LLM知道 langchain都有哪些工具，会帮你来进行调用的
+
+
+Q：老师，使用langchain封装的工具，怎么抉择使用哪一种，大模型会自动选择吗？
+工具需要指定的，给出一个list
+LLM会从给定的范围list中，自主进行判断
+
+
+Q：每个智能体都需要根据当前需求挑选智LLM，以及作为工具的LLM。如何选择呢？ 有没有标准的量化方式呢？
+
+
+Q：我使用cursor时，经常看见它思考很多次，这好像react
+是的
+
+Q：ReAct 和 COT 是一回事吗
+ReAct是一种CoT
+
+
+        Tool(
+            name=text_analysis.name,
+            func=text_analysis.run,
+            description="分析文本内容，提取字数、字符数和情感倾向"
+        ),
+
+    agent = create_react_agent(llm, tools, prompt)
+
+Q：老师，对于产品来说coze的使用场景会比Longchain更实用？
+coze：低代码 （可视化，直观，好上手；需要人自己来做，没有AI帮搭建）
+
+LangChain：高代码（搞定一切，但是需要有一些门槛，好在我们可以用cursor/claude code/wucai 帮你写代码）
+
+
+1、@1-simple_toolchain.py 理解代码，帮我写 .md，包括核心逻辑，不需要代码
+
+2、帮我搭建一个网络故障诊断类的Agent，工具之间存在串联，第一个工具的输出是第二个工具的输入；如果有10个工具的话，会有很多输入输出的关系。
+希望Agent，在适当的时候调用适合的工具；
+===
+可以参考@1-simple_toolchain.py 编写新的Python
+
+
+
+Q：wucai可以像cursor那样设置全局控制要求吗
+1）全局规则
+在 C:/用户名/.wucai 下面创建一个 WUCAI.md
+2）项目规则
+在当前的项目文件夹下面，创建一个 WUCAI.md
+
+
+
+wucai会在你对应的文件夹生成一个py文件吧，在哪个编辑器里运行都行。
+
+判断进入RAG方式，还是Agent推理方式，查了DeepSeek，给了如下回答：
+
+
+Q：可以把这个网络检查，当一个大工具设置到工具链中不，LLM识别到时网络检查的场景后，调用这个大工具，然后再通过内部的10个小工具来分析问题
+是的，可以的！
+大工具 = 固定工作流（A=>B=>C）
+Agent 自主编排 
+
+
+Q：我发现放到.wucai里头的WUCAI.md没怎么起到作用
+
+
+Longchain是只能使用自己工具箱里的工具吗
+
+
+Q：coze对产品友好
+是的
+
+Q：dify怎么私有化部署
+
+
+Q：Longchain似乎很快就不能用了？
+官方推荐的是LangGraph
+
+Q：coze工作流不能太复杂
+对的！
+
+
+Q：会叫different吗
+
+
+Q：规划使用哪些工具是一次性规划出要使用的所有工具还是逐步规划的？
+逐步规划
+Agent => Question, Thinking, Action, Action input, Observation
+
+plan（A=>B=>C=D） + exc
+
+撸代码方便
+
+
+
+Q：对过程透明化或者版本控制要求高的工作用工作流还是langchain更适合
+
+
+Q：推广使用，还是编排式的工具好，如果coze等能够支持复杂流程，肯定比langchain更受欢迎
+是的
+
+
+Q：麻烦问下钢铁检测打卡上交后说有错误The img ID is incorrect：1400should be within 1800, 1400是在1800里啊
+1401开始
+
+Q：wucai除python外，支持其它语言吗
+支持，甚至还能写 ST
+
+Q：那为什么不直接讲langgraph，既然langchain要不能用了
+langgraph后面会讲到
+
+
+Q：langchan、langgraph也支持多模态吧
+支持LLM，LLM可以是多模态
+
+
+N8N可以本地部署，代替coze说是算中代码
+
+
+
+
+
+
+
+
+
+

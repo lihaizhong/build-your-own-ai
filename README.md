@@ -1,5 +1,9 @@
 # build your own ai
 
+## 课程资料下载
+
+- [AI大模型应用第16期](https://pan.baidu.com/s/1MfjQwHba-dHav67tYVAWAw?pwd=8888)
+
 ## uv 查找 Python 环境的顺序
 
 1. 目前目录下的 `.python-version` 文件设定的版本；

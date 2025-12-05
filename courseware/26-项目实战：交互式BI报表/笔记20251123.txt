@@ -1,0 +1,146 @@
+Q：陈老师您好， 可否介绍一下autoDL的基本使用方法， 后续有空可否再
+演示一下或者在您的wucai网页上介绍一下使用方法。
+
+https://www.autodl.com/create
+7B、8B 模型 => 24G显存，可以选择 4090
+jupyter
+
+autodl-tmp （相当于我们的D盘，大模型下载要放到这个盘）
+
+在命令行下面输入 nvidia-smi
+
+使用claude，经常重复造轮子  =》 系统里面有 
+一个主编排的Agent（需求分析）+ 3个subAgent（工具打造，对话助手，应用界面）
+
+
+Q：企业级 rag 中，为了保真和减少幻觉，理论上预处理后切片前的格式是否用 json 比较好， 但 json 存储成本大，是否可以用 parquet 替代？
+mineru => json, markdown
+JSON结构存储，如果成本比较大，可以减少存储的内容
+
+
+
+Q：陈老师，现在一般面试ai产品经理会重点考察哪些内容呢，比如agent客服方向
+1）业务
+chatbot（智能客服）
+
+2）自动化工作流 Agent
+
+
+Q：老师您好，上节课的知识库案例中，每个公司都是一个独立的数据库并设计路由，请问这种设计中，若用户的问题是泛化度很高的问题：比如问标普中利润最高的公司，会如何拆分？
+泛化问题很高的话，不好拆分
+
+
+
+添加 数据库结构字典 的知识库可以解决这个问题么
+
+
+Q：创建宽表，那是不是要在数据库中重新创建表，就是数据库中有两份数据？
+建立视图
+
+scope，
+tushare.pro
+
+tushare.pro/document/2?doc_id=27
+
+
+1、帮我编写Python，使用tushare，获取贵州茅台、五粮液、国泰君安、中芯国际的历史价格，从2021-01-01到今天，保存到 .xlsx中，放到一个worksheet中
+
+2、基于当前的数据表字段，帮我创建 MySQL8.0 建表语句，写入到 .sql
+3、open close是保留字，create sql的时候用  `open` 和 `close`
+trade_date 可以用 varchar(10)
+4、将当前的xlsx，按照 trade_date 从小到大进行排序，trade_date 只保留10位，即日期即可
+5、我想做一个 股票量化交易助手 AI Agent，建表语句见 @create_stock_table.sql 使用qwen-agent，参考 @assistant_ticket_bot-3.py
+
+6、数据库连接用
+数据库名称为 stock
+
+我输入：五粮液和国泰君安哪个股票的平均成交量更高？
+AI回复：
+Start calling tool "exc_sql" ...
+{"sql_input": "SELECT ts_code, AVG(vol) AS avg_vol FROM stock_prices WHERE ts_code IN ('000858.SZ', '000776.SZ') GROUP BY ts_code;"}
+
+Finished tool calling.
+ts_code	avg_vol
+000858.SZ	209827
+===
+你看下有什么问题，如何调整更适合，给我建议及置信度（0-100），先不修改代码
+
+7、在 system_prompt中补充 这4只股票的代码
+8、在画折线图的时候，如果横坐标太密了，横坐标可以选择少一些的个数进行展示
+9、如果结果只有一个数值，不需要用图表呈现
+
+
+10、在 ExcSQLTool中的call中的md会提取df的前10行，这里可以改成提取df的前5行+df的后5行，这样可以让AI看到更完整的信息
+
+11、帮我想做一个布林带的异常检测，使用20日周期+2σ进行检测，默认检测过去1年的超买和超卖日期。
+也可以让用户自定义范围，检测这段时间的超买和超卖点
+编写 boll_detection工具。这里应该也要先从远端阿里云MySQL中获取该股票的数据，然后再进行检测。
+在@stock_quant_agent_2.py 的基础上进行编写，写入到 stock_quant_agent_3.py
+
+
+12、我想用prophet，对某支股票进行周期性分析，分析trend, weekly, yearly的情况，并通过prophet进行可视化，呈现给用户
+编写prophet_analysis，股票周期性分析工具，这里应该也要先从远端阿里云MySQL中获取该股票的数据，然后默认检测过去1年的规律，用户也可以指定分析的时间范围。
+在@stock_quant_agent_3.py 的基础上进行编写，写入到 stock_quant_agent_4.py
+
+投研，投顾
+====
+https://tavily.com/
+https://modelscope.cn/mcp/servers/@tavily-ai/tavily-mcp
+
+另外可以args中传入一个参数为是否需要可视化，这样让AI大模型可以自主判断，传入这个参数
+当不需要进行可视化的时候，后面的 describe() 和 可视化都不需要进行
+
+
+Q：感觉code AI有时候会进死胡同，一直get不到bug关键，这个时候就要自己去看代码了
+
+
+Q：agent经常会因为幻觉导致循环改错，跟鬼打墙似的。换不同agent还会在同一个位置出同样的问题，最后还得走读代码，确认错误点再喂给agent，才能跳出来，
+
+如果是自己的MYSQL
+1）修改的连接 user:password@localhost
+2）在本地的MySQL中，创建对应的数据表 stock_prices
+导入 excel的数据
+
+API_BASE_URL = 
+model = ""
+
+GRANT SELECT ON stock.* TO 'student123'@'%';
+
+
+方法1：在线MySQL
+方法2：本地 sqlite
+
+tushare的token = XXX（填写你的token）
+
+
+价格预测：
+1）机器学习（时间序列）
+ARIMA, prophet
+XGBoost
+2）LSTM（神经网络） => informer, FDEformer
+
+
+我想使用ARIMA，对未来N天的股票价格进行预测，编写工具 arima_stock
+传入股票的ts_code，以及预测的天数 n，这里ts_code是必填
+预测的时候需要先从远端阿里云MySQL中获取该股票的数据，获取截止到今天的前一年的历史价格，然后使用ARIMA进行建模（5,1,5），并对未来n天的价格进行预测
+在@stock_quant_agent-1.py 的基础上进行编写，写入到 stock_quant_agent-2.py
+
+ARIMA 改成 (14,1,14)
+arima_stock_prediction 这里画图的时候，最后一个实际数据点与第一个预测数据点 需要有连线，现在是断开的
+
+
+添加免责声明；弱化“预测”的确定性；明确说明“非投资建议”；强调：这仅是数学模拟结果，不构成投资建议，实际市场波动可能远超模型预期，请谨慎对待。
+
+方法1：修改 qwen-agent调用的GUI gradio
+方法2：vue
+
+
+Q：数量比较多的表，也是用的筛选分类确定的表，有可能用到向量数据库来匹配吗
+可以用向量数据库，进行检索
+
+LLM来判断
+embedding 近似语义检索，判断能否 不如LLM
+
+LLM Reranking
+
+
