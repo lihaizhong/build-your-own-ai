@@ -15,10 +15,12 @@ print(y.shape)
 
 # 将y转换形状
 y = y.reshape(-1, 1)
+print(y.shape)
 
 # 数据规范化
 ss_input = MinMaxScaler()
 x = ss_input.fit_transform(x)
+print(x)
 
 # 转为torch张量
 torch_x = torch.from_numpy(x).type(torch.FloatTensor)
