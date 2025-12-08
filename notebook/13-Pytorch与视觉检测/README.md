@@ -91,6 +91,15 @@ CNN 的由来
 
 ---
 
+YOLO
+
+目标检测算法：
+
+- 第一类方法，基于 Region Proposal 的 R-CNN 系列算法，比如 **R-CNN**，**Fast R-CNN**，**Faster R-CNN**，属于 two-stage
+    - 即，需要先使用启发式方法（selective search）或者 CNN 网络（RPN）产生 Region Proposal，然后再在 Region Proposal 上做分类与回归
+- 第二类方法，YOLO，SSD 这类 one-stage 算法，只使用一个 CNN 网络直接预测不同目标的类别与位置
+
+> two-stage 方法准确度高一些，但速度慢；one-stage 算法是速度快，但是准确度低一些
 
 
 
