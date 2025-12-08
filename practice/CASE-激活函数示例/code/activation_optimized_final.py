@@ -5,7 +5,7 @@ from matplotlib.patches import FancyBboxPatch
 import matplotlib.patheffects as path_effects
 
 # 设置中文字体和样式 - 优化字体设置
-plt.rcParams['font.family'] = ['Arial', 'DejaVu Sans', 'Liberation Sans']
+plt.rcParams['font.family'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
 plt.rcParams['font.size'] = 10
 

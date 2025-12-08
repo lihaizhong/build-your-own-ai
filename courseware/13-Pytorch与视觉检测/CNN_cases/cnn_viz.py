@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 %matplotlib inline
  
 # 读取图像
-img = cv2.imread('故宫.jpg')
+img = cv2.imread('gugong.jpg')
 
 # imread 读的彩色图按照BGR像素存储、转换为RGB
 img_RGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -13,7 +13,7 @@ plt.show()
 
 # 灰度化处理图像
 grayImage = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-# Normalise
+# Normalize
 grayImage = grayImage.astype("float32")/255
 plt.imshow(grayImage, cmap='gray')
 plt.show()
@@ -55,7 +55,7 @@ class Net(nn.Module):
 
     def __init__(self, weight):
         super(Net, self).__init__()
-        # 使用4个固定的fiters，初始化卷积层的权重
+        # 使用4个固定的filters，初始化卷积层的权重
         k_height, k_width = weight.shape[2:] # 4, 4
         #print(k_height, k_width)
         # 这里有4个grayscale filters
