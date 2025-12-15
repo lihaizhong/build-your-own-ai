@@ -19,22 +19,25 @@ Case-二手车价格预测-P1/
 ├── README.md                    # 项目概述和性能记录
 ├── IFLOW.md                     # 本使用指南
 ├── DIALOGUE.md                  # 项目历史交互记录
-├── 数据/
+├── data/                        # 原始数据文件目录
 │   ├── used_car_train_20200313.csv      # 训练数据
 │   ├── used_car_testB_20200421.csv      # 测试数据
 │   └── used_car_sample_submit.csv       # 提交模板
-├── 模型/
-│   ├── modeling_v1.py ~ modeling_v29.py # 29个版本模型
-│   └── rf_modeling.py                    # 随机森林基准模型
-├── 特征工程/
-│   └── modeling_v*_analysis.py          # 各版本特征分析
-├── 预测结果/
+├── code/                        # 预测模型脚本目录 ⭐
+│   ├── modeling_v1.py ~ modeling_v29.py # 29个版本模型脚本
+│   └── rf_modeling.py                    # 随机森林基准模型脚本
+├── feature/                     # 分析工具和特征工程目录 ⭐
+│   ├── modeling_v*_analysis.py          # 各版本特征分析
+│   ├── plot_learning_curve.py           # 学习曲线可视化
+│   └── plot_model_comparison.py         # 模型对比分析
+├── model/                       # 训练好的模型文件目录（预留）
+├── prediction_result/           # 预测结果目录
 │   └── modeling_v*_result_*.csv         # 各版本预测结果
-├── 用户数据/
+├── user_data/                   # 用户生成内容目录
 │   ├── 预处理数据/
 │   ├── 分析图表/
 │   └── 模型可视化/
-└── 文档/
+└── docs/                        # 项目文档目录
     ├── 探索性数据分析（EDA）报告.md
     ├── 数据集说明.md
     ├── 数据预处理建议.md
@@ -50,8 +53,8 @@ Case-二手车价格预测-P1/
 - **测试数据**: 5万条记录，30个特征（无price目标变量）
 - **预测结果**: 包含SaleID和price预测值的CSV文件
 
-#### 模型文件
-- **modeling_v1.py ~ modeling_v29.py**: 完整的模型迭代记录
+#### 代码文件
+- **modeling_v1.py ~ modeling_v29.py**: 完整的模型迭代记录（位于code/目录）
 - **modeling_v28.py**: 当前最佳模型（MAE=487.7112）
 - **modeling_v29.py**: 最新版本（目标突破475分）
 
@@ -104,13 +107,13 @@ def enhanced_preprocessing():
 ### 2. 模型训练
 ```python
 # 运行最新模型
-python model/modeling_v29.py
+python code/modeling_v29.py
 
 # 运行特定版本
-python model/modeling_v28.py
+python code/modeling_v28.py
 
 # 运行快速版本（用于快速验证）
-python model/modeling_v28_fast.py
+python code/modeling_v28_fast.py
 ```
 
 ### 3. 性能验证
@@ -175,9 +178,6 @@ plt.show()
 
 ### 诊断分析
 ```python
-# 运行诊断分析
-python docs/diagnostic_analysis.py
-
 # 查看学习曲线
 python feature/plot_learning_curve.py
 
@@ -309,5 +309,6 @@ snapshot = tracemalloc.take_snapshot()
 
 ---
 
-*本文档随项目发展持续更新，最后更新时间: 2025年11月19日*
+*本文档随项目发展持续更新，最后更新时间: 2025年12月15日*
 *项目状态: 持续优化中，当前最佳成绩: MAE 487.7112 (V28)*
+*目录结构: 已标准化为与CASE-资金流入流出预测-P1一致的结构*
