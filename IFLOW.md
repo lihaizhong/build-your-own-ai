@@ -2,13 +2,13 @@
 
 ## 项目概述
 
-这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、RAG技术、Text2SQL、向量数据库、MCP与A2A、视觉大模型与多模态理解、微调技术等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含26个核心课程模块和丰富的实战案例，形成了从基础到专家的完整学习路径。项目以实战为导向，通过大量真实项目和竞赛案例，帮助学习者掌握AI技术的实际应用能力。
+这是一个全面的AI学习和实践项目，专注于构建从基础到高级的人工智能应用。项目包含完整的机器学习课程材料、实践案例和优化实验，涵盖大模型API使用、传统机器学习、深度学习、Agent开发、RAG技术、Text2SQL、向量数据库、MCP与A2A、视觉大模型与多模态理解、微调技术、AI运营助手、AI搜索应用等多个AI领域。项目已发展成为一个成熟的AI学习生态系统，包含**28个核心课程模块**和丰富的实战案例，形成了从基础到专家的完整学习路径。项目以实战为导向，通过大量真实项目和竞赛案例，帮助学习者掌握AI技术的实际应用能力。
 
 ## 核心技术栈
 
 - **Python环境管理**: uv (现代Python包管理器)
 - **机器学习**: scikit-learn, pandas, numpy, scipy, statsmodels, mlxtend
-- **深度学习**: PyTorch, Transformers, accelerate, peft
+- **深度学习**: PyTorch, TensorFlow, Transformers, accelerate, peft
 - **大模型集成**: OpenAI, Dashscope, ModelScope, cozepy, qwen-agent
 - **向量数据库**: FAISS, ChromaDB
 - **可视化**: matplotlib, seaborn, plotly
@@ -25,6 +25,8 @@
 - **文档解析**: docling, mineru
 - **API集成**: dashscope, coze
 - **BI分析**: SQLAlchemy, 交互式BI报表, 股票数据分析
+- **数据挖掘**: 关联规则挖掘, Apriori算法, FP-Growth
+- **AI搜索**: 搜索引擎集成, 智能问答系统
 
 ## 环境配置
 
@@ -81,16 +83,25 @@ build-your-own-ai/
 │   ├── 23-Fine-tuning微调艺术/     # 微调技术与应用
 │   ├── 24-Fine-tuning实操/        # 微调实操案例
 │   ├── 25-项目实战：企业知识库/     # 企业知识库实战
-│   └── 26-项目实战：交互式BI报表/    # 交互式BI报表实战
+│   ├── 26-项目实战：交互式BI报表/    # 交互式BI报表实战
+│   ├── 27-项目实战：AI运营助手/     # AI运营助手实战
+│   └── 28-项目实战：AI搜索类应用/    # AI搜索应用实战
 ├── practice/                       # 实践练习代码
 │   ├── CASE-员工离职预测分析/       # 离职预测项目
 │   ├── CASE-二手车价格预测-DataWhale/ # 原始版本
 │   ├── CASE-二手车价格预测-P1/     # 优化版本(29个迭代)
 │   ├── CASE-资金流入流出预测-P1/    # 时间序列项目
 │   ├── CASE-股票分析助手/           # 股票分析项目
-│   └── CASE-ChatBI报表/           # ChatBI报表项目
-├── notebook/                       # Jupyter笔记本 (26个模块完整覆盖)
+│   ├── CASE-ChatBI报表/           # ChatBI报表项目
+│   ├── CASE-波士顿房价预测/         # 波士顿房价预测项目
+│   ├── CASE-激活函数示例/           # 激活函数可视化项目
+│   ├── 项目实战：企业知识库/         # 企业知识库实战练习
+│   ├── 项目实战：交互式BI报表/       # BI报表实战练习
+│   ├── 项目实战：AI运营助手/         # AI运营助手实战练习
+│   └── 项目实战：AI搜索类应用/       # AI搜索实战练习
+├── notebook/                       # Jupyter笔记本 (28个模块完整覆盖)
 ├── public/                         # 公共资源
+├── database/                       # 数据库文件
 └── typings/                        # 类型定义
 ```
 
@@ -410,6 +421,64 @@ cd courseware/14-Embeddings和向量数据库/CASE-向量数据库
 python 2-embedding-faiss-元数据.py
 ```
 
+### 🛒 AI运营助手 (courseware/27-项目实战：AI运营助手)
+
+基于关联规则挖掘的AI运营助手项目，专注于客群经营和商品推荐：
+
+**项目特点**:
+- **关联规则挖掘**: Apriori算法、FP-Growth算法实现
+- **百万客群经营**: 大规模用户行为分析和精准营销
+- **商品推荐系统**: 基于购物篮分析的智能推荐
+- **数据挖掘实战**: 从交易数据中发现关联关系
+- **业务应用**: 商品捆绑销售、货架优化、促销策略
+
+**核心技术栈**:
+- **数据挖掘**: mlxtend关联规则挖掘
+- **数据处理**: pandas大规模数据处理
+- **可视化**: matplotlib关联规则可视化
+- **算法实现**: Apriori、FP-Growth高效算法
+
+**应用场景**:
+- 超市购物篮分析
+- 电商商品推荐
+- 客户行为分析
+- 营销策略优化
+
+**运行方式**:
+```bash
+cd courseware/27-项目实战：AI运营助手/【完成参考】CASE-百万客群经营
+python association_rules_mining.py
+```
+
+### 🔎 AI搜索类应用 (courseware/28-项目实战：AI搜索类应用)
+
+构建智能搜索问答系统，集成多种搜索引擎和AI能力：
+
+**项目特点**:
+- **AI搜索引擎**: 集成多个搜索引擎API
+- **智能问答系统**: 基于检索增强的问答能力
+- **Qwen-Agent实践**: 智能体框架最佳实践
+- **多源信息整合**: 搜索结果智能聚合和排序
+- **实时问答**: 快速响应的搜索问答体验
+
+**核心技术栈**:
+- **AI框架**: qwen-agent智能体框架
+- **搜索集成**: 多搜索引擎API集成
+- **RAG技术**: 检索增强生成
+- **提示工程**: 高质量提示词设计
+
+**应用场景**:
+- 智能搜索助手
+- 知识问答系统
+- 信息聚合平台
+- 研究辅助工具
+
+**运行方式**:
+```bash
+cd courseware/28-项目实战：AI搜索类应用/【完成参考】CASE-AI搜索问答
+python search_qa_system.py
+```
+
 ## 学习路径
 
 ### 初学者路径
@@ -443,6 +512,8 @@ python 2-embedding-faiss-元数据.py
 10. **24-Fine-tuning实操**: 深度实操案例与最佳实践
 11. **25-项目实战：企业知识库**: 企业级RAG系统实战开发
 12. **26-项目实战：交互式BI报表**: 交互式商业智能分析系统
+13. **27-项目实战：AI运营助手**: 关联规则挖掘与客群经营
+14. **28-项目实战：AI搜索类应用**: 智能搜索问答系统构建
 
 ## 开发规范
 
@@ -555,6 +626,27 @@ python stock_query_assistant-5.py
 # 或运行不同版本
 python stock_query_assistant.py      # 基础版本
 python stock_query_assistant-3.py    # 增强版本
+```
+
+### AI运营助手系统
+```bash
+# 运行关联规则挖掘
+cd courseware/27-项目实战：AI运营助手/【完成参考】CASE-百万客群经营
+python association_rules_mining.py
+
+# 分析购物篮数据
+python basket_analysis.py
+```
+
+### AI搜索系统
+```bash
+# 启动AI搜索问答系统
+cd courseware/28-项目实战：AI搜索类应用/【完成参考】CASE-AI搜索问答
+python search_qa_system.py
+
+# 运行Qwen-Agent最佳实践
+cd courseware/28-项目实战：AI搜索类应用/CASE-Qwen-Agent最佳实践
+python qwen_agent_demo.py
 ```
 
 ## 数据处理最佳实践
@@ -681,6 +773,91 @@ def search_similar_vectors(index, query_embedding, k=5):
     return distances, indices
 ```
 
+### 关联规则挖掘
+```python
+from mlxtend.frequent_patterns import apriori, association_rules
+import pandas as pd
+
+# 关联规则挖掘
+def mine_association_rules(transactions, min_support=0.01, min_confidence=0.5):
+    """挖掘关联规则"""
+    # 转换为one-hot编码
+    basket = transactions.groupby(['transaction_id', 'item'])['quantity'].sum().unstack().fillna(0)
+    basket = basket.applymap(lambda x: 1 if x > 0 else 0)
+    
+    # 使用Apriori算法找出频繁项集
+    frequent_itemsets = apriori(basket, min_support=min_support, use_colnames=True)
+    
+    # 生成关联规则
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=min_confidence)
+    
+    # 按提升度排序
+    rules = rules.sort_values('lift', ascending=False)
+    
+    return rules
+
+# 商品推荐
+def recommend_products(rules, purchased_items, top_n=5):
+    """基于关联规则推荐商品"""
+    recommendations = []
+    
+    for item in purchased_items:
+        # 找到包含该商品的规则
+        relevant_rules = rules[rules['antecedents'].apply(lambda x: item in x)]
+        
+        # 提取推荐商品
+        for _, rule in relevant_rules.head(top_n).iterrows():
+            recommendations.extend(list(rule['consequents']))
+    
+    # 去重并返回
+    return list(set(recommendations) - set(purchased_items))
+```
+
+### AI搜索系统
+```python
+from qwen_agent import Agent
+import requests
+
+# AI搜索问答系统
+def create_search_agent():
+    """创建AI搜索Agent"""
+    agent = Agent(
+        function_list=['web_search', 'code_interpreter'],
+        llm_cfg={'model': 'qwen-max'}
+    )
+    return agent
+
+def search_and_answer(agent, query):
+    """搜索并回答问题"""
+    # 执行搜索
+    response = agent.run(query)
+    
+    # 整合搜索结果
+    answer = response[-1]['content']
+    sources = [msg for msg in response if msg['role'] == 'function']
+    
+    return {
+        'answer': answer,
+        'sources': sources
+    }
+
+# 多源搜索整合
+def multi_source_search(query, search_engines=['bing', 'google', 'baidu']):
+    """多源搜索整合"""
+    results = []
+    
+    for engine in search_engines:
+        # 调用不同搜索引擎API
+        search_results = call_search_api(engine, query)
+        results.extend(search_results)
+    
+    # 去重和排序
+    unique_results = deduplicate_results(results)
+    ranked_results = rank_by_relevance(unique_results, query)
+    
+    return ranked_results
+```
+
 ### 微调技术最佳实践
 ```python
 # PEFT微调示例
@@ -760,6 +937,20 @@ lora_config = LoraConfig(
 - 实时数据流和增量更新机制
 - Web界面响应式设计和用户交互优化
 
+### 8. 关联规则挖掘优化
+- 使用FP-Growth算法替代Apriori提升性能
+- 实施增量挖掘策略处理实时数据
+- 采用并行计算加速大规模数据处理
+- 优化支持度和置信度阈值选择
+- 实施规则剪枝减少冗余规则
+
+### 9. AI搜索系统优化
+- 实现搜索结果缓存机制
+- 采用异步并发调用多个搜索引擎
+- 使用语义相似度进行结果去重
+- 实施智能排序和重排序算法
+- 优化提示词工程提升回答质量
+
 ## 故障排除
 
 ### 常见问题
@@ -828,8 +1019,10 @@ def debug_database_connection():
 
 ## 新增功能与更新
 
-### 最新技术集成 (2025年11月更新)
-- **交互式BI报表**: 新增第26个模块，构建ChatBI智能助手系统
+### 最新技术集成 (2025年12月更新)
+- **AI运营助手**: 新增第27个模块，关联规则挖掘与客群经营系统
+- **AI搜索应用**: 新增第28个模块，智能搜索问答系统构建
+- **交互式BI报表**: 第26个模块，构建ChatBI智能助手系统
 - **大模型本地部署**: Ollama集成，支持本地运行DeepSeek等模型
 - **Agent开发**: Coze和Dify平台API集成，qwen-agent框架
 - **向量数据库**: FAISS和ChromaDB集成，支持ChatPDF等应用
@@ -847,10 +1040,14 @@ def debug_database_connection():
 - **深度微调实操**: Unsloth高效微调、GRPO强化学习、多模态微调等前沿技术
 - **企业知识库**: RAG冠军方案实战，企业级知识库系统构建与部署
 - **BI智能分析**: SQLAlchemy数据库操作、交互式图表、股票数据智能分析
+- **关联规则挖掘**: Apriori、FP-Growth算法，购物篮分析
+- **智能搜索**: 多源搜索整合，智能问答系统
 
 ### 项目优化成果
 - **二手车价格预测**: 从v1迭代到v29，MAE从1000+优化到487.71(V28最佳)，持续优化中
 - **员工离职预测**: 新增人力资源分析项目，完善预测模型体系
+- **波士顿房价预测**: 新增回归分析项目，多模型对比验证
+- **激活函数可视化**: 新增神经网络基础教学项目，完整的激活函数分析
 - **特征工程**: 建立了完整的特征分析和自动化流程
 - **模型集成**: 实现了多模型Stacking和动态权重调整
 - **校准技术**: 开发了智能校准算法提升预测精度
@@ -864,10 +1061,14 @@ def debug_database_connection():
 - **微调技术**: 从理论到实践的完整微调技术栈，包含LoRA、QLoRA、GRPO等前沿方法
 - **企业知识库**: 实现了基于RAG冠军方案的企业级知识库系统，支持生产环境部署
 - **ChatBI报表**: 新增交互式BI报表模块，支持股票数据智能分析和可视化
+- **AI运营助手**: 新增关联规则挖掘模块，支持百万级客群经营分析
+- **AI搜索应用**: 新增智能搜索问答系统，多源信息整合
 - **竞赛优化**: 多个版本在阿里云天池等竞赛中获得优异成绩，技术实力持续提升
-- **技术扩展**: 项目从25个模块扩展到26个模块，技术覆盖范围不断扩大
+- **技术扩展**: 项目从26个模块扩展到28个模块，技术覆盖范围不断扩大
 
-### 最新模块详解：交互式BI报表 (模块26)
+### 最新模块详解
+
+#### 模块26：交互式BI报表
 
 **项目特色**:
 - **智能SQL生成**: 基于自然语言自动生成SQL查询语句
@@ -883,6 +1084,36 @@ def debug_database_connection():
 - **WebUI界面**: 现代化的用户交互体验
 - **时间序列预测**: 专业的金融数据预测算法
 
+#### 模块27：AI运营助手
+
+**项目特色**:
+- **关联规则挖掘**: Apriori和FP-Growth算法实现
+- **百万客群经营**: 大规模用户行为分析
+- **购物篮分析**: 商品关联关系发现
+- **精准营销**: 基于数据挖掘的营销策略
+- **实战案例**: BreadBasket真实数据集分析
+
+**技术亮点**:
+- **mlxtend框架**: 高效的关联规则挖掘
+- **大数据处理**: pandas处理百万级交易数据
+- **可视化分析**: 关联规则网络图和热力图
+- **业务应用**: 商品捆绑、货架优化、促销策略
+
+#### 模块28：AI搜索类应用
+
+**项目特色**:
+- **多源搜索**: 集成多个搜索引擎API
+- **智能问答**: 基于检索增强的问答系统
+- **Qwen-Agent实践**: 智能体框架最佳实践
+- **信息整合**: 搜索结果智能聚合和排序
+- **实时响应**: 快速的搜索问答体验
+
+**技术亮点**:
+- **qwen-agent框架**: 强大的智能体开发框架
+- **RAG技术**: 检索增强生成提升回答质量
+- **提示工程**: 精心设计的提示词模板
+- **异步处理**: 并发调用多个搜索源
+
 ## 联系支持
 
 - 项目仓库: https://github.com/lihaizhong/build-your-own-ai.git
@@ -892,5 +1123,7 @@ def debug_database_connection():
 ---
 
 *本IFLOW指南将随项目发展持续更新，建议定期查看最新版本。*
-*最后更新: 2025年11月24日*
-*新增模块26：交互式BI报表实战*
+*最后更新: 2025年12月16日*
+*新增模块27：AI运营助手实战*
+*新增模块28：AI搜索类应用实战*
+*当前版本: v2.0 - 28个核心模块完整覆盖*
