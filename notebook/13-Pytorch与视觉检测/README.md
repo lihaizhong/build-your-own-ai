@@ -101,7 +101,19 @@ YOLO
 
 > two-stage 方法准确度高一些，但速度慢；one-stage 算法是速度快，但是准确度低一些
 
+---
 
+缺陷检测步骤：
+
+1. 数据标记 labelImg
+2. 数据集切分 makeTxt.py
+3. 格式转换 voc_label.py
+4. 配置参数
+    - 训练参数 rbc.data, rbc.name
+    - Yolo 参数（基于 classes）
+5. 训练 train.py
+6. 评估 test.py
+7. 预测 detect.py
 
 
 
