@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>香港疫情数据可视化大屏</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <!-- 加载香港地图数据 -->
+  <script>
+    // 从本地hongkong.json文件加载香港地图数据
+    let hongKongMapData = null;
+
+    // 地区名称映射（英文 -> 中文）
+    const districtNameMapping = {
+      'Central and Western': '中西区',
+      'Eastern': '东区',
+      'Islands': '离岛区',
+      'Kowloon City': '九龙城区',
+      'Kwai Tsing': '葵青区',
+      'Kwun Tong': '观塘区',
+      'North': '北区',
+      'Sai Kung': '西贡区',
+      'Sha Tin': '沙田区',
+      'Sham Shui Po': '深水埗区',
+      'Southern': '南区',
+      'Tai Po': '大埔区',
+      'Tsuen Wan': '荃湾区',
+      'Tuen Mun': '屯门区',
+      'Wan Chai': '湾仔区',
+      'Wong Tai Sin': '黄大仙区',
+      'Yau Tsim Mong': '油尖旺区',
+      'Yuen Long': '元朗区'
+    };
+
+    // 异步加载香港地图数据
+    async function loadHongKongMap() {
+      try {
+        console.log('正在加载香港地图数据从 hongkong.json...');
+        const response = await fetch('./hongkong.json?v=' + Date.now());
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const rawMapData = await response.json();
+
+        // 转换地图数据，添加中文名称
+        hongKongMapData = {
+          ...rawMapData,
+          features: rawMapData.features.map(feature => ({
+            ...feature,
+            properties: {
+              ...feature.properties,
+              chineseName: districtNameMapping[feature.properties.name] || feature.properties.name,
+              englishName: feature.properties.name
+            }
+          }))
+        };
+
+        console.log('香港地图数据加载成功，包含', hongKongMapData.features.length, '个地区');
+
+        // 注册地图到ECharts
+        echarts.registerMap('HongKong', hongKongMapData);
+        console.log('香港地图注册成功');
+
+        return true;
+      } catch (error) {
+        console.error('加载香港地图数据失败:', error);
+        return false;
+      }
+    }
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Microsoft YaHei', Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .dashboard-header {
+      text-align: center;
+      padding: 20px 0;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .dashboard-title {
+      font-size: 2.5em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, #ffd700, #ffed4a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .dashboard-subtitle {
+      font-size: 1.2em;
+      opacity: 0.8;
+    }
+
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 20px;
+      padding: 20px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .chart-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .chart-title {
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-align: center;
+      color: #ffd700;
+    }
+
+    .chart {
+      width: 100%;
+      height: 400px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .key-indicators {
+      grid-column: 1 / -1;
+      height: 250px;
+    }
+
+    .key-indicators .chart {
+      height: 200px;
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      font-size: 1.2em;
+    }
+
+    @media (max-width: 1200px) {
+      .dashboard-container {
+        grid-template-columns: 1fr;
+      }
+
+      .full-width {
+        grid-column: 1;
+      }
+    }
+
+    .update-time {
+      text-align: center;
+      margin-top: 20px;
+      opacity: 0.7;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">🏥 香港疫情数据可视化大屏</h1>
+    <p class="dashboard-subtitle">Hong Kong COVID-19 Data Visualization Dashboard</p>
+  </div>
+
+  <div class="dashboard-container">
+    <!-- 图表1: 每日新增与累计确诊 -->
+    <div class="chart-container">
+      <div class="chart-title">📊 每日新增与累计确诊</div>
+      <div id="dailySummaryChart" class="chart">
+        <div class="loading">正在加载数据...</div>
+      </div>
+    </div>
+
+    <!-- 图表2: 各区域疫情分布热力图 -->
+    <div class="chart-container">
+      <div class="chart-title">🗺️ 各区域疫情分布热力图</div>
+      <div id="districtDistributionChart" class="chart">
+        <div class="loading">正在加载数据...</div>
+      </div>
+    </div>
+
+    <!-- 图表3: 疫情增长趋势分析 -->
+    <div class="chart-container">
+      <div class="chart-title">📈 疫情增长趋势分析</div>
+      <div id="trendAnalysisChart" class="chart">
+        <div class="loading">正在加载数据...</div>
+      </div>
+    </div>
+
+    <!-- 图表4: 各区域疫情排行榜 -->
+    <div class="chart-container">
+      <div class="chart-title">🏆 各区域疫情排行榜</div>
+      <div id="districtRankingChart" class="chart">
+        <div class="loading">正在加载数据...</div>
+      </div>
+    </div>
+
+    <!-- 图表5: 关键指标仪表盘 -->
+    <div class="chart-container key-indicators full-width">
+      <div class="chart-title">⚡ 关键指标仪表盘</div>
+      <div id="keyIndicatorsChart" class="chart">
+        <div class="loading">正在加载数据...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="update-time">
+    <p>📅 数据更新时间：<span id="updateTime"></span></p>
+  </div>
+
+  <script>
+    // 初始化所有图表
+    const charts = {};
+
+    // 初始化图表容器
+    function initCharts() {
+      charts.dailySummary = echarts.init(document.getElementById('dailySummaryChart'));
+      charts.districtDistribution = echarts.init(document.getElementById('districtDistributionChart'));
+      charts.trendAnalysis = echarts.init(document.getElementById('trendAnalysisChart'));
+      charts.districtRanking = echarts.init(document.getElementById('districtRankingChart'));
+      charts.keyIndicators = echarts.init(document.getElementById('keyIndicatorsChart'));
+    }
+
+    // 加载每日汇总数据
+    async function loadDailySummary() {
+      try {
+        const response = await fetch('/api/daily_summary');
+        const data = await response.json();
+
+        const option = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'cross' }
+          },
+          legend: {
+            data: ['每日新增', '累计确诊'],
+            textStyle: { color: '#fff' }
+          },
+          xAxis: {
+            type: 'category',
+            data: data.dates,
+            axisLabel: { color: '#fff' },
+            axisLine: { lineStyle: { color: '#fff' } }
+          },
+          yAxis: [
+            {
+              type: 'value',
+              name: '每日新增',
+              axisLabel: { color: '#fff' },
+              axisLine: { lineStyle: { color: '#fff' } },
+              splitLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+            },
+            {
+              type: 'value',
+              name: '累计确诊',
+              axisLabel: { color: '#fff' },
+              axisLine: { lineStyle: { color: '#fff' } }
+            }
+          ],
+          series: [
+            {
+              name: '每日新增',
+              type: 'bar',
+              data: data.new_cases,
+              itemStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: '#ffd700' },
+                  { offset: 1, color: '#ffed4a' }
+                ])
+              }
+            },
+            {
+              name: '累计确诊',
+              type: 'line',
+              yAxisIndex: 1,
+              data: data.total_cases,
+              lineStyle: { color: '#ff6b6b', width: 3 },
+              symbol: 'circle',
+              symbolSize: 6
+            }
+          ]
+        };
+
+        charts.dailySummary.setOption(option);
+      } catch (error) {
+        console.error('加载每日汇总数据失败:', error);
+      }
+    }
+
+    // 加载区域分布数据
+    async function loadDistrictDistribution() {
+      try {
+        // 首先确保地图数据已加载
+        if (!hongKongMapData) {
+          console.log('正在等待地图数据加载...');
+          const mapLoaded = await loadHongKongMap();
+          if (!mapLoaded) {
+            console.warn('地图数据加载失败，使用备用图表');
+            showFallbackChart();
+            return;
+          }
+        }
+
+        const response = await fetch('/api/district_distribution');
+        const data = await response.json();
+
+        console.log('District data:', data);
+
+        if (!data || data.length === 0) {
+          console.warn('没有区域分布数据');
+          showFallbackChart();
+          return;
+        }
+
+        // 获取最大值和最小值用于颜色分级
+        const values = data.map(item => item.value);
+        const maxValue = Math.max(...values);
+        const minValue = Math.min(...values);
+
+        console.log('Min value:', minValue, 'Max value:', maxValue);
+
+        // 将数据转换为地图格式，使用中文名称匹配
+        const mapData = data.map(item => {
+          // 查找对应的英文名称
+          const englishName = Object.keys(districtNameMapping).find(key =>
+            districtNameMapping[key] === item.name
+          );
+
+          return {
+            name: englishName || item.name, // 使用英文名称匹配地图
+            value: item.value,
+            chineseName: item.name, // 保留中文名称用于显示
+            new_cases: item.new_cases,
+            active_cases: item.active_cases
+          };
+        });
+
+        console.log('Map data:', mapData);
+
+        // 尝试显示地图，如果失败则使用备用方案
+        try {
+          const mapOption = {
+            backgroundColor: 'transparent',
+            title: {
+              text: '香港各区疫情分布地图',
+              left: 'center',
+              top: '3%',
+              textStyle: {
+                color: '#fff',
+                fontSize: 16,
+                fontWeight: 'bold'
+              }
+            },
+            tooltip: {
+              trigger: 'item',
+              backgroundColor: 'rgba(0,0,0,0.8)',
+              borderColor: '#fff',
+              borderWidth: 1,
+              textStyle: {
+                color: '#fff',
+                fontSize: 14
+              },
+              formatter: function (params) {
+                if (params.data) {
+                  const chineseName = params.data.chineseName || districtNameMapping[params.name] || params.name;
+                  return `${chineseName}<br/>累计确诊: ${params.value || 0}例<br/>新增确诊: ${params.data.new_cases || 0}例<br/>现有确诊: ${params.data.active_cases || 0}例`;
+                }
+                const chineseName = districtNameMapping[params.name] || params.name;
+                return `${chineseName}<br/>暂无数据`;
+              }
+            },
+            geo: {
+              map: 'HongKong',
+              aspectScale: 0.75,
+              zoom: 1.1,
+              center: [114.1694, 22.3193],
+              roam: false,
+              itemStyle: {
+                borderColor: '#fff',
+                borderWidth: 1.2,
+                areaColor: '#2a5298'
+              },
+              emphasis: {
+                itemStyle: {
+                  areaColor: '#48dbfb',
+                  borderWidth: 2
+                }
+              }
+            },
+            visualMap: {
+              min: minValue,
+              max: maxValue,
+              left: '10px',
+              bottom: '20px',
+              text: ['高', '低'],
+              textStyle: {
+                color: '#fff',
+                fontSize: 12
+              },
+              inRange: {
+                color: ['#1dd1a1', '#48dbfb', '#feca57', '#ff9ff3', '#ff4757']
+              },
+              itemWidth: 20,
+              itemHeight: 120,
+              backgroundColor: 'rgba(0,0,0,0.3)',
+              borderColor: '#fff',
+              borderWidth: 1,
+              padding: [8, 8]
+            },
+            series: [
+              {
+                name: '疫情分布',
+                type: 'map',
+                map: 'HongKong',
+                aspectScale: 0.75,
+                zoom: 1.1,
+                center: [114.1694, 22.3193],
+                roam: false,
+                data: mapData,
+                itemStyle: {
+                  borderColor: '#fff',
+                  borderWidth: 1.2
+                },
+                emphasis: {
+                  itemStyle: {
+                    borderWidth: 2,
+                    shadowBlur: 15,
+                    shadowColor: 'rgba(255,255,255,0.5)'
+                  },
+                  label: {
+                    show: true,
+                    fontSize: 12,
+                    color: '#ffd700',
+                    fontWeight: 'bold'
+                  }
+                },
+                label: {
+                  show: true,
+                  fontSize: 10,
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  distance: 5,
+                  formatter: function (params) {
+                    const chineseName = params.data && params.data.chineseName
+                      ? params.data.chineseName
+                      : districtNameMapping[params.name] || params.name;
+                    // 只显示区名，不显示数值避免过于拥挤
+                    return chineseName;
+                  }
+                }
+              }
+            ]
+          };
+
+          console.log('Setting map chart option:', mapOption);
+          charts.districtDistribution.setOption(mapOption, true);
+          console.log('Map chart set successfully');
+
+        } catch (mapError) {
+          console.warn('Map display failed, using fallback chart:', mapError);
+          showFallbackChart(data, maxValue);
+        }
+
+      } catch (error) {
+        console.error('加载区域分布数据失败:', error);
+        showFallbackChart();
+      }
+    }
+
+    // 备用图表显示函数
+    function showFallbackChart(data = [], maxValue = 100) {
+      console.log('Showing fallback chart');
+
+      // 如果没有数据，创建示例数据
+      if (!data || data.length === 0) {
+        data = [
+          { name: '中西区', value: 456, new_cases: 15, active_cases: 48 },
+          { name: '湾仔区', value: 678, new_cases: 23, active_cases: 92 },
+          { name: '东区', value: 892, new_cases: 31, active_cases: 118 },
+          { name: '南区', value: 234, new_cases: 8, active_cases: 32 },
+          { name: '深水埗区', value: 567, new_cases: 19, active_cases: 76 }
+        ];
+        maxValue = Math.max(...data.map(item => item.value));
+      }
+
+      const getColor = (value, maxValue) => {
+        const ratio = value / maxValue;
+        if (ratio > 0.8) return '#ff4757';
+        if (ratio > 0.6) return '#ff9ff3';
+        if (ratio > 0.4) return '#feca57';
+        if (ratio > 0.2) return '#48dbfb';
+        return '#1dd1a1';
+      };
+
+      const fallbackOption = {
+        backgroundColor: 'transparent',
+        title: {
+          text: '香港各区疫情分布热力图',
+          left: 'center',
+          top: '5%',
+          textStyle: {
+            color: '#fff',
+            fontSize: 16,
+            fontWeight: 'bold'
+          }
+        },
+        tooltip: {
+          trigger: 'item',
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          borderColor: '#fff',
+          borderWidth: 1,
+          textStyle: {
+            color: '#fff',
+            fontSize: 14
+          },
+          formatter: function (params) {
+            const item = data.find(d => d.name === params.name);
+            if (item) {
+              return `${params.name}<br/>累计确诊: ${params.value}例<br/>新增确诊: ${item.new_cases}例<br/>现有确诊: ${item.active_cases}例`;
+            }
+            return `${params.name}<br/>累计确诊: ${params.value}例`;
+          }
+        },
+        series: [
+          {
+            name: '香港各区疫情分布',
+            type: 'treemap',
+            width: '100%',
+            height: '85%',
+            top: '15%',
+            roam: false,
+            nodeClick: false,
+            breadcrumb: {
+              show: false
+            },
+            label: {
+              show: true,
+              fontSize: 12,
+              color: '#fff',
+              fontWeight: 'bold',
+              formatter: function (params) {
+                return `${params.name}\n${params.value}例`;
+              }
+            },
+            itemStyle: {
+              borderColor: '#fff',
+              borderWidth: 2,
+              gapWidth: 2
+            },
+            emphasis: {
+              itemStyle: {
+                borderWidth: 3,
+                shadowBlur: 20,
+                shadowColor: 'rgba(255,255,255,0.5)'
+              }
+            },
+            data: data.map((item) => ({
+              name: item.name,
+              value: item.value,
+              itemStyle: {
+                color: getColor(item.value, maxValue),
+                borderColor: '#fff',
+                borderWidth: 2
+              }
+            }))
+          }
+        ]
+      };
+
+      charts.districtDistribution.setOption(fallbackOption, true);
+      console.log('Fallback chart displayed');
+    }
+
+    // 加载趋势分析数据
+    async function loadTrendAnalysis() {
+      try {
+        const response = await fetch('/api/trend_analysis');
+        const data = await response.json();
+
+        const option = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'cross' }
+          },
+          legend: {
+            data: ['新增确诊', '7日均线', '增长率%'],
+            textStyle: { color: '#fff' }
+          },
+          xAxis: {
+            type: 'category',
+            data: data.dates,
+            axisLabel: { color: '#fff' },
+            axisLine: { lineStyle: { color: '#fff' } }
+          },
+          yAxis: [
+            {
+              type: 'value',
+              name: '确诊数',
+              axisLabel: { color: '#fff' },
+              axisLine: { lineStyle: { color: '#fff' } },
+              splitLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+            },
+            {
+              type: 'value',
+              name: '增长率%',
+              axisLabel: { color: '#fff' },
+              axisLine: { lineStyle: { color: '#fff' } }
+            }
+          ],
+          series: [
+            {
+              name: '新增确诊',
+              type: 'bar',
+              data: data.new_cases_trend,
+              itemStyle: { color: 'rgba(255, 107, 107, 0.8)' }
+            },
+            {
+              name: '7日均线',
+              type: 'line',
+              data: data.ma7,
+              lineStyle: { color: '#ffd700', width: 3 },
+              smooth: true
+            },
+            {
+              name: '增长率%',
+              type: 'line',
+              yAxisIndex: 1,
+              data: data.growth_rate,
+              lineStyle: { color: '#48dbfb', width: 2 },
+              symbol: 'diamond'
+            }
+          ]
+        };
+
+        charts.trendAnalysis.setOption(option);
+      } catch (error) {
+        console.error('加载趋势分析数据失败:', error);
+      }
+    }
+
+    // 加载区域排名数据
+    async function loadDistrictRanking() {
+      try {
+        const response = await fetch('/api/district_ranking');
+        const data = await response.json();
+
+        const option = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' }
+          },
+          xAxis: {
+            type: 'value',
+            axisLabel: { color: '#fff' },
+            axisLine: { lineStyle: { color: '#fff' } },
+            splitLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+          },
+          yAxis: {
+            type: 'category',
+            data: data.districts,
+            axisLabel: { color: '#fff' },
+            axisLine: { lineStyle: { color: '#fff' } }
+          },
+          series: [
+            {
+              name: '累计确诊',
+              type: 'bar',
+              data: data.values,
+              itemStyle: {
+                color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+                  { offset: 0, color: '#feca57' },
+                  { offset: 1, color: '#ff9ff3' }
+                ])
+              },
+              label: {
+                show: true,
+                position: 'right',
+                color: '#fff'
+              }
+            }
+          ]
+        };
+
+        charts.districtRanking.setOption(option);
+      } catch (error) {
+        console.error('加载区域排名数据失败:', error);
+      }
+    }
+
+    // 加载关键指标数据
+    async function loadKeyIndicators() {
+      try {
+        const response = await fetch('/api/key_indicators');
+        const data = await response.json();
+
+        const option = {
+          backgroundColor: 'transparent',
+          title: [
+            {
+              text: '今日新增',
+              left: '16.5%',
+              top: '75%',
+              textAlign: 'center',
+              textStyle: {
+                color: '#fff',
+                fontSize: 14,
+                fontWeight: 'bold'
+              }
+            },
+            {
+              text: '恢复率',
+              left: '50%',
+              top: '75%',
+              textAlign: 'center',
+              textStyle: {
+                color: '#fff',
+                fontSize: 14,
+                fontWeight: 'bold'
+              }
+            },
+            {
+              text: '疫苗接种率',
+              left: '83.5%',
+              top: '75%',
+              textAlign: 'center',
+              textStyle: {
+                color: '#fff',
+                fontSize: 14,
+                fontWeight: 'bold'
+              }
+            }
+          ],
+          series: [
+            {
+              name: '新增确诊',
+              type: 'gauge',
+              center: ['16.5%', '45%'],
+              radius: '65%',
+              min: 0,
+              max: 1000,
+              startAngle: 225,
+              endAngle: -45,
+              splitNumber: 5,
+              data: [{ value: data.total_new, name: '今日新增' }],
+              axisLine: {
+                lineStyle: {
+                  color: [[0.3, '#67e0e3'], [0.7, '#37a2da'], [1, '#fd666d']],
+                  width: 6
+                }
+              },
+              axisTick: {
+                distance: -8,
+                length: 4,
+                lineStyle: {
+                  color: '#fff',
+                  width: 1
+                }
+              },
+              axisLabel: {
+                distance: -20,
+                color: '#fff',
+                fontSize: 10
+              },
+              splitLine: {
+                distance: -15,
+                length: 8,
+                lineStyle: {
+                  color: '#fff',
+                  width: 2
+                }
+              },
+              pointer: {
+                length: '70%',
+                width: 3,
+                itemStyle: {
+                  color: '#fff'
+                }
+              },
+              detail: {
+                fontSize: 16,
+                color: '#fff',
+                fontWeight: 'bold',
+                offsetCenter: [0, '30%'],
+                formatter: '{value}'
+              },
+              title: {
+                show: false
+              }
+            },
+            {
+              name: '恢复率',
+              type: 'gauge',
+              center: ['50%', '45%'],
+              radius: '65%',
+              min: 0,
+              max: 100,
+              startAngle: 225,
+              endAngle: -45,
+              splitNumber: 5,
+              data: [{ value: data.recovery_rate, name: '恢复率%' }],
+              axisLine: {
+                lineStyle: {
+                  color: [[0.3, '#fd666d'], [0.7, '#feca57'], [1, '#67e0e3']],
+                  width: 6
+                }
+              },
+              axisTick: {
+                distance: -8,
+                length: 4,
+                lineStyle: {
+                  color: '#fff',
+                  width: 1
+                }
+              },
+              axisLabel: {
+                distance: -20,
+                color: '#fff',
+                fontSize: 10
+              },
+              splitLine: {
+                distance: -15,
+                length: 8,
+                lineStyle: {
+                  color: '#fff',
+                  width: 2
+                }
+              },
+              pointer: {
+                length: '70%',
+                width: 3,
+                itemStyle: {
+                  color: '#fff'
+                }
+              },
+              detail: {
+                fontSize: 16,
+                color: '#fff',
+                fontWeight: 'bold',
+                offsetCenter: [0, '30%'],
+                formatter: '{value}%'
+              },
+              title: {
+                show: false
+              }
+            },
+            {
+              name: '疫苗接种率',
+              type: 'gauge',
+              center: ['83.5%', '45%'],
+              radius: '65%',
+              min: 0,
+              max: 100,
+              startAngle: 225,
+              endAngle: -45,
+              splitNumber: 5,
+              data: [{ value: data.vaccination_rate, name: '疫苗接种率%' }],
+              axisLine: {
+                lineStyle: {
+                  color: [[0.3, '#fd666d'], [0.7, '#feca57'], [1, '#67e0e3']],
+                  width: 6
+                }
+              },
+              axisTick: {
+                distance: -8,
+                length: 4,
+                lineStyle: {
+                  color: '#fff',
+                  width: 1
+                }
+              },
+              axisLabel: {
+                distance: -20,
+                color: '#fff',
+                fontSize: 10
+              },
+              splitLine: {
+                distance: -15,
+                length: 8,
+                lineStyle: {
+                  color: '#fff',
+                  width: 2
+                }
+              },
+              pointer: {
+                length: '70%',
+                width: 3,
+                itemStyle: {
+                  color: '#fff'
+                }
+              },
+              detail: {
+                fontSize: 16,
+                color: '#fff',
+                fontWeight: 'bold',
+                offsetCenter: [0, '30%'],
+                formatter: '{value}%'
+              },
+              title: {
+                show: false
+              }
+            }
+          ]
+        };
+
+        charts.keyIndicators.setOption(option, true);
+      } catch (error) {
+        console.error('加载关键指标数据失败:', error);
+      }
+    }
+
+    // 自动调整图表大小
+    function resizeCharts() {
+      Object.values(charts).forEach(chart => {
+        chart.resize();
+      });
+    }
+
+    // 初始化函数
+    async function initDashboard() {
+      try {
+        console.log('正在初始化仪表板...');
+
+        // 首先加载地图数据
+        await loadHongKongMap();
+
+        // 并行加载所有数据
+        await Promise.all([
+          loadDailySummary(),
+          loadDistrictDistribution(),
+          loadTrendAnalysis(),
+          loadDistrictRanking(),
+          loadKeyIndicators()
+        ]);
+
+        // 设置更新时间
+        document.getElementById('updateTime').textContent = new Date().toLocaleString('zh-CN');
+
+        console.log('仪表板初始化完成');
+      } catch (error) {
+        console.error('仪表板初始化失败:', error);
+      }
+    }
+
+    // 页面加载完成后初始化
+    window.addEventListener('load', function () {
+      initCharts();
+      initDashboard();
+
+      // 窗口大小变化时调整图表
+      window.addEventListener('resize', resizeCharts);
+    });
+
+    // 定时刷新数据（每5分钟）
+    setInterval(function () {
+      initDashboard();
+    }, 5 * 60 * 1000);
+  </script>
+</body>
+
+</html>
