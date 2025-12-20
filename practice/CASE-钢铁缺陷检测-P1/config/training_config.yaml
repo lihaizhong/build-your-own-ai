@@ -1,0 +1,91 @@
+# 钢铁缺陷检测 - YOLOv11训练配置
+# 针对200×200灰度图像优化
+
+# 数据配置
+data_yaml: "data/yolo_format/data.yaml"
+imgsz: 200  # 保持原尺寸，避免resize失真
+
+# 模型配置
+model: "yolo11n.pt"  # 从nano模型开始，后续可升级到s/m/l
+pretrained: true  # 使用预训练权重
+
+# 训练配置
+epochs: 200  # 小数据集需要更多epoch
+batch_size: 16  # 根据显存调整 (16GB显存可用16-32)
+workers: 4  # 数据加载线程数
+device: "0"  # GPU设备，多个GPU可用"0,1,2,3"
+
+# 优化器配置
+optimizer: "AdamW"  # 比SGD更适合小数据集
+lr0: 0.001  # 初始学习率
+lrf: 0.01   # 最终学习率衰减到lr0*lrf
+momentum: 0.937
+weight_decay: 0.0005  # L2正则化
+
+# 学习率调度
+warmup_epochs: 3  # 学习率预热
+warmup_momentum: 0.8
+warmup_bias_lr: 0.1
+cos_lr: true  # 余弦退火，适合小数据集
+
+# 损失函数权重（针对小目标优化）
+box: 7.5  # 边界框损失权重
+cls: 0.5  # 分类损失权重
+dfl: 1.5  # Distribution Focal Loss权重
+
+# 数据增强配置（针对工业图像优化）
+hsv_h: 0.015  # 色调增强（灰度图像影响较小）
+hsv_s: 0.7    # 饱和度增强
+hsv_v: 0.4    # 明度增强（模拟不同光照）
+degrees: 10.0 # 旋转角度（±10度）
+translate: 0.1 # 平移（10%）
+scale: 0.5    # 缩放（0.5-1.5倍）
+fliplr: 0.5   # 水平翻转概率
+flipud: 0.0   # 垂直翻转（钢铁图像通常不需要）
+mosaic: 1.0   # Mosaic数据增强概率
+mixup: 0.0    # Mixup增强（小数据集谨慎使用）
+
+# 针对小目标的特殊增强
+copy_paste: 0.0  # 复制粘贴增强（小数据集可能有用）
+perspective: 0.0  # 透视变换（钢铁平面图像不需要）
+shear: 0.0  # 剪切变换
+
+# 正则化配置
+dropout: 0.0  # Dropout率
+label_smoothing: 0.0  # 标签平滑
+
+# 早停和保存配置
+patience: 50  # 早停耐心值
+save_period: 10  # 每10个epoch保存一次
+save: true  # 保存检查点
+save_json: true  # 保存评估结果为JSON
+
+# 验证配置
+val: true  # 训练过程中验证
+plots: true  # 生成训练图表
+conf: 0.25  # 验证置信度阈值
+iou: 0.45   # 验证IoU阈值
+
+# 实验配置
+seed: 42  # 随机种子
+verbose: true  # 详细输出
+exist_ok: true  # 覆盖现有实验
+project: "steel_defect_detection"  # 项目名称
+name: "yolo11n_steel_v1"  # 实验名称
+output_dir: "runs/detect"  # 输出目录
+
+# 导出配置
+export_format: "onnx"  # 导出格式 (onnx, engine, torchscript, tflite)
+
+# 类别权重（可选，用于处理类别不平衡）
+# class_weights: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+# 实验名称
+experiment_name: "steel_defect_yolo11n"
+
+# 备注
+# 1. 针对200×200灰度图像优化
+# 2. 使用YOLOv11 nano模型作为起点
+# 3. 数据增强针对工业场景设计
+# 4. 学习率调度适合小数据集训练
+# 5. 损失函数权重针对小目标检测优化
