@@ -47,7 +47,7 @@ langchain/langgraph/qwen-agent => 高代码（个性化，灵活）
 老师，您好。半导体行业能用到这个？因为IC设计挺难进的，芯片验证能结合AI？
 
 Q：下节课讲什么，要做什么准备
-DAHSCOPE_API_KEY 阿里云百炼
+DASHSCOPE_API_KEY 阿里云百炼
 https://bailian.console.aliyun.com/
 https://bailian.console.aliyun.com/?tab=model#/api-key
 
