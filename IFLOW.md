@@ -9,6 +9,7 @@
 - **Python环境管理**: uv (现代Python包管理器)
 - **机器学习**: scikit-learn, pandas, numpy, scipy, statsmodels, mlxtend
 - **深度学习**: PyTorch, TensorFlow, Transformers, accelerate, peft
+- **计算机视觉**: YOLOv11, OpenCV, Ultralytics, 图像处理与目标检测
 - **大模型集成**: OpenAI, Dashscope, ModelScope, cozepy, qwen-agent
 - **向量数据库**: FAISS, ChromaDB
 - **可视化**: matplotlib, seaborn, plotly
@@ -91,7 +92,7 @@ build-your-own-ai/
 │   ├── CASE-二手车价格预测-DataWhale/ # 原始版本
 │   ├── CASE-二手车价格预测-P1/     # 优化版本(29个迭代)
 │   ├── CASE-资金流入流出预测-P1/    # 时间序列项目
-│   ├── CASE-股票分析助手/           # 股票分析项目
+│   ├── CASE-钢铁缺陷检测-P1/        # YOLOv11目标检测项目
 │   ├── CASE-ChatBI报表/           # ChatBI报表项目
 │   ├── CASE-波士顿房价预测/         # 波士顿房价预测项目
 │   ├── CASE-激活函数示例/           # 激活函数可视化项目
@@ -179,6 +180,44 @@ python stock_query_assistant-5.py  # 最新版本ChatBI助手
 python stock_query_assistant.py    # 基础版本
 python stock_query_assistant-3.py  # 增强版本
 ```
+
+### 🔧 钢铁缺陷检测 (practice/CASE-钢铁缺陷检测-P1)
+
+基于YOLOv11的工业计算机视觉项目，专注于钢铁表面缺陷的自动识别和定位：
+
+**项目特点**:
+- **工业应用场景**: 钢铁生产质量在线检测
+- **技术栈**: Ultralytics YOLOv11 / OpenCV / PyTorch
+- **缺陷类型**: 轧入氧化皮、斑块、划痕、夹杂物、裂纹、点蚀表面（6类）
+- **数据集**: NEU-DET钢铁表面缺陷数据集（1800张200×200灰度图像）
+- **评估指标**: mAP、精度、召回率、F1分数、IoU
+
+**核心技术**:
+- **目标检测**: YOLOv11最新架构，高精度缺陷检测
+- **数据转换**: VOC格式到YOLO格式的完整转换工具
+- **训练优化**: 针对工业图像的数据增强策略
+- **一键训练**: 完整的训练脚本和配置系统
+- **模型评估**: 全面的性能指标和可视化分析
+
+**运行方式**:
+```bash
+cd practice/CASE-钢铁缺陷检测-P1
+
+# 一键训练（推荐）
+./run_training.sh
+
+# 或手动训练
+uv run python code/train_yolov11.py --config config/training_config.yaml
+
+# 数据格式转换
+uv run python code/convert_voc_to_yolo.py --data-root data --val-ratio 0.2
+```
+
+**性能目标**:
+- mAP@0.5: > 0.85
+- 精度: > 90%
+- 召回率: > 85%
+- 推理速度: < 50ms/图像（RTX 3060）
 
 ### 🎯 员工离职预测分析 (practice/CASE-员工离职预测分析)
 
@@ -649,6 +688,28 @@ cd courseware/28-项目实战：AI搜索类应用/CASE-Qwen-Agent最佳实践
 python qwen_agent_demo.py
 ```
 
+### 钢铁缺陷检测系统
+```bash
+# 一键训练（推荐）
+cd practice/CASE-钢铁缺陷检测-P1
+./run_training.sh
+
+# 手动训练
+uv run python code/train_yolov11.py --config config/training_config.yaml
+
+# 数据格式转换
+uv run python code/convert_voc_to_yolo.py --data-root data --val-ratio 0.2
+
+# 验证数据集
+uv run python code/convert_voc_to_yolo.py --verify
+
+# 评估模型
+uv run python code/train_yolov11.py --config config/training_config.yaml --evaluate-only
+
+# 导出模型为ONNX格式
+uv run python code/train_yolov11.py --config config/training_config.yaml --export-only --export-format onnx
+```
+
 ## 数据处理最佳实践
 
 ### 数据加载
@@ -882,6 +943,77 @@ lora_config = LoraConfig(
 )
 ```
 
+### 计算机视觉与目标检测
+```python
+import cv2
+import numpy as np
+from ultralytics import YOLO
+
+# YOLO目标检测
+def detect_defects(image_path, model_path):
+    """使用YOLO检测钢铁缺陷"""
+    # 加载模型
+    model = YOLO(model_path)
+    
+    # 读取图像
+    image = cv2.imread(image_path)
+    
+    # 进行预测
+    results = model(image, conf=0.25)
+    
+    # 处理检测结果
+    detections = []
+    for result in results:
+        boxes = result.boxes
+        for box in boxes:
+            # 获取边界框坐标
+            x1, y1, x2, y2 = box.xyxy[0]
+            # 获取类别和置信度
+            cls = int(box.cls[0])
+            conf = float(box.conf[0])
+            
+            detections.append({
+                'class': cls,
+                'confidence': conf,
+                'bbox': [x1, y1, x2, y2]
+            })
+    
+    return detections
+
+# 图像预处理
+def preprocess_image(image_path, target_size=(200, 200)):
+    """图像预处理"""
+    # 读取图像
+    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    
+    # 调整大小
+    image = cv2.resize(image, target_size)
+    
+    # 归一化
+    image = image.astype(np.float32) / 255.0
+    
+    return image
+
+# 数据增强
+def augment_image(image):
+    """图像数据增强"""
+    # 随机旋转
+    angle = np.random.uniform(-15, 15)
+    h, w = image.shape[:2]
+    M = cv2.getRotationMatrix2D((w/2, h/2), angle, 1)
+    image = cv2.warpAffine(image, M, (w, h))
+    
+    # 随机亮度调整
+    brightness = np.random.uniform(0.8, 1.2)
+    image = np.clip(image * brightness, 0, 255).astype(np.uint8)
+    
+    # 随机翻转
+    if np.random.random() > 0.5:
+        image = cv2.flip(image, 1)
+    
+    return image
+```
+
 ## 性能优化建议
 
 ### 1. 数据优化
@@ -951,6 +1083,18 @@ lora_config = LoraConfig(
 - 实施智能排序和重排序算法
 - 优化提示词工程提升回答质量
 
+### 10. 计算机视觉与目标检测优化
+- **模型选择**: 根据精度和速度需求选择合适的YOLO模型尺寸（n/s/m/l/x）
+- **数据增强**: 针对工业图像设计专门的数据增强策略
+- **批次大小**: 根据GPU显存调整批次大小，平衡训练速度和内存使用
+- **学习率调度**: 使用余弦退火配合预热策略提升训练稳定性
+- **早停策略**: 基于验证集性能的智能早停，避免过拟合
+- **混合精度训练**: 使用FP16/FP32混合精度训练提升训练速度
+- **推理优化**: 模型量化和剪枝，提升推理速度和降低内存占用
+- **数据预处理**: 统一图像尺寸和归一化，提升模型一致性
+- **多尺度训练**: 使用多尺度输入提升模型鲁棒性
+- **集成学习**: 多模型集成提升检测精度和稳定性
+
 ## 故障排除
 
 ### 常见问题
@@ -960,6 +1104,10 @@ lora_config = LoraConfig(
 4. **环境问题**: 重新创建虚拟环境
 5. **Ollama连接失败**: 检查服务是否启动，端口是否正确
 6. **BI报表数据连接**: 检查数据库连接配置和SQLAlchemy设置
+7. **YOLO训练GPU显存不足**: 减小批次大小或使用更小的模型（yolo11n）
+8. **数据集转换失败**: 检查XML标注文件格式，确保路径正确
+9. **模型训练不收敛**: 调整学习率、增加训练轮数或检查数据质量
+10. **检测精度低**: 增加训练数据、优化数据增强或调整模型参数
 
 ### 调试技巧
 ```python
@@ -1002,6 +1150,57 @@ def debug_database_connection():
     except Exception as e:
         print(f"数据库连接失败: {e}")
         return False
+
+# 计算机视觉调试
+import cv2
+import torch
+from ultralytics import YOLO
+
+# 检查GPU可用性
+def debug_gpu_availability():
+    """检查GPU可用性"""
+    print(f"CUDA可用: {torch.cuda.is_available()}")
+    if torch.cuda.is_available():
+        print(f"CUDA设备数量: {torch.cuda.device_count()}")
+        print(f"当前设备: {torch.cuda.current_device()}")
+        print(f"设备名称: {torch.cuda.get_device_name(0)}")
+
+# 验证数据集
+def debug_dataset(data_root):
+    """验证数据集"""
+    import os
+    from pathlib import Path
+    
+    data_path = Path(data_root)
+    
+    # 检查图像文件
+    image_dir = data_path / "train" / "IMAGES"
+    images = list(image_dir.glob("*.jpg"))
+    print(f"训练图像数量: {len(images)}")
+    
+    # 检查标注文件
+    annotation_dir = data_path / "train" / "ANNOTATIONS"
+    annotations = list(annotation_dir.glob("*.xml"))
+    print(f"标注文件数量: {len(annotations)}")
+    
+    # 检查YOLO格式
+    yolo_dir = data_path / "yolo_format"
+    if yolo_dir.exists():
+        print(f"YOLO格式数据集已转换")
+        print(f"训练图像: {len(list((yolo_dir / 'images' / 'train').glob('*')))}")
+        print(f"验证图像: {len(list((yolo_dir / 'images' / 'val').glob('*')))}")
+
+# 测试模型加载
+def debug_model_loading(model_path):
+    """测试模型加载"""
+    try:
+        model = YOLO(model_path)
+        print(f"模型加载成功: {model_path}")
+        print(f"模型类别: {model.names}")
+        return True
+    except Exception as e:
+        print(f"模型加载失败: {e}")
+        return False
 ```
 
 ## 贡献指南
@@ -1020,8 +1219,9 @@ def debug_database_connection():
 ## 新增功能与更新
 
 ### 最新技术集成 (2025年12月更新)
-- **AI运营助手**: 新增第27个模块，关联规则挖掘与客群经营系统
-- **AI搜索应用**: 新增第28个模块，智能搜索问答系统构建
+- **钢铁缺陷检测**: 新增YOLOv11目标检测项目，工业计算机视觉应用
+- **AI运营助手**: 第27个模块，关联规则挖掘与客群经营系统
+- **AI搜索应用**: 第28个模块，智能搜索问答系统构建
 - **交互式BI报表**: 第26个模块，构建ChatBI智能助手系统
 - **大模型本地部署**: Ollama集成，支持本地运行DeepSeek等模型
 - **Agent开发**: Coze和Dify平台API集成，qwen-agent框架
@@ -1044,6 +1244,7 @@ def debug_database_connection():
 - **智能搜索**: 多源搜索整合，智能问答系统
 
 ### 项目优化成果
+- **钢铁缺陷检测**: 新增YOLOv11目标检测项目，工业计算机视觉应用，支持6类缺陷检测
 - **二手车价格预测**: 从v1迭代到v29，MAE从1000+优化到487.71(V28最佳)，持续优化中
 - **员工离职预测**: 新增人力资源分析项目，完善预测模型体系
 - **波士顿房价预测**: 新增回归分析项目，多模型对比验证
@@ -1067,6 +1268,22 @@ def debug_database_connection():
 - **技术扩展**: 项目从26个模块扩展到28个模块，技术覆盖范围不断扩大
 
 ### 最新模块详解
+
+#### 钢铁缺陷检测项目 (practice/CASE-钢铁缺陷检测-P1)
+
+**项目特色**:
+- **YOLOv11架构**: 采用最新的Ultralytics YOLOv11目标检测框架
+- **工业应用**: 钢铁生产质量在线检测，6类缺陷自动识别
+- **数据集**: NEU-DET钢铁表面缺陷数据集（1800张200×200灰度图像）
+- **完整流程**: VOC→YOLO格式转换、训练、评估、导出全流程
+- **一键训练**: 提供完整的训练脚本和配置文件
+
+**技术亮点**:
+- **数据转换**: 完整的VOC到YOLO格式转换工具
+- **训练优化**: 针对工业图像的数据增强策略
+- **性能目标**: mAP@0.5 > 0.85，精度 > 90%，召回率 > 85%
+- **推理优化**: 目标推理速度 < 50ms/图像（RTX 3060）
+- **配置管理**: YAML配置文件，易于调优和复现
 
 #### 模块26：交互式BI报表
 
@@ -1123,7 +1340,6 @@ def debug_database_connection():
 ---
 
 *本IFLOW指南将随项目发展持续更新，建议定期查看最新版本。*
-*最后更新: 2025年12月16日*
-*新增模块27：AI运营助手实战*
-*新增模块28：AI搜索类应用实战*
-*当前版本: v2.0 - 28个核心模块完整覆盖*
+*最后更新: 2026年1月4日*
+*新增项目：钢铁缺陷检测（YOLOv11目标检测）*
+*当前版本: v2.1 - 28个核心模块 + 钢铁缺陷检测项目*
