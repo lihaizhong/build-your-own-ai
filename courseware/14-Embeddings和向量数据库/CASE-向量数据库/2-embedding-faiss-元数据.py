@@ -2,6 +2,9 @@ import os
 import numpy as np
 import faiss
 from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)  # 从 .env 文件加载环境变量
 
 # Step1. 初始化 API 客户端
 try:

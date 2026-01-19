@@ -1,5 +1,8 @@
 import os
 from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)  # 从 .env 文件加载环境变量
 
 client = OpenAI(
     api_key=os.getenv("DASHSCOPE_API_KEY"),  # 如果您没有配置环境变量，请在此处用您的API Key进行替换

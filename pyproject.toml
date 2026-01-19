@@ -46,6 +46,9 @@ dependencies = [
     "pyqt5>=5.15.11",
     "lxml>=6.0.2",
     "nltk>=3.9.2",
+    "faiss-cpu>=1.13.2",
+    "jieba>=0.42.1",
+    "gensim>=4.4.0",
 ]
 [tool.uv.extra-build-dependencies]
     fbprophet = ["pystan"]

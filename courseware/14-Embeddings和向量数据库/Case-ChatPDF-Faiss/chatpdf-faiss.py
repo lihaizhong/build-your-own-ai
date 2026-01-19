@@ -7,6 +7,9 @@ from langchain_community.vectorstores import FAISS
 from typing import List, Tuple
 import os
 import pickle
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)  # 从 .env 文件加载环境变量
 
 DASHSCOPE_API_KEY = os.getenv('DASHSCOPE_API_KEY')
 if not DASHSCOPE_API_KEY:
