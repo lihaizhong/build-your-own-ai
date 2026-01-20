@@ -8,7 +8,6 @@ from typing import Optional
 import jieba
 from gensim.models import Word2Vec
 from collections import Counter
-import numpy as np
 
 
 def get_project_path(*paths: str) -> str:
