@@ -1,0 +1,23 @@
+[project]
+name = "vector-db-metadata-management"
+version = "0.1.0"
+description = "向量数据库与元数据管理项目"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.24.0,<2.0.0",
+    "pandas>=2.0.0",
+    "faiss-cpu>=1.7.4",
+    "chromadb>=0.4.0",
+    "sentence-transformers>=2.2.0",
+    "jieba>=0.42.1",
+    "pypdf>=6.6.0",
+    "fitz>=0.0.1.dev2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]

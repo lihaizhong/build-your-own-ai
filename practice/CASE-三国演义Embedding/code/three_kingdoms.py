@@ -246,12 +246,18 @@ def main() -> None:
     
     similar_to_caocao = analyzer.analyze_similar_words('曹操', topn=15)
     
+    print(f"\n相似词结果已保存到变量 similar_to_caocao")
+    print(f"共找到 {len(similar_to_caocao)} 个相似词")
+    
     # 词类比: 曹操 + 刘备 - 张飞 = ?
     analogy_result = analyzer.word_analogy(
         positive_words=['曹操', '刘备'],
         negative_words=['张飞'],
         topn=10
     )
+    
+    print(f"\n词类比结果已保存到变量 analogy_result")
+    print(f"共找到 {len(analogy_result)} 个类比结果")
     
     # 更多有趣的词类比
     print("\n" + "=" * 60)

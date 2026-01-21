@@ -1,0 +1,8 @@
+{
+  "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+  "dimension": 384,
+  "total_qa_pairs": 143,
+  "faiss_index_path": "/Users/lihaizhong/Documents/Project/build-your-own-x/build-your-own-ai/practice/CASE-向量数据库与元数据管理/model/faiss_index.bin",
+  "metadata_path": "/Users/lihaizhong/Documents/Project/build-your-own-x/build-your-own-ai/practice/CASE-向量数据库与元数据管理/model/metadata.json",
+  "created_at": "2026-01-21"
+}

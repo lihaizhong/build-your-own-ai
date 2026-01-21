@@ -1,0 +1,41 @@
+[
+  {
+    "rank": 1,
+    "similarity": 0.9999999999930866,
+    "distance": 6.9134576535789805e-12,
+    "metadata": {
+      "id": "qa_058",
+      "category": "经典算法类",
+      "question_number": "七",
+      "question_title": ""
+    },
+    "question": "什么是机器学习？",
+    "answer": ""
+  },
+  {
+    "rank": 2,
+    "similarity": 0.170489600562957,
+    "distance": 4.865460395812988,
+    "metadata": {
+      "id": "qa_130",
+      "category": "技术基础类",
+      "question_number": "七",
+      "question_title": ""
+    },
+    "question": "什么是机器学习？",
+    "answer": "机器学习 (Machine Learning) 是对研究问题进行模型假设，利用计算机从训 练数据中学习得到模型参数，并最终对数据进行预测和分析的一门学科。"
+  },
+  {
+    "rank": 3,
+    "similarity": 0.12341806661279509,
+    "distance": 7.102541446685791,
+    "metadata": {
+      "id": "qa_059",
+      "category": "经典算法类",
+      "question_number": "八",
+      "question_title": ""
+    },
+    "question": "机器学习的应用场景都有哪些？",
+    "answer": ""
+  }
+]

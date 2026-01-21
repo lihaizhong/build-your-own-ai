@@ -1,0 +1,41 @@
+[
+  {
+    "rank": 1,
+    "similarity": 0.5077810535124183,
+    "distance": 0.9693527221679688,
+    "metadata": {
+      "id": "qa_017",
+      "category": "经典算法类",
+      "question_number": "五",
+      "question_title": ""
+    },
+    "question": "KNN 算法的优缺点",
+    "answer": ""
+  },
+  {
+    "rank": 2,
+    "similarity": 0.15642016079155246,
+    "distance": 5.393037796020508,
+    "metadata": {
+      "id": "qa_088",
+      "category": "经典算法类",
+      "question_number": "五",
+      "question_title": ""
+    },
+    "question": "KNN 算法的优缺点",
+    "answer": "优点 1.简单好用，容易理解，精度高，理论成熟，既可以用来做分类也可以用来 做回归； 2.可用于数值型数据和离散型数据； 3.训练时间复杂度为 O(n)；无数据输入假定； 4.对异常值不敏感 缺点 1.计算复杂性高；空间复杂性高； 2.样本不平衡问题（即有些类别的样本数量很多，而其它样本的数量很少）； 3.一般数值很大的时候不用这个，计算量太大。但是单个样本又不能太少， 否则容易发生误分。4.最大的缺点是无法给出数据的内在含义。"
+  },
+  {
+    "rank": 3,
+    "similarity": 0.14988463936024124,
+    "distance": 5.671797752380371,
+    "metadata": {
+      "id": "qa_016",
+      "category": "经典算法类",
+      "question_number": "四",
+      "question_title": ""
+    },
+    "question": "什么是 KNN 算法的实现原理",
+    "answer": ""
+  }
+]
