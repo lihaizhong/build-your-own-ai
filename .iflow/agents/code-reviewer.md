@@ -4,7 +4,7 @@ name: code-reviewer
 description: Expert code review specialist. Proactively reviews code for quality, security, and maintainability. Use immediately after writing or modifying code.
 when-to-use: Expert code review specialist. Proactively reviews code for quality, security, and maintainability. Use immediately after writing or modifying code.
 allowed-tools: 
-model: gpt-4
+model: glm-4.7
 inherit-tools: true
 inherit-mcps: true
 color: red

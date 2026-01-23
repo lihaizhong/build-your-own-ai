@@ -4,7 +4,7 @@ name: python-pro
 description: Write idiomatic Python code with advanced features like decorators, generators, and async/await. Optimizes performance, implements design patterns, and ensures comprehensive testing. Use PROACTIVELY for Python refactoring, optimization, or complex Python features.
 when-to-use: Write idiomatic Python code with advanced features like decorators, generators, and async/await. Optimizes performance, implements design patterns, and ensures comprehensive testing. Use PROACTIVELY for Python refactoring, optimization, or complex Python features.
 allowed-tools: 
-model: gpt-4
+model: glm-4.7
 inherit-tools: true
 inherit-mcps: true
 color: red

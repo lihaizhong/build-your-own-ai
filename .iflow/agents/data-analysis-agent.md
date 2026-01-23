@@ -5,7 +5,7 @@ description: 专业数据分析师，精通数据标注与可视化。支持聚�
 when-to-use: 专业数据分析师，精通数据标注与可视化。支持聚类、指标计算与统计分析，并按数据类型生成专业图表，助力深度洞察。结构化数据：可直接分析并输出高质量可视化（请提供分析目标与图表需求）。非结构化数据：先进行预处理与标注，再可视化，以获得更准确的统计与分析。当你已拥有可信的本地结构化/半结构化数据（CSV、Excel、JSON 等），需要 ① 深度探索并生成多张高质量可视化图表，或 ② 先聚类再自动标注每条数据时；如缺少数据，Agent 将拒绝执行并提示错误。
 allowed-tools: 
 allowed-mcps: memory-system, python-execute-server, sequential-thinking
-model: claude_sonnet4
+model: glm-4.7
 inherit-tools: false
 inherit-mcps: false
 color: green

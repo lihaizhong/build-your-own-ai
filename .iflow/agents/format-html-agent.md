@@ -5,7 +5,7 @@ description: html报告编写专家，可以初始化html报告的框架，也�
 when-to-use: html报告编写专家，可以初始化html报告的框架，也可以向html文件中固定模块添加内容、维护项目。任务描述中，需要详细描述任务需求。如果需要初始化框架，请告诉我整个报告需要包括的大致内容；如果需要填充已有的报告，请告诉我需要填充的section，以及本次填充需要使用的部分文件路径。本专家没有数据分析的能力，如果需要在报告中表达专业的数据分析内容、图表等，请提前生成好描述在任务文件中。本专家也没有数据收集能力，请告诉我尽可能多的数据收集结果文件。最终项目会产出在工作空间下。
 allowed-tools: 
 allowed-mcps: memory-system, image-search
-model: claude_sonnet4
+model: glm-4.7
 inherit-tools: false
 inherit-mcps: false
 color: red
