@@ -1,5 +1,26 @@
 # DeepSeek使用和提示词工程
 
+---
+
+DeepSeek 使用
+
+- DeepSeek 的创新
+- DeepSeek 私有化部署选择
+- Ollama 部署 DeepSeek-R1
+- 不同尺寸大模型选择
+- API 调用 DeepSeek
+
+提示词工程
+
+- Prompt 工程：设计与优化
+- Prompt 原理
+- 提示词关键原则
+- 提示词编写框架（重要性排序）
+- 提示词编写技巧（限制格式、区分、小样本学习、CoT、角色扮演等）
+- Prompt 工程实战
+
+---
+
 ## DeepSeek的创新
 
 - MLA（Multi-Head Latent Attention）

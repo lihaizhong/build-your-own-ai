@@ -1,5 +1,16 @@
 # Coze工作原理与应用实例
 
+---
+
+Coze 工作原理与应用实例
+
+- Agent 与 Copilot 的区别
+- 插件使用
+- 工作流使用
+- RAG 知识库
+
+---
+
 ## Agent 与 Copilot 的区别
 
 |      | Copilot                                 | Agent                                   |
