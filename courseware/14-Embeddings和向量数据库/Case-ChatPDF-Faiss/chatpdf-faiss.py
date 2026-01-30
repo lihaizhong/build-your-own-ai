@@ -2,8 +2,8 @@ from PyPDF2 import PdfReader
 from langchain.chains.question_answering import load_qa_chain
 from langchain_community.callbacks.manager import get_openai_callback
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import DashScopeEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings.dashscope import DashScopeEmbeddings
+from langchain_community.vectorstores.faiss import FAISS
 from typing import List, Tuple
 import os
 import pickle
@@ -161,7 +161,7 @@ def load_knowledge_base(load_path: str, embeddings = None) -> FAISS:
     return knowledgeBase
 
 # 读取PDF文件
-pdf_reader = PdfReader('./浦发上海浦东发展银行西安分行个金客户经理考核办法.pdf')
+pdf_reader = PdfReader('./courseware/14-Embeddings和向量数据库/Case-ChatPDF-Faiss/浦发上海浦东发展银行西安分行个金客户经理考核办法.pdf')
 # 提取文本和页码信息
 text, page_numbers = extract_text_with_page_numbers(pdf_reader)
 text
@@ -192,7 +192,7 @@ docs = loaded_knowledgeBase.similarity_search("客户经理每年评聘申报时
 """
 
 from langchain_community.llms import Tongyi
-llm = Tongyi(model_name="deepseek-v3", dashscope_api_key=DASHSCOPE_API_KEY) # qwen-turbo
+llm = Tongyi(model_name="qwen-turbo", dashscope_api_key=DASHSCOPE_API_KEY)
 
 # 设置查询问题
 query = "客户经理被投诉了，投诉一次扣多少分"

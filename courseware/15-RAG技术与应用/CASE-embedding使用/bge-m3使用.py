@@ -26,7 +26,7 @@ embeddings_1 = model.encode(sentences_1,
                             max_length=8192, # If you don't need such a long length, you can set a smaller value to speed up the encoding process.
                             )['dense_vecs']
 embeddings_2 = model.encode(sentences_2)['dense_vecs']
-similarity = embeddings_1 @ embeddings_2.T
+similarity = embeddings_1 @ embeddings_2.T # type: ignore
 print(similarity)
 # [[0.6265, 0.3477], [0.3499, 0.678 ]]
 

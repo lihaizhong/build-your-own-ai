@@ -23,29 +23,6 @@
 5. modeling_v24_fast.py
     - 分数：**501.8398**
 
-### 其他考试成绩
-
-- modeling_v29.py
-    - 分数：542.3983
-- modeling_v28_fast.py
-    - 分数：504.9944
-- modeling_v27.py
-    - 分数：783.9360
-- modeling_v27_fast.py
-    - 分数：531.8382
-- modeling_v25.py
-    - 分数：1298.1723
-- modeling_v24.py
-    - 分数：5900.2078
-- modeling_v22.py
-    - 分数：502.1616
-- modeling_v19.py
-    - 分数：516.7588
-- modeling_v17.py
-    - 分数：531.0229
-- modeling_v16.py
-    - 分数：539.8390
-
 ## 项目结构
 
 ```plaintext
