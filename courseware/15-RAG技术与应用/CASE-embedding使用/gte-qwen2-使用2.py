@@ -14,6 +14,10 @@ from modelscope import AutoTokenizer, AutoModel  # 从modelscope导入自动分�
 
 # 定义最后一个token池化函数
 # 该函数从最后的隐藏状态中提取每个序列的最后一个有效token的表示
+# * 核心问题
+# 当你对多个不同长度的文本进行分词和模型推理时，会遇到一个问题：
+# - 短文本需要用特殊符号填充（padding）来匹配长度
+# - 你需要准确提取每个序列的最后一个 **真实 token**，而不是填充符号
 def last_token_pool(last_hidden_states: Tensor,
                  attention_mask: Tensor) -> Tensor:
     # 检查是否为左侧填充（即所有序列最后一个位置都有效）
