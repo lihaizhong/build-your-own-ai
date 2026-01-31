@@ -133,3 +133,12 @@
 - [NLP 教程](https://www.runoob.com/nlp/nlp-tutorial.html)
 - [Transformers 教程](https://huggingface.co/docs/transformers/v4.56.0/zh/index)
 
+## 学习资料
+
+- [x][大模型 RAG 基础：信息检索、文本向量化及 BGE-M3 embedding 实践（2024）](https://arthurchiao.art/blog/rag-basis-bge-zh/)
+- [ ][Transformer 是如何工作的：600 行 Python 代码实现 self-attention 和两类 Transformer（2019）](https://arthurchiao.art/blog/transformers-from-scratch-zh/)
+- [ ][什么是 GPT？Transformer 工作原理的动画展示（2024）](https://arthurchiao.art/blog/visual-intro-to-transformers-zh/)
+- [ ][GPT 是如何工作的：200 行 Python 代码实现一个极简 GPT（2023）](https://arthurchiao.art/blog/gpt-as-a-finite-state-markov-chain-zh/)
+- [ ][如何训练一个企业级 GPT 助手（OpenAI，2023）](https://arthurchiao.art/blog/how-to-train-a-gpt-assistant-zh/)
+- [ ][InstructGPT：基于人类反馈训练语言模型遵从指令的能力（OpenAI，2022）](https://arthurchiao.art/blog/instructgpt-paper-zh/)
+- [ ][BERT：预训练深度双向 Transformers 做语言理解（Google，2019）](https://arthurchiao.art/blog/bert-paper-zh/)
