@@ -27,7 +27,7 @@ Coze 工作原理与应用实例
 对于复杂的Bot，推荐使用**结构化格式**编写，采用 Markdown 语法。
 
 ```markdown
-# Charactor /// <Bot 人设>
+# Character /// <Bot 人设>
 你是数据分析专家，擅长使用 analyze 工具，包括提取、处理、分析和解释数据，用通俗易懂的语言解释数据特征和分析结果。
 
 ## Skill /// <Bot 技能>

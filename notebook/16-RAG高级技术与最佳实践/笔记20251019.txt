@@ -46,7 +46,7 @@ Q：一般一款软件的代码量极大。针对现有的一个软件源码管�
 我按我case的步骤问哈
 
 
-Q：jupiterhub怎么用的
+Q：jupiter hub怎么用的
 jupyter lab，安装anaconda，然后 win开始的地方，输入 jupyter 可以看到这个应用
 
 Q：linux下的terminal，上下键不支持，只有alacritty
@@ -181,7 +181,7 @@ Query只是一段代码，是借助于大模型运行，跟Rerank那种本身就
 Q：多轮的对话，是需要将几轮的上下文，带入后，改写会更准确，这里范围需要如何设置带入多大的上下文
 通过规则设定，一般设置k=5
 
-CoT Chain of Tought
+CoT Chain of Thought
 
 置信度：
 
@@ -227,8 +227,8 @@ doc2query，我们给知识库，增加了一些问题
 
 上海迪士尼乐园门票价格为：成人票平日399元，周末及节假日499元；儿童票（身高1.0-1.4米）平日299元，周末374元，1.0米以下儿童免费。园区通常每天开放，营业时间为上午8:00至晚上8:00。必玩项目包括创极速光轮（明日世界）、七个小矮人矿山车（梦幻世界）、加勒比海盗：战争之潮（宝藏湾）和翱翔·飞越地平线（探险岛）。部分游乐项目设有身高限制。游客可携带密封包装的零食和水入园，但禁止携带玻璃瓶及酒精饮料。园内停车场收费为100元/天。
 
-Q：grahpRAG文件夹里没有可以执行的脚本呐，如果我想试试自己跑呢~ 
-github上面可以看到graphrag
+Q：GraphRAG文件夹里没有可以执行的脚本呐，如果我想试试自己跑呢~ 
+github上面可以看到 GraphRAG
 
 Q：知识入库，是把整理好的“内容”入库？还是整个JSON “内容”加“关键字”一起入库？
 整理好的内容
@@ -255,7 +255,7 @@ Q：k的数量大是不是就不需要rerank
 TopK 如果在上一阶段embedding筛选出来的是30个，需要rerank
 
 上上次课的word_similarity，我这运行报错，这个怎么解决？
-ImportError: cannotimport name 'triu' from 'scipy.linalg.special matrices’
+ImportError: cannot import name 'triu' from 'scipy.linalg.special matrices’
 
 
 Q：Query 几种改写类型， 先判断是否需要改写？
@@ -331,9 +331,9 @@ Q：加不了课的话，可以给一些推荐的论文书籍或者视频也行�
 GraphRAG github里面说明
 回来找找，放到 class.wucai.com 的打卡
 
-Q：graphrag对于多文本的召回率提升大吗
+Q：GraphRAG对于多文本的召回率提升大吗
 会好一些
 
-embadding里K大的的化，好像也没有必要rerank了。所以K+rerank是不是了回答为更准确呢（比如K大了会召回无关知识，会答错，所以用rerank
+embedding里K大的的化，好像也没有必要rerank了。所以K+rerank是不是了回答为更准确呢（比如K大了会召回无关知识，会答错，所以用rerank
 
 优化chunk内容的准确率越高是不是就是模型的幻觉越低？还是说会有召回速度的提升？
