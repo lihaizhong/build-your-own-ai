@@ -4,8 +4,6 @@ import os
 import json
 import numpy as np
 from openai import OpenAI
-import pandas as pd
-from datetime import datetime
 from rank_bm25 import BM25Okapi
 import jieba
 import re

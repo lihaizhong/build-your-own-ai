@@ -2,11 +2,7 @@
 # 导入依赖库
 import dashscope
 import os
-import json
-import re
-from datetime import datetime, timedelta
-from collections import defaultdict, Counter
-import pandas as pd
+from datetime import datetime
 import numpy as np
 import faiss
 from openai import OpenAI

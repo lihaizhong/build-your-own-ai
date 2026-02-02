@@ -9,7 +9,6 @@ from langchain_community.llms import Tongyi
 from typing import List, Tuple
 import os
 import pickle
-from langchain_core.callbacks.manager import CallbackManagerForRetrieverRun
 
 # 获取环境变量中的 DASHSCOPE_API_KEY
 DASHSCOPE_API_KEY = os.getenv('DASHSCOPE_API_KEY')
