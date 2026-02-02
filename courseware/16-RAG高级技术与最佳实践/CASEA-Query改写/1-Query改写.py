@@ -12,11 +12,11 @@ def get_completion(prompt, model="qwen-turbo-latest"):
     messages = [{"role": "user", "content": prompt}]
     response = dashscope.Generation.call(
         model=model,
-        messages=messages,
+        messages=messages, # type: ignore
         result_format='message',
         temperature=0,
     )
-    return response.output.choices[0].message.content
+    return response.output.choices[0].message.content # type: ignore
 
 # Query改写功能
 class QueryRewriter:
@@ -109,7 +109,7 @@ class QueryRewriter:
         
         response = get_completion(prompt, self.model)
         try:
-            return json.loads(response)
+            return json.loads(response) # type: ignore
         except:
             return [response]
     
@@ -172,7 +172,7 @@ class QueryRewriter:
         
         response = get_completion(prompt, self.model)
         try:
-            return json.loads(response)
+            return json.loads(response) # type: ignore
         except:
             return {
                 "query_type": "未知类型",

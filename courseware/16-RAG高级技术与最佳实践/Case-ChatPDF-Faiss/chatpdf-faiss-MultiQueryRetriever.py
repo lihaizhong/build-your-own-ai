@@ -1,10 +1,9 @@
 from PyPDF2 import PdfReader
 from langchain.chains.question_answering import load_qa_chain
-from langchain_openai import OpenAI
 from langchain_community.callbacks.manager import get_openai_callback
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import DashScopeEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings.dashscope import DashScopeEmbeddings
+from langchain_community.vectorstores.faiss import FAISS
 from langchain.retrievers import MultiQueryRetriever
 from langchain_community.llms import Tongyi
 from typing import List, Tuple
@@ -41,7 +40,7 @@ def extract_text_with_page_numbers(pdf) -> Tuple[str, List[int]]:
 
     return text, page_numbers
 
-def process_text_with_splitter(text: str, page_numbers: List[int], save_path: str = None) -> FAISS:
+def process_text_with_splitter(text: str, page_numbers: List[int], save_path: str = None) -> FAISS: # type: ignore
     """
     处理文本并创建向量存储
     
@@ -69,7 +68,7 @@ def process_text_with_splitter(text: str, page_numbers: List[int], save_path: st
     embeddings = DashScopeEmbeddings(
         model="text-embedding-v1",
         dashscope_api_key=DASHSCOPE_API_KEY,
-    )
+    ) # type: ignore
     
     # 从文本块创建知识库
     knowledgeBase = FAISS.from_texts(chunks, embeddings)
@@ -100,7 +99,7 @@ def process_text_with_splitter(text: str, page_numbers: List[int], save_path: st
                 page_info[chunk] = page_numbers[-1] if page_numbers else 1
         else:
             page_info[chunk] = -1
-    knowledgeBase.page_info = page_info
+    knowledgeBase.page_info = page_info # type: ignore
     
     # 如果提供了保存路径，则保存向量数据库和页码信息
     if save_path:
@@ -134,7 +133,7 @@ def load_knowledge_base(load_path: str, embeddings = None) -> FAISS:
         embeddings = DashScopeEmbeddings(
             model="text-embedding-v1",
             dashscope_api_key=DASHSCOPE_API_KEY,
-        )
+        ) # type: ignore
     
     # 加载FAISS向量数据库，添加allow_dangerous_deserialization=True参数以允许反序列化
     knowledgeBase = FAISS.load_local(load_path, embeddings, allow_dangerous_deserialization=True)
@@ -145,7 +144,7 @@ def load_knowledge_base(load_path: str, embeddings = None) -> FAISS:
     if os.path.exists(page_info_path):
         with open(page_info_path, "rb") as f:
             page_info = pickle.load(f)
-        knowledgeBase.page_info = page_info
+        knowledgeBase.page_info = page_info # type: ignore
         print("页码信息已加载。")
     else:
         print("警告: 未找到页码信息文件。")
@@ -232,7 +231,7 @@ def main():
         embeddings = DashScopeEmbeddings(
             model="text-embedding-v1",
             dashscope_api_key=DASHSCOPE_API_KEY,
-        )
+        ) # type: ignore
         # 加载向量数据库
         knowledgeBase = load_knowledge_base(vector_db_path, embeddings)
     else:

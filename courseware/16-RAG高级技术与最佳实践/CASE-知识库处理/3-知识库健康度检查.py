@@ -3,7 +3,6 @@
 import dashscope
 import os
 import json
-import re
 from datetime import datetime
 
 # 从环境变量中获取 API Key
@@ -14,11 +13,11 @@ def get_completion(prompt, model="qwen-turbo-latest"):
     messages = [{"role": "user", "content": prompt}]
     response = dashscope.Generation.call(
         model=model,
-        messages=messages,
+        messages=messages, # type: ignore
         result_format='message',
         temperature=0.3,
     )
-    return response.output.choices[0].message.content
+    return response.output.choices[0].message.content # type: ignore
 
 class KnowledgeBaseHealthChecker:
     def __init__(self, model="qwen-turbo-latest"):
@@ -85,14 +84,14 @@ class KnowledgeBaseHealthChecker:
             response = get_completion(prompt, self.model)
             
             # 预处理响应，移除markdown代码块格式
-            if response.startswith('```json'):
+            if response.startswith('```json'): # type: ignore
                 response = response[7:]
-            elif response.startswith('```'):
+            elif response.startswith('```'): # type: ignore
                 response = response[3:]
-            if response.endswith('```'):
+            if response.endswith('```'): # type: ignore
                 response = response[:-3]
             
-            result = json.loads(response.strip())
+            result = json.loads(response.strip()) # type: ignore
             return result
             
         except Exception as e:
@@ -156,14 +155,14 @@ class KnowledgeBaseHealthChecker:
             response = get_completion(prompt, self.model)
             
             # 预处理响应，移除markdown代码块格式
-            if response.startswith('```json'):
+            if response.startswith('```json'): # type: ignore
                 response = response[7:]
-            elif response.startswith('```'):
+            elif response.startswith('```'): # type: ignore
                 response = response[3:]
-            if response.endswith('```'):
+            if response.endswith('```'): # type: ignore
                 response = response[:-3]
             
-            result = json.loads(response.strip())
+            result = json.loads(response.strip()) # type: ignore
             return result
             
         except Exception as e:
@@ -221,14 +220,14 @@ class KnowledgeBaseHealthChecker:
             response = get_completion(prompt, self.model)
             
             # 预处理响应，移除markdown代码块格式
-            if response.startswith('```json'):
+            if response.startswith('```json'): # type: ignore
                 response = response[7:]
-            elif response.startswith('```'):
+            elif response.startswith('```'): # type: ignore
                 response = response[3:]
-            if response.endswith('```'):
+            if response.endswith('```'): # type: ignore
                 response = response[:-3]
             
-            result = json.loads(response.strip())
+            result = json.loads(response.strip()) # type: ignore
             return result
             
         except Exception as e:

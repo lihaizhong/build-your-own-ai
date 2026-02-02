@@ -1,6 +1,6 @@
 from langchain.retrievers import MultiQueryRetriever
-from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import DashScopeEmbeddings
+from langchain_community.vectorstores.faiss import FAISS
+from langchain_community.embeddings.dashscope import DashScopeEmbeddings
 from langchain_community.llms import Tongyi
 import os
 
@@ -14,7 +14,7 @@ llm = Tongyi(model_name="deepseek-v3", dashscope_api_key=DASHSCOPE_API_KEY) # qw
 embeddings = DashScopeEmbeddings(
     model="text-embedding-v1",
     dashscope_api_key=DASHSCOPE_API_KEY,
-)
+) # type: ignore
 
 # 加载向量数据库，添加allow_dangerous_deserialization=True参数以允许反序列化
 vectorstore = FAISS.load_local("./faiss-1", embeddings, allow_dangerous_deserialization=True)

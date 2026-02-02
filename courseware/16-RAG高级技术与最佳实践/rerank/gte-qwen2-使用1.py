@@ -34,5 +34,5 @@ document_embeddings = model.encode(documents)
 
 scores = (query_embeddings @ document_embeddings.T) * 100
 print(scores.tolist())
-[[78.49691772460938, 17.04286003112793], [14.924489974975586, 75.37960815429688]]
+# [[78.49691772460938, 17.04286003112793], [14.924489974975586, 75.37960815429688]]
 

@@ -3,7 +3,6 @@
 import dashscope
 import os
 import json
-import re
 from datetime import datetime
 
 # 从环境变量中获取 API Key
@@ -14,11 +13,11 @@ def get_completion(prompt, model="qwen-turbo-latest"):
     messages = [{"role": "user", "content": prompt}]
     response = dashscope.Generation.call(
         model=model,
-        messages=messages,
+        messages=messages, # type: ignore
         result_format='message',
         temperature=0,
     )
-    return response.output.choices[0].message.content
+    return response.output.choices[0].message.content # type: ignore
 
 class WebSearchQueryRewriter:
     def __init__(self, model="qwen-turbo-latest"):
@@ -62,7 +61,7 @@ class WebSearchQueryRewriter:
         
         response = get_completion(prompt, self.model)
         try:
-            return json.loads(response)
+            return json.loads(response) # type: ignore
         except:
             return {
                 "need_web_search": False,
@@ -107,7 +106,7 @@ class WebSearchQueryRewriter:
         
         response = get_completion(prompt, self.model)
         try:
-            return json.loads(response)
+            return json.loads(response) # type: ignore
         except:
             return {
                 "rewritten_query": query,
@@ -154,7 +153,7 @@ class WebSearchQueryRewriter:
         
         response = get_completion(prompt, self.model)
         try:
-            return json.loads(response)
+            return json.loads(response) # type: ignore
         except:
             return {
                 "primary_keywords": [query],

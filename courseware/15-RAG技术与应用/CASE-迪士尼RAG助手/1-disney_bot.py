@@ -22,12 +22,10 @@
    - HF_TOKEN: (可选) 您的 Hugging Face Token，用于下载 CLIP 模型，避免手动确认。
 """
 import os
-import re
 import numpy as np
 import faiss
 from openai import OpenAI
 from docx import Document as DocxDocument
-import fitz  # PyMuPDF
 from PIL import Image
 import pytesseract
 from transformers import CLIPProcessor, CLIPModel
@@ -127,14 +125,14 @@ def get_image_embedding(image_path):
     image = Image.open(image_path)
     inputs = clip_processor(images=image, return_tensors="pt")
     with torch.no_grad():
-        image_features = clip_model.get_image_features(**inputs)
+        image_features = clip_model.get_image_features(**inputs) # type: ignore
     return image_features[0].numpy()
 
 def get_clip_text_embedding(text):
     """使用CLIP的文本编码器获取文本的Embedding。"""
     inputs = clip_processor(text=text, return_tensors="pt")
     with torch.no_grad():
-        text_features = clip_model.get_text_features(**inputs)
+        text_features = clip_model.get_text_features(**inputs) # type: ignore
     return text_features[0].numpy()
 
 def build_knowledge_base(docs_dir, img_dir):
@@ -206,14 +204,14 @@ def build_knowledge_base(docs_dir, img_dir):
     text_index_map = faiss.IndexIDMap(text_index)
     text_ids = [m["id"] for m in metadata_store if m["type"] == "text"]
     if text_vectors:  # 只有当有文本向量时才添加到索引
-        text_index_map.add_with_ids(np.array(text_vectors).astype('float32'), np.array(text_ids))
+        text_index_map.add_with_ids(np.array(text_vectors).astype('float32'), np.array(text_ids)) # type: ignore
     
     # 图像索引
     image_index = faiss.IndexFlatL2(IMAGE_EMBEDDING_DIM)
     image_index_map = faiss.IndexIDMap(image_index)
     image_ids = [m["id"] for m in metadata_store if m["type"] == "image"]
     if image_vectors:  # 只有当有图像向量时才添加到索引
-        image_index_map.add_with_ids(np.array(image_vectors).astype('float32'), np.array(image_ids))
+        image_index_map.add_with_ids(np.array(image_vectors).astype('float32'), np.array(image_ids)) # type: ignore
     
     print(f"索引构建完成。共索引 {len(text_vectors)} 个文本片段和 {len(image_vectors)} 张图片。")
     
@@ -294,7 +292,7 @@ def rag_ask(query, metadata_store, text_index, image_index, k=3):
                 break
         
         if image_path_found:
-            final_answer += f"\n\n(同时，我为您找到了相关图片，路径为: {image_path_found})"
+            final_answer += f"\n\n(同时，我为您找到了相关图片，路径为: {image_path_found})" # type: ignore
 
     except Exception as e:
         final_answer = f"调用LLM时出错: {e}"

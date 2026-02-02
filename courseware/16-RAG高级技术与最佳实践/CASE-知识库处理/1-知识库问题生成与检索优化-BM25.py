@@ -41,7 +41,7 @@ def get_completion(prompt, model="qwen-turbo-latest"):
     messages = [{"role": "user", "content": prompt}]
     response = client.chat.completions.create(
         model=model,
-        messages=messages,
+        messages=messages, # type: ignore
         temperature=0.7,
     )
     return response.choices[0].message.content
@@ -468,7 +468,7 @@ def main():
     # 为知识库生成问题
     print('正在为知识库生成问题...')
     for chunk in knowledge_base:
-        chunk['generated_questions'] = optimizer.generate_questions_for_chunk(chunk['content'])
+        chunk['generated_questions'] = optimizer.generate_questions_for_chunk(chunk['content']) # type: ignore
         #print("chunk['generated_questions']=", chunk['generated_questions'])
     print('为知识库生成问题完毕')
     

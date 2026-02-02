@@ -31,11 +31,11 @@ def get_completion(prompt, model="qwen-turbo-latest"):
     messages = [{"role": "user", "content": prompt}]
     response = dashscope.Generation.call(
         model=model,
-        messages=messages,
+        messages=messages, # type: ignore
         result_format='message',
         temperature=0.3,
     )
-    return response.output.choices[0].message.content
+    return response.output.choices[0].message.content # type: ignore
 
 class ConversationKnowledgeExtractor:
     def __init__(self, model="qwen-turbo-latest"):

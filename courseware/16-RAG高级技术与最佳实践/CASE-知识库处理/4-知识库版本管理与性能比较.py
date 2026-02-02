@@ -29,11 +29,11 @@ def get_completion(prompt, model="qwen-turbo-latest"):
     messages = [{"role": "user", "content": prompt}]
     response = dashscope.Generation.call(
         model=model,
-        messages=messages,
+        messages=messages, # type: ignore
         result_format='message',
         temperature=0.3,
     )
-    return response.output.choices[0].message.content
+    return response.output.choices[0].message.content # type: ignore
 
 def get_text_embedding(text):
     """获取文本的 Embedding"""
@@ -94,7 +94,7 @@ class KnowledgeBaseVersionManager:
         
         if text_vectors:
             text_ids = [m["id"] for m in metadata_store]
-            text_index_map.add_with_ids(np.array(text_vectors).astype('float32'), np.array(text_ids))
+            text_index_map.add_with_ids(np.array(text_vectors).astype('float32'), np.array(text_ids)) # type: ignore
         
         return metadata_store, text_index_map
     
@@ -326,14 +326,14 @@ class KnowledgeBaseVersionManager:
             "comparison_date": datetime.now().isoformat(),
             "performance_comparison": {
                 "accuracy": {
-                    "version1": perf1["overall_metrics"]["accuracy"],
-                    "version2": perf2["overall_metrics"]["accuracy"],
-                    "improvement": perf2["overall_metrics"]["accuracy"] - perf1["overall_metrics"]["accuracy"]
+                    "version1": perf1["overall_metrics"]["accuracy"], # type: ignore
+                    "version2": perf2["overall_metrics"]["accuracy"], # type: ignore
+                    "improvement": perf2["overall_metrics"]["accuracy"] - perf1["overall_metrics"]["accuracy"] # type: ignore
                 },
                 "response_time": {
-                    "version1": perf1["overall_metrics"]["avg_response_time"],
-                    "version2": perf2["overall_metrics"]["avg_response_time"],
-                    "improvement": perf1["overall_metrics"]["avg_response_time"] - perf2["overall_metrics"]["avg_response_time"]
+                    "version1": perf1["overall_metrics"]["avg_response_time"], # type: ignore
+                    "version2": perf2["overall_metrics"]["avg_response_time"], # type: ignore
+                    "improvement": perf1["overall_metrics"]["avg_response_time"] - perf2["overall_metrics"]["avg_response_time"] # type: ignore
                 }
             },
             "recommendation": self.generate_performance_recommendation(perf1, perf2)
@@ -465,20 +465,20 @@ def main():
     
     print(f"版本比较结果:")
     changes = comparison['changes']
-    print(f"  新增知识切片: {len(changes['added_chunks'])}个")
-    print(f"  删除知识切片: {len(changes['removed_chunks'])}个")
-    print(f"  修改知识切片: {len(changes['modified_chunks'])}个")
+    print(f"  新增知识切片: {len(changes['added_chunks'])}个") # type: ignore
+    print(f"  删除知识切片: {len(changes['removed_chunks'])}个") # type: ignore
+    print(f"  修改知识切片: {len(changes['modified_chunks'])}个") # type: ignore
     
     print(f"\n新增的知识切片:")
-    for i, chunk in enumerate(changes['added_chunks'], 1):
-        print(f"  {i}. ID: {chunk['id']}")
-        print(f"     内容: {chunk['content']}")
+    for i, chunk in enumerate(changes['added_chunks'], 1): # type: ignore
+        print(f"  {i}. ID: {chunk['id']}") # type: ignore
+        print(f"     内容: {chunk['content']}") # type: ignore
     
     print(f"\n修改的知识切片:")
-    for i, chunk in enumerate(changes['modified_chunks'], 1):
-        print(f"  {i}. ID: {chunk['id']}")
-        print(f"     旧内容: {chunk['old_content']}")
-        print(f"     新内容: {chunk['new_content']}")
+    for i, chunk in enumerate(changes['modified_chunks'], 1): # type: ignore
+        print(f"  {i}. ID: {chunk['id']}") # type: ignore
+        print(f"     旧内容: {chunk['old_content']}") # type: ignore
+        print(f"     新内容: {chunk['new_content']}") # type: ignore
     
     print("\n" + "="*60 + "\n")
     
@@ -497,12 +497,12 @@ def main():
     perf_v2 = version_manager.evaluate_version_performance("v2.0", test_queries)
     
     print(f"版本1性能:")
-    print(f"  准确率: {perf_v1['overall_metrics']['accuracy']*100:.1f}%")
-    print(f"  平均响应时间: {perf_v1['overall_metrics']['avg_response_time']*1000:.1f}ms")
+    print(f"  准确率: {perf_v1['overall_metrics']['accuracy']*100:.1f}%") # type: ignore
+    print(f"  平均响应时间: {perf_v1['overall_metrics']['avg_response_time']*1000:.1f}ms") # type: ignore
     
     print(f"\n版本2性能:")
-    print(f"  准确率: {perf_v2['overall_metrics']['accuracy']*100:.1f}%")
-    print(f"  平均响应时间: {perf_v2['overall_metrics']['avg_response_time']*1000:.1f}ms")
+    print(f"  准确率: {perf_v2['overall_metrics']['accuracy']*100:.1f}%") # type: ignore
+    print(f"  平均响应时间: {perf_v2['overall_metrics']['avg_response_time']*1000:.1f}ms") # type: ignore
     
     print("\n" + "="*60 + "\n")
     
@@ -512,8 +512,8 @@ def main():
     
     print(f"性能比较结果:")
     comp = perf_comparison['performance_comparison']
-    print(f"  准确率提升: {comp['accuracy']['improvement']*100:.1f}%")
-    print(f"  响应时间变化: {comp['response_time']['improvement']*1000:.1f}ms")
+    print(f"  准确率提升: {comp['accuracy']['improvement']*100:.1f}%") # type: ignore
+    print(f"  响应时间变化: {comp['response_time']['improvement']*1000:.1f}ms") # type: ignore
     print(f"  建议: {perf_comparison['recommendation']}")
     
     print("\n" + "="*60 + "\n")
@@ -528,8 +528,8 @@ def main():
     
     print(f"\n详细测试结果:")
     for i, result in enumerate(regression_v2['test_results'], 1):
-        status = "✓" if result['passed'] else "✗"
-        print(f"  {i}. {result['query']} {status}")
+        status = "✓" if result['passed'] else "✗" # type: ignore
+        print(f"  {i}. {result['query']} {status}") # type: ignore
 
 if __name__ == "__main__":
     main() 
