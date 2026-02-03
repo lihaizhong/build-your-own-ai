@@ -385,7 +385,7 @@ def load_and_optimize_data():
             all_values = pd.concat([
                 train_data[col].astype(str), 
                 test_data[col].astype(str)
-            ]).unique()
+            ]).unique() # type: ignore
 
             le = LabelEncoder()
             le.fit(all_values)
@@ -514,7 +514,7 @@ def create_targeted_features(train_data, test_data):
         all_brand_model = pd.concat([
             train_data['brand_model'],
             test_data['brand_model']
-        ]).unique()
+        ]).unique() # type: ignore
         
         le_brand_model.fit(all_brand_model)
         train_data['brand_model_encoded'] = le_brand_model.transform(train_data['brand_model'])
@@ -834,16 +834,16 @@ def create_optimized_rf_ensemble(X_train, y_train, X_test, enable_analysis=True)
         print(f"训练抗过拟合模型 {i+1}/{len(rf_models)}...")
         
         # 设置OOB评分
-        model.oob_score = True
+        model.oob_score = True # type: ignore
         model.fit(X_train, y_train)
         pred = model.predict(X_test)
         pred = np.maximum(pred, 0)  # 确保非负
         
         predictions.append(pred)
         trained_models.append(model)
-        oob_scores.append(model.oob_score_)
+        oob_scores.append(model.oob_score_) # type: ignore
         
-        print(f"  模型{i+1} - 预测范围: {pred.min():.2f} - {pred.max():.2f}, OOB Score: {model.oob_score_:.4f}")
+        print(f"  模型{i+1} - 预测范围: {pred.min():.2f} - {pred.max():.2f}, OOB Score: {model.oob_score_:.4f}") # type: ignore
     
     # 基于OOB分数的智能加权集成
     oob_weights = np.array(oob_scores)
@@ -1027,7 +1027,7 @@ def main():
     models_to_save = {}
     
     # 保存所有训练好的RF模型
-    for i, model in enumerate(trained_models):
+    for i, model in enumerate(trained_models): # type: ignore
         models_to_save[f'rf_{i+1}'] = model
     
     if models_to_save:

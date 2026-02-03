@@ -494,17 +494,17 @@ def v24_fast_test():
     
     # 收集所有已训练的模型
     if 'lgb_model' in locals():
-        models_to_save['lgb'] = lgb_model
+        models_to_save['lgb'] = lgb_model # type: ignore
     if 'xgb_model' in locals():
-        models_to_save['xgb'] = xgb_model
+        models_to_save['xgb'] = xgb_model # type: ignore
     if 'cat_model' in locals():
-        models_to_save['cat'] = cat_model
+        models_to_save['cat'] = cat_model # type: ignore
     if 'rf_model' in locals():
-        models_to_save['rf'] = rf_model
+        models_to_save['rf'] = rf_model # type: ignore
     if 'ridge_model' in locals():
-        models_to_save['ridge'] = ridge_model
+        models_to_save['ridge'] = ridge_model # type: ignore
     if 'meta_model' in locals():
-        models_to_save['meta'] = meta_model
+        models_to_save['meta'] = meta_model # type: ignore
     
     # 保存模型
     if models_to_save:

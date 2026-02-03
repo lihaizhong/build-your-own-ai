@@ -548,9 +548,9 @@ def train_innovative_models(X_train, y_train, X_test):
     
     # 返回预测结果、评分信息和训练好的模型
     models = {
-        'lgb': lgb_model,
-        'xgb': xgb_model,
-        'cat': cat_model
+        'lgb': lgb_model, # type: ignore
+        'xgb': xgb_model, # type: ignore
+        'cat': cat_model # type: ignore
     }
     
     return lgb_predictions, xgb_predictions, cat_predictions, {
