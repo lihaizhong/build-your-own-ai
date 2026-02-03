@@ -196,12 +196,12 @@ embeddings = DashScopeEmbeddings(
     dashscope_api_key=DASHSCOPE_API_KEY,
 )
 # 从磁盘加载向量数据库
-loaded_knowledgeBase = load_knowledge_base("./vector_db", embeddings)
+loaded_knowledgeBase = load_knowledge_base(save_dir, embeddings)
 # 使用加载的知识库进行查询
 docs = loaded_knowledgeBase.similarity_search("客户经理每年评聘申报时间是怎样的？")
 
 # 直接使用FAISS.load_local方法加载（替代方法）
-# loaded_knowledgeBase = FAISS.load_local("./vector_db", embeddings, allow_dangerous_deserialization=True)
+# loaded_knowledgeBase = FAISS.load_local(save_dir, embeddings, allow_dangerous_deserialization=True)
 # 注意：使用这种方法加载时，需要手动加载页码信息
 """
 
