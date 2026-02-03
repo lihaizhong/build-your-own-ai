@@ -1,8 +1,8 @@
 from PyPDF2 import PdfReader
 from langchain.chains.question_answering import load_qa_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import DashScopeEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings.dashscope import DashScopeEmbeddings
+from langchain_community.vectorstores.faiss import FAISS
 from typing import List, Tuple
 import os
 import pickle
@@ -10,6 +10,28 @@ import pickle
 DASHSCOPE_API_KEY = os.getenv('DASHSCOPE_API_KEY')
 if not DASHSCOPE_API_KEY:
     raise ValueError("请设置环境变量 DASHSCOPE_API_KEY")
+
+def get_project_path(*paths: str) -> str:
+    """
+    获取项目路径的统一方法
+    类似TypeScript中的path.join(__dirname, ...paths)
+    
+    Args:
+        *paths: 路径组件
+        
+    Returns:                                                                                                                                    
+        完整的项目路径
+    """
+    try:
+        # __file__ 类似于 TypeScript 中的 __filename
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        # 获取项目根目录(向上一级)
+        project_dir = os.path.dirname(current_dir)
+        
+        return os.path.join(project_dir, *paths)
+    except NameError:
+        # 在某些环境下(如Jupyter)__file__不可用,使用当前工作目录
+        return os.path.join(os.getcwd(), *paths)
 
 def extract_text_with_page_numbers(pdf) -> Tuple[str, List[Tuple[str, int]]]:
     """
@@ -36,7 +58,7 @@ def extract_text_with_page_numbers(pdf) -> Tuple[str, List[Tuple[str, int]]]:
 
     return text, char_page_mapping
 
-def process_text_with_splitter(text: str, char_page_mapping: List[int], save_path: str = None) -> FAISS:
+def process_text_with_splitter(text: str, char_page_mapping: List[int], save_path: str = None) -> FAISS: # type: ignore
     """
     处理文本并创建向量存储
     
@@ -64,7 +86,7 @@ def process_text_with_splitter(text: str, char_page_mapping: List[int], save_pat
     embeddings = DashScopeEmbeddings(
         model="text-embedding-v1",
         dashscope_api_key=DASHSCOPE_API_KEY,
-    )
+    ) # type: ignore
     
     # 从文本块创建知识库
     knowledgeBase = FAISS.from_texts(chunks, embeddings)
@@ -89,14 +111,14 @@ def process_text_with_splitter(text: str, char_page_mapping: List[int], save_pat
                 page_counts[page] = page_counts.get(page, 0) + 1
             
             # 找到出现次数最多的页码
-            most_common_page = max(page_counts, key=page_counts.get)
+            most_common_page = max(page_counts, key=page_counts.get) # type: ignore
             page_info[chunk] = most_common_page
         else:
             page_info[chunk] = 1  # 默认页码
         
         current_pos = chunk_end
     
-    knowledgeBase.page_info = page_info
+    knowledgeBase.page_info = page_info # type: ignore
     print(f'页码映射完成，共 {len(page_info)} 个文本块')
     
     # 如果提供了保存路径，则保存向量数据库和页码信息
@@ -131,7 +153,7 @@ def load_knowledge_base(load_path: str, embeddings = None) -> FAISS:
         embeddings = DashScopeEmbeddings(
             model="text-embedding-v1",
             dashscope_api_key=DASHSCOPE_API_KEY,
-        )
+        ) # type: ignore
     
     # 加载FAISS向量数据库，添加allow_dangerous_deserialization=True参数以允许反序列化
     knowledgeBase = FAISS.load_local(load_path, embeddings, allow_dangerous_deserialization=True)
@@ -142,7 +164,7 @@ def load_knowledge_base(load_path: str, embeddings = None) -> FAISS:
     if os.path.exists(page_info_path):
         with open(page_info_path, "rb") as f:
             page_info = pickle.load(f)
-        knowledgeBase.page_info = page_info
+        knowledgeBase.page_info = page_info # type: ignore
         print("页码信息已加载。")
     else:
         print("警告: 未找到页码信息文件。")
@@ -162,8 +184,8 @@ text, char_page_mapping = extract_text_with_page_numbers(pdf_reader)
 print(f"提取的文本长度: {len(text)} 个字符。")
     
 # 处理文本并创建知识库，同时保存到磁盘
-save_dir = "./vector_db"
-knowledgeBase = process_text_with_splitter(text, char_page_mapping, save_path=save_dir)
+save_dir = get_project_path("./vector_db")
+knowledgeBase = process_text_with_splitter(text, char_page_mapping, save_path=save_dir) # type: ignore
 
 # 示例：如何加载已保存的向量数据库
 # 注释掉以下代码以避免在当前运行中重复加载
@@ -215,7 +237,7 @@ if query:
     for doc in docs:
         #print('doc=',doc)
         text_content = getattr(doc, "page_content", "")
-        source_page = knowledgeBase.page_info.get(
+        source_page = knowledgeBase.page_info.get( # type: ignore
             text_content.strip(), "未知"
         )
 

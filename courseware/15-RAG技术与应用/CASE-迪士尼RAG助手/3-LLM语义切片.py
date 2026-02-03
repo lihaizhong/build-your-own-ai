@@ -44,10 +44,10 @@ def advanced_semantic_chunking_with_llm(text, max_chunk_size=512):
         )
         
         result = response.choices[0].message.content
-        print(f"LLM返回结果: {result[:200]}...")
+        print(f"LLM返回结果: {result[:200]}...") # type: ignore
         
         # 清理结果，移除可能的Markdown代码块标记
-        cleaned_result = result.strip()
+        cleaned_result = result.strip() # type: ignore
         if cleaned_result.startswith('```'):
             # 移除开头的 ```json 或 ```
             cleaned_result = re.sub(r'^```(?:json)?\s*', '', cleaned_result)
@@ -77,11 +77,11 @@ def advanced_semantic_chunking_with_llm(text, max_chunk_size=512):
         
     except json.JSONDecodeError as e:
         print(f"JSON解析失败: {e}")
-        print(f"原始结果: {result}")
+        print(f"原始结果: {result}") # type: ignore
         # 尝试手动解析
         try:
             # 尝试提取JSON部分
-            json_match = re.search(r'\{.*\}', result, re.DOTALL)
+            json_match = re.search(r'\{.*\}', result, re.DOTALL) # type: ignore
             if json_match:
                 json_str = json_match.group()
                 chunks_data = json.loads(json_str)

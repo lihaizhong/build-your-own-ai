@@ -1,9 +1,9 @@
-import json
 import os
 import dashscope
 from dashscope.api_entities.dashscope_response import Role
 from dashscope import MultiModalConversation
 import os
+
 dashscope.api_key = os.getenv("DASHSCOPE_API_KEY")
 
 local_file_path = 'file://2-万圣节.jpeg'
