@@ -4,6 +4,14 @@
 
 - [AI大模型应用第16期](https://pan.baidu.com/s/1MfjQwHba-dHav67tYVAWAw?pwd=8888)
 
+## 目录结构
+
+- courseware     --- 课件
+- notebook       --- 笔记
+- database       --- 数据库
+- practice       --- 实战练习
+- practice-py    --- python 练习
+
 ## uv 查找 Python 环境的顺序
 
 1. 目前目录下的 `.python-version` 文件设定的版本；
