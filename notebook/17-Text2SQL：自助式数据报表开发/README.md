@@ -38,3 +38,21 @@ agent_executor.run("描述与订单相关的表及其关系")
 # 为提高准确率
 # 可以给 Agent 配备专有的知识库，在 prompt 中动态完善和 query 相关的 context
 ```
+
+Prompt 工程最佳实践
+
+```python
+prompt = f"""-- language: SQL
+### Question: {query}
+### Input: {create_sql}
+### Response:
+Here is the SQL query I have generated to answer the question `{query}`:
+```sql
+"""
+```
+
+1. 说明语言类型， -- language: SQL
+2. 将 SQL 建表语句放到 SQL prompt 中，因为大语言是通过 SQL 建表语句进行识别的
+3. SQL 编写用 ```sql，放到 prompt 最后
+
+PS: Prompt 中的首尾很重要
