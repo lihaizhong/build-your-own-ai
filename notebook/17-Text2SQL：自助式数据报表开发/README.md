@@ -39,6 +39,24 @@ agent_executor.run("描述与订单相关的表及其关系")
 # 可以给 Agent 配备专有的知识库，在 prompt 中动态完善和 query 相关的 context
 ```
 
+---
+
+使用向量数据库的时候，有哪些可以优化的地方？
+
+1. 如果想让 LLM 使用 tool（可以按照某个顺序，执行完这个再执行下一个），比较有效的方式是写在 prompt 中，而不是在 tool description 中进行定义
+2. 向量数据库的作用：给 prompt 提供更多的 context，用于 LLM 进行决策
+3. 使用 similarity threshold，来决定 retrieved examples 的质量（有些 example 和用户 query 关系不大）
+4. 优化 few-show examples 的多样性，让尽可能多的情况展示给 prompt
+
+---
+
+如何让 LLM 进行 SQL 查询，准确率如何？
+
+- 方法一：SQLDatabaseToolkit
+- 方法二：coding for yourself
+
+---
+
 Prompt 工程最佳实践
 
 ```python
