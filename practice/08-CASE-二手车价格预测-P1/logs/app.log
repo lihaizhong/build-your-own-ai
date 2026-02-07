@@ -1,0 +1,4 @@
+2026-02-04 02:47:14.244 | INFO     | __main__:setup_logging:32 - 日志系统初始化完成
+2026-02-04 02:47:14.244 | INFO     | __main__:load_environment:38 - 环境变量加载完成
+2026-02-04 02:47:14.244 | INFO     | __main__:main:60 - 项目环境初始化完成
+2026-02-04 02:47:14.244 | INFO     | __main__:main:61 - 项目路径: /Users/lihaizhong/Documents/Project/build-your-own-x/build-your-own-ai/practice/08-CASE-二手车价格预测-P1
