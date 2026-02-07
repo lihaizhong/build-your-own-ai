@@ -1,0 +1,10 @@
+[project]
+name = "build-your-own-ai"
+version = "0.1.0"
+description = "AI 训练营"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = []
