@@ -18,7 +18,10 @@ def test_pdf_processing():
     print("测试PDF处理功能")
     print("=" * 60)
     
-    pdf_path = "data/AI产品经理面试题65道.pdf"
+    # 获取脚本所在目录的绝对路径
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    pdf_path = os.path.join(script_dir, "data/AI产品经理面试题65道.pdf")
+    
     if not os.path.exists(pdf_path):
         print(f"错误: PDF文件不存在: {pdf_path}")
         return False

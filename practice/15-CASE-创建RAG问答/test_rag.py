@@ -5,6 +5,7 @@ RAG系统基础功能测试
 from langchain_community.vectorstores.faiss import FAISS
 from langchain_community.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
 
 def test_imports():
     """测试所有导入是否正常"""
@@ -35,7 +36,7 @@ def test_basic_functionality():
         
         # 分割文档
         split_docs = text_splitter.split_documents(
-            [type('Document', (), {'page_content': doc})() for doc in sample_documents] # type: ignore
+            [Document(page_content=doc) for doc in sample_documents]
         )
         
         print(f"✅ 文本分割成功: {len(split_docs)} 个文档块")
