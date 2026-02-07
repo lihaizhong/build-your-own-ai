@@ -21,7 +21,7 @@ messages = [
 ]
 
 response = get_response(messages)
-print(response.output.choices[0].message.content)
+print(response.output.choices[0].message.content) # type: ignore
 
 # 情感分析
 review = '这款音效特别好 给你意想不到的音质。'
@@ -31,4 +31,4 @@ messages = [
 ]
 
 response = get_response(messages)
-print(response.output.choices[0].message.content)
+print(response.output.choices[0].message.content) # type: ignore

@@ -27,8 +27,8 @@ messages=[
 response = get_response(messages)
 print("===response===", response)
 
-if response.status_code == 200:
-  print("最终结果：", response.output.choices[0].message.content[0]["text"])
+if response.status_code == 200: # type: ignore
+  print("最终结果：", response.output.choices[0].message.content[0]["text"]) # type: ignore
 else:
-  print("API调用出错：", f"【{response.code}】{response.message}")
+  print("API调用出错：", f"【{response.code}】{response.message}") # type: ignore
 

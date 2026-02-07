@@ -66,11 +66,11 @@ messages=[
 
 while True:
   response = get_response(messages)
-  message = response.output.choices[0].message
+  message = response.output.choices[0].message # type: ignore
   messages.append(message)
   print('response=', response)
   
-  if response.output.choices[0].finish_reason == 'stop':
+  if response.output.choices[0].finish_reason == 'stop': # type: ignore
     break
   
   # 判断用户是否要call function

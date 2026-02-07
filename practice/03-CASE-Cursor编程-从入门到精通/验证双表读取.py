@@ -26,7 +26,7 @@ def main():
         print(f"成功读取 {len(info_df)} 行，{info_df.shape[1]} 列")
         print("\n数据内容：")
         for i, row in info_df.iterrows():
-            print(f"第{i+1}行: {row['员工编号']} - {row['姓名']} - {row['部门']} - {row['职位']}")
+            print(f"第{i+1}行: {row['员工编号']} - {row['姓名']} - {row['部门']} - {row['职位']}") # type: ignore
     except Exception as e:
         print(f"读取失败: {e}")
     
@@ -38,7 +38,7 @@ def main():
         print(f"成功读取 {len(perf_df)} 行，{perf_df.shape[1]} 列")
         print("\n数据内容：")
         for i, row in perf_df.iterrows():
-            print(f"第{i+1}行: {row['员工编号']} - {row['姓名']} - 综合得分: {row['综合得分']} - {row['绩效等级']}")
+            print(f"第{i+1}行: {row['员工编号']} - {row['姓名']} - 综合得分: {row['综合得分']} - {row['绩效等级']}") # type: ignore
     except Exception as e:
         print(f"读取失败: {e}")
     

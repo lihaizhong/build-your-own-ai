@@ -23,4 +23,4 @@ messages = [
 
 response = get_response(messages)
 
-print(response.output.choices[0].message.content)
+print(response.output.choices[0].message.content) # type: ignore

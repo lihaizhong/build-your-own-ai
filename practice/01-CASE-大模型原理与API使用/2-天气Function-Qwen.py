@@ -51,12 +51,12 @@ def run_conversation():
   # 得到第一次响应
   response = get_response(messages)
   
-  if not response or not response.output:
+  if not response or not response.output: # type: ignore
     print("获取响应失败")
     return None
   
   print("===response1===", response)
-  message = response.output.choices[0].message
+  message = response.output.choices[0].message # type: ignore
   print("===message1===", message)
   print("\n\n\n")
   
@@ -75,12 +75,12 @@ def run_conversation():
     
     # 得到第二次响应
     response = get_response(messages)
-    if not response or not response.output:
+    if not response or not response.output: # type: ignore
       print("获取第二次响应失败")
       return None
     
     print("===response2===", response)
-    message = response.output.choices[0].message
+    message = response.output.choices[0].message # type: ignore
     print("===message2===", message)
     return message
   return message

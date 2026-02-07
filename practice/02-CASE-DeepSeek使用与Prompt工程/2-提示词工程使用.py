@@ -10,13 +10,13 @@ def get_completion(prompt, model="deepseek-v3"):
   messages = [{"role": "user", "content": prompt}]
   response = dashscope.Generation.call(
     model=model,
-    messages=messages,
+    messages=messages, # type: ignore
     # 将输出设置为message形式
     result_format='message',
     # 模型输出的随机性，0 表示随机性最小
     temperature=0,
   )
-  return response.output.choices[0].message.content
+  return response.output.choices[0].message.content # type: ignore
 
 # 任务描述
 instruction = """

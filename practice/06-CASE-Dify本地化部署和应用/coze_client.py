@@ -21,7 +21,7 @@ load_dotenv(verbose=True)
 class CozeClient:
   """基于 cozepy 的 Coze API 客户端类"""
 
-  def __init__(self, api_token: str = None, bot_id: str = None, base_url: str = None):
+  def __init__(self, api_token: str = None, bot_id: str = None, base_url: str = None): # type: ignore
     """
     初始化 Coze 客户端
 
@@ -37,15 +37,15 @@ class CozeClient:
 
     # 初始化 Coze 客户端
     self.coze = Coze(
-      auth=TokenAuth(token=self.api_token),
-      base_url=self.base_url
+      auth=TokenAuth(token=self.api_token), # type: ignore
+      base_url=self.base_url # type: ignore
     )
 
     print(f"✅ Coze客户端初始化成功")
     print(f"📍 API地址: {self.base_url}")
     print(f"🤖 智能体ID: {self.bot_id}")
 
-  def chat_stream(self, message: str, user_id: str = None) -> Generator[str, None, None]:
+  def chat_stream(self, message: str, user_id: str = None) -> Generator[str, None, None]: # type: ignore
     """
     流式聊天，实时返回智能体的回复
 
@@ -56,12 +56,12 @@ class CozeClient:
     Yield:
       智能体回复的文本片段
     """
-    user_id = user_id or os.getenv("DEFAULT_USER_ID")
+    user_id = user_id or os.getenv("DEFAULT_USER_ID") # type: ignore
 
     try:
       # 创建流式聊天
       for event in self.coze.chat.stream(
-        bot_id=self.bot_id,
+        bot_id=self.bot_id, # type: ignore
         user_id=user_id,
         additional_messages=[Message.build_user_question_text(message)],
       ):
@@ -71,19 +71,19 @@ class CozeClient:
           # 检查消息内容是否存在且为文本类型
           if (
             hasattr(event.message, "content") and
-            event.message.content and
-            hasattr(event.message.content, "type") and
-            event.message.content.type == MessageContentType.TEXT
+            event.message.content and # type: ignore
+            hasattr(event.message.content, "type") and # type: ignore
+            event.message.content.type == MessageContentType.TEXT # type: ignore
           ):
-            yield event.message.content.text
-          elif hasattr(event.message, "content") and isinstance(event.message.content, str):
+            yield event.message.content.text # type: ignore
+          elif hasattr(event.message, "content") and isinstance(event.message.content, str): # type: ignore
             # 如果 content 直接是字符串
-            yield event.message.content
+            yield event.message.content # type: ignore
     except Exception as e:
       print(f"❌ 流式聊天发生错误: {e}")
       yield f"错误: {str(e)}"
 
-  def chat(self, message: str, user_id: str = None) -> Optional[str]:
+  def chat(self, message: str, user_id: str = None) -> Optional[str]: # type: ignore
     """
     普通聊天，返回完整的智能体回复
 
@@ -94,12 +94,12 @@ class CozeClient:
     Returns:
       智能体的完整回复
     """
-    user_id = user_id or os.getenv("DEFAULT_USER_ID")
+    user_id = user_id or os.getenv("DEFAULT_USER_ID") # type: ignore
 
     try:
       # 使用 create_and_poll 方法，这是 SDK 提供的简化方法
       chat_poll = self.coze.chat.create_and_poll(
-        bot_id=self.bot_id,
+        bot_id=self.bot_id, # type: ignore
         user_id=user_id,
         additional_messages=[Message.build_user_question_text(message)],
       )
@@ -107,7 +107,7 @@ class CozeClient:
       # 检查聊天状态
       if chat_poll.chat.status == ChatStatus.COMPLETED:
         # 从消息列表中提取助手的回复
-        for msg in chat_poll.messages:
+        for msg in chat_poll.messages: # type: ignore
           if msg.role == "assistant" and msg.content:
             return msg.content
           
@@ -119,7 +119,7 @@ class CozeClient:
       print(f"❌ 聊天发生错误: {e}")
       return None
 
-  def chat_with_history(self, messages: List[Dict[str, str]], user_id: str = None) -> Optional[str]:
+  def chat_with_history(self, messages: List[Dict[str, str]], user_id: str = None) -> Optional[str]: # type: ignore
     """
     带历史记录的聊天
 
@@ -130,7 +130,7 @@ class CozeClient:
     Returns:
       智能体的回复
     """
-    user_id = user_id or os.getenv("DEFAULT_USER_ID")
+    user_id = user_id or os.getenv("DEFAULT_USER_ID") # type: ignore
 
     try:
       # 构建消息列表
@@ -143,7 +143,7 @@ class CozeClient:
       
       # 使用 create_and_poll 方法
       chat_poll = self.coze.chat.create_and_poll(
-        bot_id=self.bot_id,
+        bot_id=self.bot_id, # type: ignore
         user_id=user_id,
         additional_messages=coze_messages,
       )
@@ -151,7 +151,7 @@ class CozeClient:
       # 检查聊天状态
       if chat_poll.chat.status == ChatStatus.COMPLETED:
         # 从消息列表中提取助手的回复
-        for msg in chat_poll.messages:
+        for msg in chat_poll.messages: # type: ignore
           if msg.role == "assistant" and msg.content:
             return msg.content
           
@@ -172,7 +172,7 @@ class CozeClient:
     """
 
     try:
-      bot_info = self.coze.bots.retrieve(bot_id=self.bot_id)
+      bot_info = self.coze.bots.retrieve(bot_id=self.bot_id) # type: ignore
 
       return {
         "bot_id": bot_info.bot_id,
