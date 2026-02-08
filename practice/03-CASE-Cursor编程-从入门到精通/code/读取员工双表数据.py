@@ -5,19 +5,20 @@
 """
 
 import pandas as pd
-import os
-from pathlib import Path
+from ...shared import get_project_path
 
 def read_multiple_excel_files():
     """
     读取员工基本信息表.xlsx和员工绩效表.xlsx文件的前5行数据
     """
-    # 获取当前脚本所在目录
-    current_dir = Path(__file__).parent
-    
-    # Excel文件路径
-    employee_info_file = current_dir / "员工基本信息表.xlsx"
-    employee_performance_file = current_dir / "员工绩效表.xlsx"
+    # 获取脚本目录并准备 user_data 目录
+    current_dir = get_project_path()
+    user_data_dir = current_dir / "user_data"
+    user_data_dir.mkdir(parents=True, exist_ok=True)
+
+    # 优先使用 user_data 中的文件（如果存在），否则回退到脚本目录
+    employee_info_file = (user_data_dir / "员工基本信息表.xlsx") if (user_data_dir / "员工基本信息表.xlsx").exists() else (current_dir / "员工基本信息表.xlsx")
+    employee_performance_file = (user_data_dir / "员工绩效表.xlsx") if (user_data_dir / "员工绩效表.xlsx").exists() else (current_dir / "员工绩效表.xlsx")
     
     print("=" * 80)
     print("员工信息与绩效数据Excel文件读取程序")

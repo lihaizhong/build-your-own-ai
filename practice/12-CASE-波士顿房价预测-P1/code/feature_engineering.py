@@ -4,14 +4,6 @@
 负责特征创建、选择、转换和重要性分析
 """
 
-import pandas as pd
-import numpy as np
-from sklearn.feature_selection import SelectKBest, f_regression, RFE
-from sklearn.preprocessing import PolynomialFeatures, StandardScaler
-from sklearn.ensemble import RandomForestRegressor
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 def create_polynomial_features(X, degree=2):
     """
     创建多项式特征

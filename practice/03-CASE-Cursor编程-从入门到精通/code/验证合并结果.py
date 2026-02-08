@@ -5,14 +5,18 @@
 """
 
 import pandas as pd
-from pathlib import Path
+from ...shared import get_project_path
 
 def verify_merged_file():
     """
     验证合并后的Excel文件
     """
-    current_dir = Path(__file__).parent
-    merged_file = current_dir / "员工综合信息表_2024Q4.xlsx"
+    current_dir = get_project_path()
+    user_data_dir = current_dir / "user_data"
+    user_data_dir.mkdir(parents=True, exist_ok=True)
+
+    # 合并文件优先从 user_data 中寻找
+    merged_file = (user_data_dir / "员工综合信息表_2024Q4.xlsx") if (user_data_dir / "员工综合信息表_2024Q4.xlsx").exists() else (current_dir / "员工综合信息表_2024Q4.xlsx")
     
     if not merged_file.exists():
         print("❌ 合并文件不存在")

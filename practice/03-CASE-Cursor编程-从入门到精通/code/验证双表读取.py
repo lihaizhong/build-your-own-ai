@@ -5,18 +5,21 @@
 """
 
 import pandas as pd
-from pathlib import Path
+from ...shared import get_project_path
 
 def main():
-    current_dir = Path(__file__).parent
+    current_dir = get_project_path()
+    user_data_dir = current_dir / "user_data"
+    user_data_dir.mkdir(parents=True, exist_ok=True)
     
     print("=" * 60)
     print("双Excel文件读取验证程序")
     print("=" * 60)
     
     # 文件路径
-    info_file = current_dir / "员工基本信息表.xlsx"
-    perf_file = current_dir / "员工绩效表.xlsx"
+    # 优先从 user_data 读取（便于临时文件管理），否则回退到脚本目录
+    info_file = (user_data_dir / "员工基本信息表.xlsx") if (user_data_dir / "员工基本信息表.xlsx").exists() else (current_dir / "员工基本信息表.xlsx")
+    perf_file = (user_data_dir / "员工绩效表.xlsx") if (user_data_dir / "员工绩效表.xlsx").exists() else (current_dir / "员工绩效表.xlsx")
     
     # 读取员工基本信息表前5行
     print("\n1. 读取员工基本信息表前5行：")

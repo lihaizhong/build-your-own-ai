@@ -5,8 +5,6 @@
 """
 
 import requests
-import json
-from pathlib import Path
 
 def test_map_functionality():
     """测试地图功能"""

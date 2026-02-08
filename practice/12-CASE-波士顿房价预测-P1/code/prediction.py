@@ -7,8 +7,6 @@
 import pandas as pd
 import numpy as np
 import joblib
-from sklearn.preprocessing import StandardScaler
-import matplotlib.pyplot as plt
 
 class HousePricePredictor:
     """房价预测器类"""

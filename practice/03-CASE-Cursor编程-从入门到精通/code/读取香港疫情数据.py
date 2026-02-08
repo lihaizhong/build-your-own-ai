@@ -5,7 +5,6 @@
 """
 
 import pandas as pd
-import os
 from pathlib import Path
 
 def read_hk_covid_data():

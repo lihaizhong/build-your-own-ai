@@ -4,15 +4,10 @@
 实现多种机器学习算法的训练和调优
 """
 
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.svm import SVR
 from sklearn.neural_network import MLPRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-import joblib
 
 class ModelTrainer:
     """模型训练器类"""

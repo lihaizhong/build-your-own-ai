@@ -5,7 +5,7 @@ Dify 工作流应用调用示例
 专门针对工作流类型的应用
 """
 import os
-from typing import Dict, Any, Union
+from typing import Dict, Any
 from dotenv import load_dotenv
 from dify_agent_client import DifyAgentClient
 

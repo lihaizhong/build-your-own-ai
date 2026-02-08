@@ -4,8 +4,6 @@
 使用Ultralytics YOLOv11进行训练
 """
 
-import os
-import sys
 from pathlib import Path
 import yaml
 import argparse
@@ -13,9 +11,7 @@ from datetime import datetime
 import torch
 from ultralytics import YOLO
 import matplotlib.pyplot as plt
-import seaborn as sns
 import pandas as pd
-import numpy as np
 from tqdm import tqdm
 
 

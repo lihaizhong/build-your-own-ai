@@ -8,9 +8,6 @@
 from flask import Flask, render_template, jsonify
 import pandas as pd
 from pathlib import Path
-import json
-from datetime import datetime, timedelta
-import random
 
 app = Flask(__name__)
 

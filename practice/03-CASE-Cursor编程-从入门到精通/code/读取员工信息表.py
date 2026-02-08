@@ -5,25 +5,29 @@
 """
 
 import pandas as pd
-import os
-from pathlib import Path
+from ...shared import get_project_path
 
 def read_employee_excel():
     """
     读取员工基本信息表.xlsx文件的前5行数据
     """
-    # 获取当前脚本所在目录
-    current_dir = Path(__file__).parent
-    
-    # Excel文件路径
-    excel_file = current_dir / "员工基本信息表.xlsx"
+    # 获取脚本目录并准备 user_data 目录
+    current_dir = get_project_path()
+    user_data_dir = current_dir / "user_data"
+    user_data_dir.mkdir(parents=True, exist_ok=True)
+
+    # 优先使用 user_data 中的文件（如果存在），否则回退到脚本目录
+    candidate = user_data_dir / "员工基本信息表.xlsx"
+    excel_file = candidate if candidate.exists() else (current_dir / "员工基本信息表.xlsx")
     
     # 检查文件是否存在
     if not excel_file.exists():
-        print(f"错误：找不到文件 {excel_file}")
-        print("正在创建示例Excel文件...")
-        create_sample_excel(excel_file)
-        print(f"已创建示例文件：{excel_file}")
+        # 创建到 user_data 以便统一存放临时文件
+        create_path = user_data_dir / "员工基本信息表.xlsx"
+        print(f"⚠️ 找不到文件，正在创建示例文件到 {create_path} ...")
+        create_sample_excel(create_path)
+        print(f"已创建示例文件：{create_path}")
+        excel_file = create_path
     
     try:
         # 读取Excel文件的前5行数据

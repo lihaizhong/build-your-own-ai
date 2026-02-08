@@ -7,9 +7,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, explained_variance_score
-import joblib
 
 class ModelEvaluator:
     """模型评估器类"""

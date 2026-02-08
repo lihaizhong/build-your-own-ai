@@ -5,19 +5,35 @@ description = "AI 训练营"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "catboost>=1.2.8",
+    "cozepy>=0.20.0",
     "dashscope>=1.25.11",
     "dotenv>=0.9.9",
+    "faiss-cpu>=1.13.2",
+    "fastapi>=0.128.4",
+    "flask>=3.1.2",
+    "gensim>=4.4.0",
+    "jieba>=0.42.1",
     "langchain>=1.2.9",
+    "langchain-community>=0.4.1",
+    "lightgbm>=4.6.0",
     "loguru>=0.7.3",
     "matplotlib>=3.10.8",
     "numpy>=2.4.2",
     "openai>=2.17.0",
     "pandas>=3.0.0",
+    "pillow>=12.1.0",
     "prophet>=1.3.0",
+    "pydantic>=2.12.5",
     "pypdf2>=3.0.1",
     "scikit-learn>=1.8.0",
     "seaborn>=0.13.2",
+    "sentence-transformers>=5.2.2",
     "statsmodels>=0.14.6",
+    "torch>=2.10.0",
+    "torchvision>=0.25.0",
+    "ultralytics>=8.4.12",
+    "xgboost>=3.1.3",
 ]
 
 [dependency-groups]

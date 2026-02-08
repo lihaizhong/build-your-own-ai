@@ -4,12 +4,6 @@
 负责波士顿房价数据的清洗、预处理和基础统计分析
 """
 
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import StandardScaler, RobustScaler
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 def load_boston_data():
     """
     加载波士顿房价数据集

@@ -5,8 +5,6 @@
 """
 
 import requests
-import json
-from pathlib import Path
 
 def test_api_endpoints():
     """测试所有API端点"""

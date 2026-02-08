@@ -5,23 +5,29 @@
 """
 
 import pandas as pd
-import os
-from pathlib import Path
+from ...shared import get_project_path
 from datetime import datetime
 
 def merge_employee_data():
     """
     合并员工基本信息表和员工绩效表数据
     """
-    # 获取当前脚本所在目录
-    current_dir = Path(__file__).parent
-    
-    # 输入文件路径
-    employee_info_file = current_dir / "员工基本信息表.xlsx"
-    employee_performance_file = current_dir / "员工绩效表.xlsx"
-    
-    # 输出文件路径
-    merged_file = current_dir / "员工综合信息表_2024Q4.xlsx"
+    # 使用 shared 的 get_project_path 获取脚本目录
+    current_dir = get_project_path()
+
+    # user_data 用于存放临时/生成文件（优先使用）
+    user_data_dir = current_dir / "user_data"
+    user_data_dir.mkdir(parents=True, exist_ok=True)
+
+    # 输入文件路径（优先从 user_data 读取）
+    info_candidate = user_data_dir / "员工基本信息表.xlsx"
+    perf_candidate = user_data_dir / "员工绩效表.xlsx"
+
+    employee_info_file = info_candidate if info_candidate.exists() else (current_dir / "员工基本信息表.xlsx")
+    employee_performance_file = perf_candidate if perf_candidate.exists() else (current_dir / "员工绩效表.xlsx")
+
+    # 输出文件路径（写入 user_data）
+    merged_file = user_data_dir / "员工综合信息表_2024Q4.xlsx"
     
     print("=" * 80)
     print("员工基本信息与绩效数据合并程序")

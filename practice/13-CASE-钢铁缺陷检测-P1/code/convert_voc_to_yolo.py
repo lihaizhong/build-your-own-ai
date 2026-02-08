@@ -4,7 +4,6 @@
 用于钢铁缺陷检测数据集
 """
 
-import os
 import xml.etree.ElementTree as ET
 import shutil
 from pathlib import Path
