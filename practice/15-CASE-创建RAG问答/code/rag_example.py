@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 from langchain_community.vectorstores.faiss import FAISS
 # 使用自定义的RAG实现，不依赖可能已过时的RetrievalQA
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_core.documents import Document
 
 # 导入自定义模块
 from .pdf_processor import process_pdf_with_page_numbers

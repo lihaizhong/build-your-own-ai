@@ -6,5 +6,7 @@
         "**/node_modules",
         "**/catbosst_info"
     ],
-    "pythonVersion": "3.11"
+    "pythonVersion": "3.12",
+    "venv": ".venv",
+    "typeCheckingMode": "basic"
 }
