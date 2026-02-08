@@ -5,15 +5,7 @@ import csv
 import json
 from datetime import datetime
 from collections import defaultdict
-
-
-def get_project_path(*paths):
-    """获取项目路径的统一方法"""
-    import os
-    try:
-        return os.path.join(os.path.dirname(__file__), *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
+from ...shared import get_project_path
 
 
 def analyze_daily_flow():

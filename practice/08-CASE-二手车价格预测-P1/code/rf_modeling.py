@@ -6,7 +6,7 @@
 
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import cross_val_score, KFold, learning_curve, validation_curve
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
@@ -16,22 +16,13 @@ from datetime import datetime
 import os
 import warnings
 import joblib
+from ...shared import get_project_path
 
 warnings.filterwarnings('ignore')
 
 # 设置中文字体
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
-
-def get_project_path(*paths):
-    """获取项目路径的统一方法"""
-    try:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        project_dir = os.path.dirname(current_dir)
-
-        return os.path.join(project_dir, *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
 
 def get_user_data_path(*paths):
     """获取用户数据路径"""

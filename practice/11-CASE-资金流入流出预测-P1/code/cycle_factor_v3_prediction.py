@@ -9,18 +9,10 @@
 
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
 import warnings
+from ...shared import get_project_path
+
 warnings.filterwarnings('ignore')
-
-
-def get_project_path(*paths):
-    """获取项目路径的统一方法"""
-    import os
-    try:
-        return os.path.join(os.path.dirname(__file__), *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
 
 
 def load_and_prepare_data():

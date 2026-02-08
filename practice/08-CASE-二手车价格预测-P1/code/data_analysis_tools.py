@@ -3,20 +3,11 @@
 提供数据加载、预处理和基础分析功能
 """
 
-from pathlib import Path
 from typing import Tuple, Optional
 import pandas as pd
 import numpy as np
 from loguru import logger
-
-
-def get_project_path(*paths: str) -> Path:
-    """获取项目路径"""
-    try:
-        current_dir = Path(__file__).parent.parent
-        return current_dir.joinpath(*paths)
-    except NameError:
-        return Path.cwd().joinpath(*paths)
+from ...shared import get_project_path
 
 
 def load_data(

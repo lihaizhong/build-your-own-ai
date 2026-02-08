@@ -8,29 +8,7 @@ from typing import Optional
 import jieba
 from gensim.models import Word2Vec
 from collections import Counter
-
-
-def get_project_path(*paths: str) -> str:
-    """
-    获取项目路径的统一方法
-    类似TypeScript中的path.join(__dirname, ...paths)
-    
-    Args:
-        *paths: 路径组件
-        
-    Returns:                                                                                                                                    
-        完整的项目路径
-    """
-    try:
-        # __file__ 类似于 TypeScript 中的 __filename
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        # 获取项目根目录(向上一级)
-        project_dir = os.path.dirname(current_dir)
-        
-        return os.path.join(project_dir, *paths)
-    except NameError:
-        # 在某些环境下(如Jupyter)__file__不可用,使用当前工作目录
-        return os.path.join(os.getcwd(), *paths)
+from ...shared import get_project_path
 
 class SanguoWord2VecAnalyzer:
     """三国演义Word2Vec分析器"""

@@ -21,7 +21,7 @@ V28核心创新策略:
 import os
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import KFold, StratifiedKFold
+from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import LabelEncoder, RobustScaler
 from sklearn.metrics import mean_absolute_error
 from sklearn.feature_selection import mutual_info_regression
@@ -31,20 +31,13 @@ from catboost import CatBoostRegressor
 import matplotlib.pyplot as plt
 import warnings
 import joblib
+from ...shared import get_project_path
+
 warnings.filterwarnings('ignore')
 
 # 设置中文字体
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
-
-def get_project_path(*paths):
-    """获取项目路径的统一方法"""
-    try:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        project_dir = os.path.dirname(current_dir)
-        return os.path.join(project_dir, *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
 
 def save_models(models, version_name):
     """

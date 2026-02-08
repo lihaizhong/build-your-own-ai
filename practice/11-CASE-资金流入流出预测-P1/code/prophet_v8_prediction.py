@@ -12,26 +12,12 @@ Prophet预测模型 v8.0 - 重构优化版
 import pandas as pd
 import numpy as np
 from prophet import Prophet
-from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings('ignore')
 
 from sklearn.metrics import mean_absolute_error, mean_squared_error
-from sklearn.model_selection import TimeSeriesSplit
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import StandardScaler
-from scipy.stats import pearsonr
 import pickle
-
-
-def get_project_path(*paths):
-    """获取项目路径的统一方法"""
-    import os
-    try:
-        return os.path.join(os.path.dirname(__file__), *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
+from ...shared import get_project_path
 
 
 def load_base_data():

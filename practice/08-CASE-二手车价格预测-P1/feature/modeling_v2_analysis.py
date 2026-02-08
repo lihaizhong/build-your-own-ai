@@ -12,20 +12,13 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import warnings
+from ...shared import get_project_path
+
 warnings.filterwarnings('ignore')
 
 # 设置中文字体支持
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
-
-def get_project_path(*paths):
-    """获取项目路径的统一方法"""
-    try:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        project_dir = os.path.dirname(current_dir)
-        return os.path.join(project_dir, *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
 
 def get_user_data_path(*paths):
     """获取用户数据路径"""

@@ -11,7 +11,6 @@ Prophet预测模型 v3.0 - 高级优化版本
 import pandas as pd
 import numpy as np
 from prophet import Prophet
-from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings('ignore')
@@ -19,15 +18,7 @@ warnings.filterwarnings('ignore')
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from scipy import stats
 import pickle
-
-
-def get_project_path(*paths):
-    """获取项目路径的统一方法"""
-    import os
-    try:
-        return os.path.join(os.path.dirname(__file__), *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
+from ...shared import get_project_path
 
 
 def load_external_features():

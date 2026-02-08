@@ -16,16 +16,7 @@ from typing import List, Dict, Any
 import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer # type: ignore
-
-
-def get_project_path(*paths: str) -> str:
-    """获取项目路径的统一方法"""
-    try:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        project_dir = os.path.dirname(current_dir)
-        return os.path.join(project_dir, *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
+from ...shared import get_project_path
 
 
 class AIInterviewQASystem:

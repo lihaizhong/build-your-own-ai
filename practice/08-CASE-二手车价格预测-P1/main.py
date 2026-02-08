@@ -3,19 +3,9 @@
 二手车价格预测项目主入口
 """
 
-from pathlib import Path
 from loguru import logger
 from dotenv import load_dotenv
-
-
-def get_project_path(*paths: str) -> Path:
-    """获取项目路径的统一方法"""
-    try:
-        current_dir = Path(__file__).parent
-        return current_dir.joinpath(*paths)
-    except NameError:
-        return Path.cwd().joinpath(*paths)
-
+from ...shared import get_project_path
 
 def setup_logging():
     """配置日志"""

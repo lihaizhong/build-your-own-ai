@@ -3,21 +3,11 @@
 
 import csv
 import matplotlib.pyplot as plt
-import numpy as np
-from datetime import datetime
+from ...shared import get_project_path
 
 # 设置中文字体以支持中文显示
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
-
-
-def get_project_path(*paths):
-    """获取项目路径的统一方法"""
-    import os
-    try:
-        return os.path.join(os.path.dirname(__file__), *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
 
 
 def create_ascii_chart(data_points, width=80, height=20):

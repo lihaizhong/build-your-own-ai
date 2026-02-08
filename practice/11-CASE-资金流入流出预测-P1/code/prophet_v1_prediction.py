@@ -10,23 +10,15 @@ Prophet预测模型 v1.0 - 基础版本
 import pandas as pd
 import numpy as np
 from prophet import Prophet
-from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import warnings
+from ...shared import get_project_path
+
 warnings.filterwarnings('ignore')
 
 # 设置matplotlib中文字体
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans', 'Arial', 'sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
-
-
-def get_project_path(*paths):
-    """获取项目路径的统一方法"""
-    import os
-    try:
-        return os.path.join(os.path.dirname(__file__), *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
 
 
 def load_and_prepare_data():

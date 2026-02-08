@@ -12,7 +12,7 @@ V24核心测试版本模型 - 快速验证版
 import os
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import KFold, StratifiedKFold
+from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import LabelEncoder, RobustScaler
 from sklearn.metrics import mean_absolute_error
 import lightgbm as lgb
@@ -20,16 +20,9 @@ import xgboost as xgb
 from catboost import CatBoostRegressor
 import warnings
 import joblib
-warnings.filterwarnings('ignore')
+from ...shared import get_project_path
 
-def get_project_path(*paths):
-    """获取项目路径的统一方法"""
-    try:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        project_dir = os.path.dirname(current_dir)
-        return os.path.join(project_dir, *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
+warnings.filterwarnings('ignore')
 
 def save_models(models, version_name):
     """

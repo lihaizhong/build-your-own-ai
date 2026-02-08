@@ -3,29 +3,10 @@
 演示如何使用 FAISS 和 ChromaDB 进行向量搜索
 """
 
-import os
-from typing import Optional
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import chromadb
-
-
-def get_project_path(*paths: str) -> str:
-    """
-    获取项目路径的统一方法
-    
-    Args:
-        *paths: 路径组件
-        
-    Returns:
-        完整的项目路径
-    """
-    try:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        project_dir = os.path.dirname(current_dir)
-        return os.path.join(project_dir, *paths)
-    except NameError:
-        return os.path.join(os.getcwd(), *paths)
+from ...shared import get_project_path
 
 
 class VectorDatabaseDemo:
