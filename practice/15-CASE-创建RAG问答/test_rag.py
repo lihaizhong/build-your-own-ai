@@ -1,20 +1,22 @@
 """
 RAG系统基础功能测试
 """
-
+import os
+from dotenv import load_dotenv
 from langchain_community.vectorstores.faiss import FAISS
-from langchain_community.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
+
+load_dotenv(verbose=True)
 
 def test_imports():
     """测试所有导入是否正常"""
     print("✅ 模块导入测试通过")
-    print("  - langchain_core.chains.RetrievalQA")
     print("  - langchain_community.vectorstores.faiss.FAISS")
-    print("  - langchain_community.embeddings.openai.OpenAIEmbeddings")
+    print("  - langchain_openai.OpenAIEmbeddings")
     print("  - langchain.text_splitter.RecursiveCharacterTextSplitter")
-    print("  - langchain_openai.ChatOpenAI")
+    print("  - langchain_core.documents.Document")
 
 def test_basic_functionality():
     """测试基本功能"""
@@ -42,7 +44,7 @@ def test_basic_functionality():
         print(f"✅ 文本分割成功: {len(split_docs)} 个文档块")
         
         # 创建虚拟嵌入（不实际调用API）
-        embeddings = OpenAIEmbeddings()
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
         
         # 创建FAISS向量数据库
         vector_store = FAISS.from_documents(split_docs, embeddings)

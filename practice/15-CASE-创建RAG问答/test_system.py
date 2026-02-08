@@ -8,8 +8,8 @@ import os
 # 添加code目录到Python路径
 sys.path.append(os.path.join(os.path.dirname(__file__), 'code'))
 
-from pdf_processor import PDFProcessor # type: ignore
-from deepseek_integration import get_integration_info, get_embeddings, get_dashscope_llm # type: ignore
+from pdf_processor import PDFProcessor
+from deepseek_integration import get_integration_info, get_embeddings, get_dashscope_llm
 
 
 def test_pdf_processing():
@@ -27,7 +27,7 @@ def test_pdf_processing():
         return False
     
     try:
-        processor = PDFProcessor(pdf_path)
+        processor = PDFProcessor(pdf_path=pdf_path)
         stats = processor.get_document_stats()
         print("PDF文档统计:")
         for key, value in stats.items():

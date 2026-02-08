@@ -1,5 +1,8 @@
 {
-    "include": ["*.py", "*.ipynb"],
+    "include": [
+        "*.py",
+        "*.ipynb"
+    ],
     "exclude": [
         "**/__pycache__",
         "**/.pytest_cache",
@@ -8,5 +11,8 @@
     ],
     "pythonVersion": "3.12",
     "venv": ".venv",
-    "typeCheckingMode": "basic"
+    "typeCheckingMode": "basic",
+    "extraPaths": [
+        "practice/15-CASE-创建RAG问答/code"
+    ]
 }
