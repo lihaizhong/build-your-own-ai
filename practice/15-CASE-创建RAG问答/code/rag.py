@@ -5,14 +5,15 @@
 """
 
 import os
+import argparse
 from dotenv import load_dotenv
 from langchain_community.vectorstores.faiss import FAISS
 # 使用自定义的RAG实现，不依赖可能已过时的RetrievalQA
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # 导入自定义模块
-from .pdf_processor import process_pdf_with_page_numbers
-from .deepseek_integration import get_dashscope_llm, get_embeddings, get_integration_info
+from pdf_processor import PDFProcessor, process_pdf_with_page_numbers
+from deepseek_integration import get_dashscope_llm, get_embeddings, get_integration_info
 
 
 # 加载环境变量
@@ -43,7 +44,6 @@ def create_complete_rag_system(pdf_path: str = PDF_FILE_PATH):
         print(f"成功加载 {len(documents)} 个文档块")
         
         # 显示文档统计信息
-        from .pdf_processor import PDFProcessor
         processor = PDFProcessor(pdf_path)
         stats = processor.get_document_stats()
         print("文档统计信息:")
@@ -193,13 +193,16 @@ def display_answer_with_sources(result, question):
         print("\n未找到相关文档")
 
 
-def interactive_rag_system():
+def interactive_rag_system(pdf_path: str | None = None):
     """
     交互式RAG问答系统
+    
+    Args:
+        pdf_path: PDF文件路径，如果为None则使用默认路径
     """
     try:
         # 创建RAG系统
-        rag_system = create_complete_rag_system()
+        rag_system = create_complete_rag_system(pdf_path or PDF_FILE_PATH)
         
         print("\n" + "=" * 60)
         print("RAG问答系统已就绪！")
@@ -243,9 +246,12 @@ def interactive_rag_system():
         print("3. 网络连接正常")
 
 
-def test_rag_system():
+def test_rag_system(pdf_path: str | None = None):
     """
     测试RAG系统功能
+    
+    Args:
+        pdf_path: PDF文件路径，如果为None则使用默认路径
     """
     print("=" * 60)
     print("RAG系统功能测试")
@@ -253,7 +259,8 @@ def test_rag_system():
     
     try:
         # 创建RAG系统
-        rag_system = create_complete_rag_system()
+        actual_pdf_path = pdf_path or PDF_FILE_PATH
+        rag_system = create_complete_rag_system(actual_pdf_path)
         
         # 测试问题
         test_questions = [
@@ -279,10 +286,34 @@ def test_rag_system():
         print(f"测试失败: {str(e)}")
 
 
+"""
+使用方式
+
+现在可以通过以下方式使用：
+
+# 方式1: 使用默认 PDF 路径和交互模式
+python rag.py
+
+# 方式2: 指定自定义 PDF 文件
+python rag.py --pdf /path/to/your/file.pdf
+
+# 方式3: 指定运行模式
+python rag.py --mode test
+
+# 方式4: 同时指定 PDF 和模式
+python rag.py --pdf /path/to/your/file.pdf --mode test
+"""
 def main():
     """
     主函数
     """
+    # 解析命令行参数
+    parser = argparse.ArgumentParser(description='AI产品经理面试题RAG问答系统')
+    parser.add_argument('--pdf', type=str, help='PDF文件路径', default=None)
+    parser.add_argument('--mode', type=str, choices=['interactive', 'test'], 
+                        help='运行模式: interactive(交互式) 或 test(测试)', default=None)
+    args = parser.parse_args()
+    
     print("=" * 60)
     print("AI产品经理面试题RAG问答系统")
     print("=" * 60)
@@ -294,30 +325,63 @@ def main():
         status = "✓" if value else "✗"
         print(f"  {status} {key}: {value}")
     
+    # 确定使用的PDF路径
+    pdf_path = args.pdf
+    if not pdf_path:
+        # 如果没有通过命令行指定，询问用户
+        print(f"\n默认PDF路径: {PDF_FILE_PATH}")
+        use_default = input("是否使用默认PDF路径? (Y/n): ").strip().lower()
+        if use_default == 'y' or use_default == None:
+            pdf_path = input("请输入PDF文件路径: ").strip()
+        else:
+            pdf_path = PDF_FILE_PATH
+    
     # 检查PDF文件是否存在
-    if not os.path.exists(PDF_FILE_PATH):
-        print(f"\n错误: PDF文件不存在: {PDF_FILE_PATH}")
-        print("请确保AI产品经理面试题65道.pdf文件存在于data目录中")
+    if not os.path.exists(pdf_path):
+        print(f"\n错误: PDF文件不存在: {pdf_path}")
+        print("请确保PDF文件路径正确且文件可访问")
         return
     
-    # 询问用户选择运行模式
-    print("\n请选择运行模式:")
-    print("1. 交互式问答模式")
-    print("2. 自动测试模式")
-    print("3. 退出")
+    print(f"\n使用PDF文件: {pdf_path}")
     
-    try:
-        choice = input("\n请输入选择 (1/2/3): ").strip()
+    # 确定运行模式
+    mode = args.mode
+    if not mode:
+        # 如果没有通过命令行指定，询问用户
+        print("\n请选择运行模式:")
+        print("1. 交互式问答模式")
+        print("2. 自动测试模式")
+        print("3. 退出")
         
-        if choice == "1":
-            interactive_rag_system()
-        elif choice == "2":
-            test_rag_system()
-        elif choice == "3":
-            print("退出程序")
+        try:
+            choice = input("\n请输入选择 (1/2/3): ").strip()
+            
+            if choice == "1":
+                mode = "interactive"
+            elif choice == "2":
+                mode = "test"
+            elif choice == "3":
+                print("退出程序")
+                return
+            else:
+                print("无效选择，使用默认交互模式")
+                mode = "interactive"
+                
+        except KeyboardInterrupt:
+            print("\n\n程序被用户中断，退出")
+            return
+        except Exception as e:
+            print(f"获取用户输入时出错: {str(e)}")
+            return
+    
+    # 根据模式执行相应功能
+    try:
+        if mode == "interactive":
+            interactive_rag_system(pdf_path)
+        elif mode == "test":
+            test_rag_system(pdf_path)
         else:
-            print("无效选择，使用默认交互模式")
-            interactive_rag_system()
+            print(f"未知模式: {mode}")
             
     except KeyboardInterrupt:
         print("\n\n程序被用户中断，退出")
