@@ -8,29 +8,19 @@ from typing import Dict, Any
 from langchain_community.embeddings.dashscope import DashScopeEmbeddings
 from langchain_community.chat_models.tongyi import ChatTongyi
 
+load_dotenv(verbose=True)
 
 class DashScopeIntegration:
     """DashScope API集成管理器"""
     
     def __init__(self):
         """初始化DashScope集成"""
-        # 尝试从多个位置加载.env文件
-        env_paths = [
-            os.path.join(os.path.dirname(__file__), '..', '.env'),  # RAG项目目录
-            '.env'  # 当前目录
-        ]
-        
-        for env_path in env_paths:
-            if os.path.exists(env_path):
-                load_dotenv(env_path, verbose=True)
-                print(f"从 {env_path} 加载环境变量")
-                break
         
         # 获取API密钥
-        self.dashscope_api_key = os.getenv('DASHSCOPE_API_KEY')
+        self.api_key = os.getenv('DASHSCOPE_API_KEY')
         
         # 验证必要密钥
-        if not self.dashscope_api_key:
+        if not self.api_key:
             raise ValueError("请设置环境变量 DASHSCOPE_API_KEY")
     
     def get_llm(self, model_name: str = "qwen-turbo", temperature: float = 0.0):
@@ -47,7 +37,7 @@ class DashScopeIntegration:
         print(f"使用DashScope模型: {model_name}")
         return ChatTongyi(
             model=model_name,
-            api_key=self.dashscope_api_key,
+            api_key=self.api_key,
             temperature=temperature # type: ignore
         )
     
@@ -64,7 +54,7 @@ class DashScopeIntegration:
         print(f"使用DashScope嵌入模型: {model_name}")
         return DashScopeEmbeddings(
             model=model_name,
-            dashscope_api_key=self.dashscope_api_key
+            dashscope_api_key=self.api_key
         ) # type: ignore
     
     def get_config_info(self) -> Dict[str, Any]:
@@ -75,7 +65,7 @@ class DashScopeIntegration:
             包含配置信息的字典
         """
         return {
-            'dashscope_api_key_set': bool(self.dashscope_api_key),
+            'dashscope_api_key_set': bool(self.api_key),
             'using_dashscope_llm': True,
             'using_dashscope_embeddings': True
         }

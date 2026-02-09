@@ -56,8 +56,7 @@ def create_complete_rag_system(pdf_path: str = PDF_FILE_PATH):
         pdf_path: PDF文件路径
         
     Returns:
-        完整的RAG系统实例
-    """
+        完整的RAG系统实例    """
     print("=" * 60)
     print("创建完整的RAG问答系统")
     print("=" * 60)
@@ -65,11 +64,12 @@ def create_complete_rag_system(pdf_path: str = PDF_FILE_PATH):
     # 1. 加载PDF文档并处理页码
     print("\n1. 加载PDF文档并处理页码...")
     try:
-        documents = process_pdf_with_page_numbers(pdf_path)
+        processor = PDFProcessor(pdf_path)
+
+        documents = processor.load_and_process()
         print(f"成功加载 {len(documents)} 个文档块")
         
         # 显示文档统计信息
-        processor = PDFProcessor(pdf_path)
         stats = processor.get_document_stats()
         print("文档统计信息:")
         for key, value in stats.items():
