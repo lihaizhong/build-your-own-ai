@@ -4,7 +4,7 @@ name: docs-architect
 description: Creates comprehensive technical documentation from existing codebases. Analyzes architecture, design patterns, and implementation details to produce long-form technical manuals and ebooks. Use PROACTIVELY for system documentation, architecture guides, or technical deep-dives.
 when-to-use: Creates comprehensive technical documentation from existing codebases. Analyzes architecture, design patterns, and implementation details to produce long-form technical manuals and ebooks. Use PROACTIVELY for system documentation, architecture guides, or technical deep-dives.
 allowed-tools: 
-model: glm-4.7
+model: GLM-4.7
 inherit-tools: true
 inherit-mcps: true
 color: yellow

@@ -18,10 +18,12 @@
    请确保 tesseract 的可执行文件路径已添加到系统的 PATH 环境变量中。
 
 3. 设置环境变量:
+   - DASHSCOPE_API_BASE: 您从阿里云百炼平台获取的 API。
    - DASHSCOPE_API_KEY: 您从阿里云百炼平台获取的 API Key。
    - HF_TOKEN: (可选) 您的 Hugging Face Token，用于下载 CLIP 模型，避免手动确认。
 """
 import os
+from dotenv import load_dotenv
 import numpy as np
 import faiss
 from openai import OpenAI
@@ -31,6 +33,8 @@ import pytesseract
 from transformers import CLIPProcessor, CLIPModel
 import torch
 
+load_dotenv(verbose=True)
+
 # Step0. 全局配置与模型加载
 
 # 检查环境变量
@@ -38,11 +42,12 @@ DASHSCOPE_API_KEY = os.getenv("DASHSCOPE_API_KEY")
 if not DASHSCOPE_API_KEY:
     raise ValueError("错误：请设置 'DASHSCOPE_API_KEY' 环境变量。")
 
+DASHSCOPE_API_BASE = os.getenv("DASHSCOPE_API_BASE")
+if not DASHSCOPE_API_BASE:
+    raise ValueError("错误：请设置 'DASHSCOPE_API_BASE' 环境变量。")
+
 # 初始化百炼兼容的 OpenAI 客户端
-client = OpenAI(
-    api_key=DASHSCOPE_API_KEY,
-    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
-)
+client = OpenAI(api_key=DASHSCOPE_API_KEY, base_url=DASHSCOPE_API_BASE)
 
 # 加载 CLIP 模型用于图像处理 (如果本地没有会自动下载)
 print("正在加载 CLIP 模型...")
@@ -123,14 +128,14 @@ def get_text_embedding(text):
 def get_image_embedding(image_path):
     """获取图片的 Embedding。"""
     image = Image.open(image_path)
-    inputs = clip_processor(images=image, return_tensors="pt")
+    inputs = clip_processor(images=image, return_tensors="pt") # type: ignore
     with torch.no_grad():
         image_features = clip_model.get_image_features(**inputs) # type: ignore
     return image_features[0].numpy()
 
 def get_clip_text_embedding(text):
     """使用CLIP的文本编码器获取文本的Embedding。"""
-    inputs = clip_processor(text=text, return_tensors="pt")
+    inputs = clip_processor(text=text, return_tensors="pt") # type: ignore
     with torch.no_grad():
         text_features = clip_model.get_text_features(**inputs) # type: ignore
     return text_features[0].numpy()

@@ -4,7 +4,7 @@ name: architect-reviewer
 description: Reviews code changes for architectural consistency and patterns. Use PROACTIVELY after any structural changes, new services, or API modifications. Ensures SOLID principles, proper layering, and maintainability.
 when-to-use: Reviews code changes for architectural consistency and patterns. Use PROACTIVELY after any structural changes, new services, or API modifications. Ensures SOLID principles, proper layering, and maintainability.
 allowed-tools: 
-model: glm-4.7
+model: Kimi-K2-Thinking
 inherit-tools: true
 inherit-mcps: true
 color: blue

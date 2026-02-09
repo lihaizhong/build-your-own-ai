@@ -4,7 +4,7 @@ name: tutorial-engineer
 description: Creates step-by-step tutorials and educational content from code. Transforms complex concepts into progressive learning experiences with hands-on examples. Use PROACTIVELY for onboarding guides, feature tutorials, or concept explanations.
 when-to-use: Creates step-by-step tutorials and educational content from code. Transforms complex concepts into progressive learning experiences with hands-on examples. Use PROACTIVELY for onboarding guides, feature tutorials, or concept explanations.
 allowed-tools: 
-model: glm-4.7
+model: GLM-4.7
 inherit-tools: true
 inherit-mcps: true
 color: blue

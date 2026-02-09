@@ -4,7 +4,7 @@ name: mlops-engineer
 description: Build ML pipelines, experiment tracking, and model registries. Implements MLflow, Kubeflow, and automated retraining. Handles data versioning and reproducibility. Use PROACTIVELY for ML infrastructure, experiment management, or pipeline automation.
 when-to-use: Build ML pipelines, experiment tracking, and model registries. Implements MLflow, Kubeflow, and automated retraining. Handles data versioning and reproducibility. Use PROACTIVELY for ML infrastructure, experiment management, or pipeline automation.
 allowed-tools: 
-model: glm-4.7
+model: DeepSeek-V3.2
 inherit-tools: true
 inherit-mcps: true
 color: orange

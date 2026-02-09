@@ -4,7 +4,7 @@ name: context-manager
 description: Manages context across multiple agents and long-running tasks. Use when coordinating complex multi-agent workflows or when context needs to be preserved across multiple sessions. MUST BE USED for projects exceeding 10k tokens.
 when-to-use: Manages context across multiple agents and long-running tasks. Use when coordinating complex multi-agent workflows or when context needs to be preserved across multiple sessions. MUST BE USED for projects exceeding 10k tokens.
 allowed-tools: 
-model: glm-4.7
+model: iFlow-ROME-30A3B
 inherit-tools: true
 inherit-mcps: true
 color: brown
