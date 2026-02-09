@@ -4,8 +4,8 @@
 基于PDF文档的智能问答系统，支持页码显示和DeepSeek集成
 """
 
-import os
 import argparse
+from pathlib import Path
 from dotenv import load_dotenv
 from langchain_community.vectorstores.faiss import FAISS
 # 使用自定义的RAG实现，不依赖可能已过时的RetrievalQA
@@ -19,8 +19,33 @@ from deepseek_integration import get_dashscope_llm, get_embeddings, get_integrat
 # 加载环境变量
 load_dotenv(verbose=True)
 
-# PDF文件路径
-PDF_FILE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "AI产品经理面试题65道.pdf")
+# PDF文件路径 - 使用 pathlib 生成字符串路径
+PDF_FILE_PATH = str(Path(__file__).parent.parent / "data" / "AI产品经理面试题65道.pdf")
+
+
+def normalize_pdf_path(pdf_path: str) -> str:
+    """
+    规范化PDF文件路径，支持绝对路径、相对路径和~路径
+
+    Args:
+        pdf_path: PDF文件路径，支持以下格式：
+                 - 绝对路径：/path/to/file.pdf
+                 - 相对路径：./data/file.pdf 或 data/file.pdf
+                 - ~路径：~/Documents/file.pdf
+
+    Returns:
+        规范化后的绝对路径字符串
+    """
+    path = Path(pdf_path).expanduser().resolve()
+    
+    # 如果路径不存在，尝试基于当前脚本文件解析相对路径
+    if not path.exists():
+        # 尝试基于脚本文件的相对路径
+        relative_path = Path(__file__).parent / pdf_path
+        if relative_path.exists():
+            path = relative_path.resolve()
+    
+    return str(path)
 
 
 def create_complete_rag_system(pdf_path: str = PDF_FILE_PATH):
@@ -137,7 +162,7 @@ def query_rag_system(rag_system, question):
     """
     # 检索相关文档
     print(f"正在检索与'{question}'相关的文档...")
-    source_documents = rag_system['retriever'].get_relevant_documents(question)
+    source_documents = rag_system['retriever'].invoke(question)
     
     if not source_documents:
         return {
@@ -271,6 +296,7 @@ def test_rag_system(pdf_path: str | None = None):
         
         print("\n开始测试问答功能...")
         for i, question in enumerate(test_questions, 1):
+            print("\n" + "=" * 60)
             print(f"\n测试 {i}: {question}")
             try:
                 result = query_rag_system(rag_system, question)
@@ -336,8 +362,11 @@ def main():
         else:
             pdf_path = PDF_FILE_PATH
     
+    # 规范化PDF路径
+    pdf_path = normalize_pdf_path(pdf_path)
+    
     # 检查PDF文件是否存在
-    if not os.path.exists(pdf_path):
+    if not Path(pdf_path).exists():
         print(f"\n错误: PDF文件不存在: {pdf_path}")
         print("请确保PDF文件路径正确且文件可访问")
         return
