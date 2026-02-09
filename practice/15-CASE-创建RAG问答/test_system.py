@@ -8,6 +8,7 @@ import os
 # 添加code目录到Python路径
 sys.path.append(os.path.join(os.path.dirname(__file__), 'code'))
 
+# 本地实现
 from pdf_processor import PDFProcessor
 from deepseek_integration import get_integration_info, get_embeddings, get_dashscope_llm
 
