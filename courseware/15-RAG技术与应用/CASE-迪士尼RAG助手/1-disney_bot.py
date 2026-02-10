@@ -76,6 +76,35 @@ def parse_docx(file_path):
         if element.tag.endswith('p'):
             # 处理段落
             paragraph_text = ""
+            """
+            Word 文档的结构原理
+
+            Word 文档（.docx）本质上是一个 ZIP 压缩包，内部使用 XML 格式存储内容。一个段落在 XML 中表示为 <w:p> 标签。
+
+            但是，段落中的文本可能被分割成多个 `<w:t>` 标签，每个 <w:t> 称为一个 "run"（文本运行）。
+
+            例如，一个段落 "Hello World" 可能在 XML 中是这样存储的：
+
+            <w:p>
+                <w:r>
+                    <w:t>Hello</w:t>
+                </w:r>
+                <w:r>
+                    <w:t> </w:t>  <!-- 空格 -->
+                </w:r>
+                <w:r>
+                    <w:t>World</w:t>
+                </w:r>
+            </w:p>
+
+            为什么需要这样写？
+
+            因为 Word 允许同一段落内的不同部分有不同的格式（如不同的字体、颜色、大小），所以会将它们分割成多个 "run"。如果不拼接所有 run，可能会丢失部分文本内容。
+
+            简化理解
+
+            这行代码的作用就是：把 Word 段落中分散存储的所有文本片段提取出来，拼接成完整的句子。
+            """
             for run in element.findall('.//w:t', {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}):
                 paragraph_text += run.text if run.text else ""
             
@@ -144,18 +173,23 @@ def build_knowledge_base(docs_dir, img_dir):
     """构建完整的知识库，包括解析、切片、Embedding和索引。"""
     print("\n--- 步骤 1 & 2: 正在解析、Embedding并索引知识库 ---")
     
-    metadata_store = []
-    text_vectors = []
-    image_vectors = []
+    metadata_store = []    # 存储所有内容的元数据（文本、图片的信息）
+    text_vectors = []      # 存储文本的向量表示
+    image_vectors = []     # 存储图片的向量表示
     
-    doc_id_counter = 0
+    doc_id_counter = 0     # 为每个内容分配唯一ID
 
     # 处理Word文档
+    # 关键点：
+    # - 遍历所有 .docx 文件
+    # - 使用 parse_docx 解析文档，提取段落和表格
+    # - 为每个文本/表格片段调用 get_text_embedding 获取1024维向量
+    # - 将元数据和向量分别存储
     for filename in os.listdir(docs_dir):
         if filename.startswith('.') or os.path.isdir(os.path.join(docs_dir, filename)):
             continue
             
-        file_path = os.path.join(docs_dir, filename)
+        file_path = os.path.join(docs_dir, filename) # 解析文档，提取文本和表格
         if filename.endswith(".docx"):
             print(f"  - 正在处理: {filename}")
             chunks = parse_docx(file_path)
@@ -175,16 +209,22 @@ def build_knowledge_base(docs_dir, img_dir):
                     metadata["type"] = "text"
                     metadata["content"] = text
                     
+                    # 获取文本向量（使用阿里云text-embedding-v4模型）
                     vector = get_text_embedding(text)
                     text_vectors.append(vector)
                     metadata_store.append(metadata)
                     doc_id_counter += 1
 
     # 处理images目录中的独立图片文件
+    # 关键点：
+    # - 遍历所有图片文件
+    # - 使用 image_to_text 进行OCR识别（Tesseract）
+    # - 使用 get_image_embedding 获取CLIP图像向量（512维）
+    # - 保存图片路径和OCR文字供后续检索使用
     print("  - 正在处理独立图片文件...")
     for img_filename in os.listdir(img_dir):
         if img_filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
-            img_path = os.path.join(img_dir, img_filename)
+            img_path = os.path.join(img_dir, img_filename) # OCR识别图片文字
             print(f"    - 处理图片: {img_filename}")
             
             img_text_info = image_to_text(img_path)
@@ -194,10 +234,11 @@ def build_knowledge_base(docs_dir, img_dir):
                 "source": f"独立图片: {img_filename}",
                 "type": "image",
                 "path": img_path,
-                "ocr": img_text_info["ocr"],
+                "ocr": img_text_info["ocr"], # 存储OCR识别的文字
                 "page": 1
             }
             
+            # 获取图片向量（使用CLIP模型，512维）
             vector = get_image_embedding(img_path)
             image_vectors.append(vector)
             metadata_store.append(metadata)
@@ -205,15 +246,15 @@ def build_knowledge_base(docs_dir, img_dir):
 
     # 创建 FAISS 索引
     # 文本索引
-    text_index = faiss.IndexFlatL2(TEXT_EMBEDDING_DIM)
-    text_index_map = faiss.IndexIDMap(text_index)
+    text_index = faiss.IndexFlatL2(TEXT_EMBEDDING_DIM)    # 创建L2距离索引（1024维）
+    text_index_map = faiss.IndexIDMap(text_index)         # 包装ID映射层
     text_ids = [m["id"] for m in metadata_store if m["type"] == "text"]
     if text_vectors:  # 只有当有文本向量时才添加到索引
         text_index_map.add_with_ids(np.array(text_vectors).astype('float32'), np.array(text_ids)) # type: ignore
     
     # 图像索引
-    image_index = faiss.IndexFlatL2(IMAGE_EMBEDDING_DIM)
-    image_index_map = faiss.IndexIDMap(image_index)
+    image_index = faiss.IndexFlatL2(IMAGE_EMBEDDING_DIM)  # 创建L2距离索引（512维）
+    image_index_map = faiss.IndexIDMap(image_index)       # 包装ID映射层
     image_ids = [m["id"] for m in metadata_store if m["type"] == "image"]
     if image_vectors:  # 只有当有图像向量时才添加到索引
         image_index_map.add_with_ids(np.array(image_vectors).astype('float32'), np.array(image_ids)) # type: ignore
