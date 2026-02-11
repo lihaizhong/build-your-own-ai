@@ -42,17 +42,17 @@
 │   ├── generator.py           # 生成层（Step4）
 │   └── main.py                # 主程序入口
 ├── data/                       # 数据目录
-│   └── images/                # 图像数据
-├── user_data/                  # 用户数据目录
 │   ├── documents/             # 文档数据
+│   └── images/                # 图像数据
+├── docs/                       # 文档目录
+│   └── USAGE.md               # 使用指南
+├── user_data/                  # 用户数据目录
 │   ├── indexes/               # FAISS索引文件
 │   └── cache/                 # 缓存目录
 ├── output/                     # 输出目录
 │   └── logs/                  # 日志文件
 ├── tests/                      # 测试目录
-├── README.md                   # 项目说明
-└── docs/                       # 文档目录
-    └── USAGE.md                # 使用指南
+└── README.md                   # 项目说明
 ```
 
 ## 环境要求
@@ -116,15 +116,19 @@ DASHSCOPE_API_KEY=your_dashscope_api_key_here
 
 ### 4. 准备数据
 
-项目已包含示例文档：
-- `user_data/documents/disney_classics.md` - 迪士尼经典动画电影
-- `user_data/documents/disney_parks.md` - 迪士尼乐园介绍
+项目已包含示例文档和Word文件：
+- `data/documents/` - 文档目录
+- `data/images/` - 图像目录
+- `data/1-上海迪士尼门票规则.docx`
+- `data/2-迪士尼老人票价规定.docx`
+- `data/3-迪士尼乐园游玩攻略清单.docx`
+- `data/4-上海迪士尼乐园酒店会员制度.docx`
 
 你可以添加自己的文档和图像：
 
 ```bash
-# 文档放入 user_data/documents/
-cp your_document.docx user_data/documents/
+# 文档放入 data/documents/
+cp your_document.docx data/documents/
 
 # 图像放入 data/images/
 cp your_image.png data/images/
@@ -240,6 +244,15 @@ $ python -m code.main -q "展示一下迪士尼的海报"
 ```python
 @dataclass
 class Config:
+    # 路径配置
+    project_root: Path = get_project_root()
+    data_dir: Path | None = None
+    documents_dir: Path | None = None  # 默认: data/documents
+    images_dir: Path | None = None     # 默认: data/images
+    indexes_dir: Path | None = None    # 默认: user_data/indexes
+    cache_dir: Path | None = None      # 默认: user_data/cache
+    output_dir: Path | None = None     # 默认: output
+    
     # Embedding配置
     text_embedding_model: str = "text-embedding-v4"
     text_embedding_dim: int = 1024
@@ -262,7 +275,7 @@ class Config:
 
 ### Q1: 如何添加新文档？
 
-将文档文件放入 `user_data/documents/` 目录，然后重新构建索引。
+将文档文件放入 `data/documents/` 目录，然后重新构建索引。
 
 ### Q2: 索引文件保存在哪里？
 

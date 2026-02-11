@@ -3,20 +3,20 @@
 Step1: 文档处理和图像处理
 """
 
-import re
+import base64
+from io import BytesIO
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 from loguru import logger
 import pytesseract
 from PIL import Image
-import docx
 from docx import Document
 from docx.table import Table
 from docx.text.paragraph import Paragraph
 
 from .config import config
-from .utils import table_to_markdown, chunk_text, clean_text, get_file_hash, get_timestamp
+from .utils import table_to_markdown, chunk_text as chunk_text_fn, clean_text, get_file_hash, get_timestamp
 
 
 @dataclass
@@ -68,7 +68,7 @@ class DocumentProcessor:
         """
         target_dir = directory or self.documents_dir
         
-        if not target_dir.exists():
+        if target_dir is not None and not target_dir.exists():
             logger.warning(f"文档目录不存在: {target_dir}")
             return []
         
@@ -79,7 +79,7 @@ class DocumentProcessor:
         
         # 查找所有支持的文档文件
         doc_files = [
-            f for f in target_dir.rglob('*') 
+            f for f in target_dir.rglob('*')  # type: ignore
             if f.is_file() and f.suffix.lower() in supported_extensions
         ]
         
@@ -128,7 +128,7 @@ class DocumentProcessor:
             文本块列表
         """
         chunks = []
-        doc = Document(file_path)
+        doc = Document(file_path) # type: ignore
         
         # 计算文件哈希用于去重
         file_hash = get_file_hash(file_path)
@@ -260,7 +260,7 @@ class DocumentProcessor:
         Returns:
             文本块列表
         """
-        chunked_texts = chunk_text(text, chunk_size=500, overlap=50)
+        chunked_texts = chunk_text_fn(text, chunk_size=500, overlap=50)
         chunks = []
         
         for i, chunk_text in enumerate(chunked_texts):
@@ -301,7 +301,7 @@ class ImageProcessor:
         """
         target_dir = directory or self.images_dir
         
-        if not target_dir.exists():
+        if target_dir is not None and not target_dir.exists():
             logger.warning(f"图像目录不存在: {target_dir}")
             return []
         
@@ -312,7 +312,7 @@ class ImageProcessor:
         
         # 查找所有图像文件
         image_files = [
-            f for f in target_dir.rglob('*') 
+            f for f in target_dir.rglob('*')  # type: ignore
             if f.is_file() and f.suffix.lower() in supported_extensions
         ]
         
@@ -391,9 +391,6 @@ class ImageProcessor:
             提取的文本
         """
         try:
-            import base64
-            from io import BytesIO
-            
             image_data = base64.b64decode(image_base64)
             image = Image.open(BytesIO(image_data))
             
@@ -424,7 +421,7 @@ def extract_images_from_docx(docx_path: Path, output_dir: Path) -> List[Path]:
     extracted_images = []
     
     try:
-        doc = Document(docx_path)
+        doc = Document(docx_path) # type: ignore
         image_index = 0
         
         # 遍历文档中的所有关系
@@ -435,7 +432,7 @@ def extract_images_from_docx(docx_path: Path, output_dir: Path) -> List[Path]:
                     
                     # 确定图像格式
                     image = Image.open(BytesIO(image_data))
-                    ext = image.format.lower()
+                    ext = image.format.lower() # type: ignore
                     
                     # 保存图像
                     output_path = output_dir / f"{docx_path.stem}_image_{image_index}.{ext}"

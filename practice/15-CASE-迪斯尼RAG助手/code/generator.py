@@ -203,7 +203,7 @@ class AnswerGenerator:
             answer = response.choices[0].message.content
             logger.info("答案生成完成")
             
-            return answer
+            return answer # type: ignore
             
         except Exception as e:
             logger.error(f"答案生成失败: {e}")

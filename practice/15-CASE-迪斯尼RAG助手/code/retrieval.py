@@ -3,14 +3,13 @@
 Step3: 混合检索和关键词触发
 """
 
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 from loguru import logger
 import numpy as np
 
 from .config import config
 from .embedding import VectorStore, TextEmbeddingModel, ImageEmbeddingModel
-from .data_processor import TextChunk, ImageData
 
 
 @dataclass
@@ -80,7 +79,7 @@ class TextRetriever:
         logger.info(f"文本检索: '{query}' (top_k={top_k})")
         
         # 生成查询向量
-        query_vector = self.text_embedding_model.embed_text(query)
+        query_vector = self.text_embedding_model.embed_text(query) # type: ignore
         query_vector_np = np.array(query_vector, dtype=np.float32)
         
         # 搜索相似向量
@@ -157,7 +156,7 @@ class ImageRetriever:
         logger.info(f"图像文本检索: '{query}' (top_k={top_k})")
         
         # 使用CLIP文本编码器生成查询向量
-        query_vector = self.image_embedding_model.embed_text_for_image_search(query)
+        query_vector = self.image_embedding_model.embed_text_for_image_search(query) # type: ignore
         query_vector_np = np.array(query_vector, dtype=np.float32)
         
         # 搜索相似向量
@@ -216,7 +215,7 @@ class ImageRetriever:
         
         # 生成查询图像向量
         from pathlib import Path
-        query_vector = self.image_embedding_model.embed_image_path(Path(image_path))
+        query_vector = self.image_embedding_model.embed_image_path(Path(image_path)) # type: ignore
         query_vector_np = np.array(query_vector, dtype=np.float32)
         
         # 搜索相似向量
@@ -277,7 +276,7 @@ class HybridRetriever:
             是否触发图像检索
         """
         query_lower = query.lower()
-        for keyword in self.image_keywords:
+        for keyword in self.image_keywords: # type: ignore
             if keyword.lower() in query_lower:
                 return True
         return False

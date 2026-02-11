@@ -23,7 +23,7 @@ def setup_logger(log_dir: Optional[Path] = None):
         log_dir: 日志目录
     """
     if log_dir is None:
-        log_dir = config.output_dir / "logs"
+        log_dir = config.output_dir / "logs" # type: ignore
     
     log_dir.mkdir(parents=True, exist_ok=True)
     

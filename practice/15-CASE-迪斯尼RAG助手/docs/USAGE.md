@@ -26,16 +26,17 @@ Disney RAG问答助手是一个基于RAG（Retrieval-Augmented Generation）技�
 │   ├── generator.py           # 生成层（Step4）
 │   └── main.py                # 主程序入口
 ├── data/                       # 数据目录
-│   └── images/                # 图像数据
-├── user_data/                  # 用户数据目录
 │   ├── documents/             # 文档数据
+│   └── images/                # 图像数据
+├── docs/                       # 文档目录
+│   └── USAGE.md               # 使用指南（本文件）
+├── user_data/                  # 用户数据目录
 │   ├── indexes/               # FAISS索引文件
 │   └── cache/                 # 缓存目录
 ├── output/                     # 输出目录
 │   └── logs/                  # 日志文件
 ├── tests/                      # 测试目录
-├── README.md                   # 项目说明
-└── USAGE.md                    # 使用指南（本文件）
+└── README.md                   # 项目说明
 ```
 
 ## 环境要求
@@ -54,40 +55,17 @@ cd /Users/lihaizhong/Documents/Project/build-your-own-x/build-your-own-ai
 source .venv/bin/activate
 ```
 
-### 2. 安装依赖
+### 2. 验证依赖
 
-确保根目录的 `pyproject.toml` 包含以下依赖：
-
-```toml
-dependencies = [
-    "langchain>=0.1.0",
-    "langchain-community>=0.1.0",
-    "langchain-core>=0.1.0",
-    "langchain-openai>=0.1.0",
-    "faiss-cpu>=1.7.4",
-    "PyPDF2>=3.0.0",
-    "python-docx>=0.8.11",
-    "pytesseract>=0.3.10",
-    "python-dotenv>=1.0.0",
-    "dashscope>=1.22.1",
-    "numpy>=1.24.0",
-    "pandas>=2.0.0",
-    "pillow>=10.0.0",
-    "torch>=2.0.0",
-    "transformers>=4.30.0",
-    "openai>=1.0.0",
-    "loguru>=0.7.0",
-]
-```
-
-如果缺少依赖，运行：
-
-```bash
-uv add langchain langchain-community langchain-core langchain-openai
-uv add faiss-cpu PyPDF2 python-docx pytesseract
-uv add python-dotenv dashscope numpy pandas
-uv add pillow torch transformers openai loguru
-```
+根目录的 `pyproject.toml` 已包含所有必需的依赖，包括：
+- `langchain>=1.2.9` - 大模型应用开发框架
+- `faiss-cpu>=1.13.2` - 向量相似度搜索
+- `dashscope>=1.25.11` - 阿里云通义千问API
+- `transformers>=5.1.0` - CLIP模型（图像Embedding）
+- `pytesseract>=0.3.13` - OCR文本识别
+- `python-docx>=1.2.0` - Word文档处理
+- `torch>=2.10.0` - 深度学习框架
+- 以及其他相关依赖
 
 ### 3. 配置环境变量
 
@@ -97,18 +75,28 @@ uv add pillow torch transformers openai loguru
 DASHSCOPE_API_KEY=your_dashscope_api_key_here
 ```
 
+项目会自动从项目根目录的 `.env` 文件加载环境变量。
+
 ### 4. 准备数据
 
 将文档和图像放入相应目录：
 
 ```bash
-# 文档放入 user_data/documents/
-cp your_document.docx user_data/documents/
-cp your_text.md user_data/documents/
+# 文档放入 data/documents/
+cp your_document.docx data/documents/
+cp your_text.md data/documents/
 
 # 图像放入 data/images/
 cp your_image.png data/images/
 ```
+
+项目已包含示例文档和Word文件：
+- `data/documents/` - 文档目录
+- `data/images/` - 图像目录
+- `data/1-上海迪士尼门票规则.docx`
+- `data/2-迪士尼老人票价规定.docx`
+- `data/3-迪士尼乐园游玩攻略清单.docx`
+- `data/4-上海迪士尼乐园酒店会员制度.docx`
 
 ### 5. 构建索引
 
@@ -129,6 +117,12 @@ python -m code.main --interactive
 
 ```bash
 python -m code.main --query "迪士尼有哪些经典动画电影？"
+```
+
+#### 查看帮助
+
+```bash
+python -m code.main --help
 ```
 
 ## 使用示例
@@ -236,6 +230,7 @@ $ python -m code.main --interactive
 
 - **上下文组织**: `generator.py` - 将检索结果组织成结构化提示
 - **答案生成**: `generator.py` - 使用大语言模型生成准确答案
+- **流式输出**: `generator.py` - 支持流式生成答案
 
 ## 配置说明
 
@@ -245,10 +240,13 @@ $ python -m code.main --interactive
 @dataclass
 class Config:
     # 路径配置
-    data_dir: Path = None
-    documents_dir: Path = None
-    images_dir: Path = None
-    indexes_dir: Path = None
+    project_root: Path = get_project_root()
+    data_dir: Path | None = None
+    documents_dir: Path | None = None  # 默认: data/documents
+    images_dir: Path | None = None     # 默认: data/images
+    indexes_dir: Path | None = None    # 默认: user_data/indexes
+    cache_dir: Path | None = None      # 默认: user_data/cache
+    output_dir: Path | None = None     # 默认: output
     
     # Embedding配置
     text_embedding_model: str = "text-embedding-v4"
@@ -258,20 +256,32 @@ class Config:
     
     # FAISS配置
     index_type: str = "IndexFlatL2"
+    nlist: int = 100  # IVF索引的聚类中心数
     
     # 检索配置
     top_k: int = 5
     score_threshold: float = 0.7
     
-    # 图像检索关键词
-    image_keywords: list = ["海报", "图片", "图像", "照片", "截图", "展示"]
+    # LLM配置
+    llm_model: str = "deepseek-chat"
+    llm_temperature: float = 0.7
+    llm_max_tokens: int = 2000
+    
+    # OCR配置
+    tesseract_config: str = "--psm 6"
+    ocr_language: str = "chi_sim+eng"
+    
+    # 检索关键词触发
+    image_keywords: list | None = None
 ```
+
+默认图像检索关键词为：`["海报", "图片", "图像", "照片", "截图", "展示"]`
 
 ## 常见问题
 
 ### Q1: 如何添加新文档？
 
-将文档文件放入 `user_data/documents/` 目录，然后重新构建索引：
+将文档文件放入 `data/documents/` 目录，然后重新构建索引：
 
 ```bash
 python -m code.main --build
@@ -287,7 +297,9 @@ python -m code.main --build
 
 ### Q3: 如何更换大语言模型？
 
-修改 `code/config.py` 中的 `llm_model` 配置，或使用支持DashScope的其他模型。
+可以通过环境变量设置或修改 `code/config.py` 中的 `llm_model` 配置：
+- 通过环境变量：`LLM_MODEL=qwen-max`
+- 或使用支持DashScope的其他模型（如 deepseek-chat、qwen-turbo 等）
 
 ### Q4: 索引文件保存在哪里？
 
@@ -305,11 +317,19 @@ python -m code.main --build
 rm -rf user_data/cache/*
 ```
 
+### Q6: 支持哪些文档格式？
+
+支持 `.docx`、`.txt`、`.md` 格式。
+
+### Q7: 支持哪些图像格式？
+
+支持 `.png`、`.jpg`、`.jpeg`、`.gif`、`.bmp`、`.webp` 格式。
+
 ## 进阶使用
 
 ### 自定义关键词触发
 
-编辑 `code/config.py` 中的 `image_keywords` 列表：
+修改 `code/config.py` 中的 `image_keywords` 列表：
 
 ```python
 config.image_keywords = ["海报", "图片", "图像", "照片", "截图", "展示", "剧照"]
@@ -324,16 +344,40 @@ config.top_k = 10  # 返回更多结果
 config.score_threshold = 0.6  # 降低分数阈值
 ```
 
-### 批量处理文档
+### 自定义LLM参数
 
-使用 `DocumentProcessor` 类批量处理文档：
+修改 `code/config.py` 中的LLM参数：
 
 ```python
-from code.data_processor import DocumentProcessor
+config.llm_temperature = 0.5  # 降低随机性
+config.llm_max_tokens = 3000  # 增加输出长度
+```
 
-processor = DocumentProcessor()
-chunks = processor.process_directory()
-print(f"处理了 {len(chunks)} 个文本块")
+### 使用代码接口
+
+```python
+from pathlib import Path
+from code.config import config, load_env_config
+from code.data_processor import DocumentProcessor, ImageProcessor
+from code.embedding import VectorStore
+from code.retrieval import HybridRetriever
+from code.generator import AnswerGenerator, RAGPipeline
+
+# 加载环境变量
+load_env_config()
+
+# 构建索引
+vector_store = VectorStore()
+doc_processor = DocumentProcessor()
+chunks = doc_processor.process_directory()
+vector_store.build_text_index(chunks)
+
+# 执行查询
+retriever = HybridRetriever(vector_store)
+generator = AnswerGenerator()
+pipeline = RAGPipeline(retriever, generator)
+result = pipeline.query("迪士尼有哪些经典动画电影？")
+print(pipeline.format_response(result))
 ```
 
 ## 许可证

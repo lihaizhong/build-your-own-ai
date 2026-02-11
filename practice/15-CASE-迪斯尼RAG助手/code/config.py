@@ -10,6 +10,9 @@ from dataclasses import dataclass
 from dotenv import load_dotenv
 
 
+load_dotenv(verbose=True)
+
+
 def get_project_root() -> Path:
     """获取项目根目录"""
     try:
@@ -26,12 +29,12 @@ class Config:
     
     # 路径配置
     project_root: Path = get_project_root()
-    data_dir: Path = None
-    documents_dir: Path = None
-    images_dir: Path = None
-    indexes_dir: Path = None
-    cache_dir: Path = None
-    output_dir: Path = None
+    data_dir: Path | None = None
+    documents_dir: Path | None = None
+    images_dir: Path | None = None
+    indexes_dir: Path | None = None
+    cache_dir: Path | None = None
+    output_dir: Path | None = None
     
     # Embedding配置
     text_embedding_model: str = "text-embedding-v4"
@@ -48,7 +51,7 @@ class Config:
     score_threshold: float = 0.7
     
     # LLM配置
-    llm_model: str = "deepseek-chat"
+    llm_model: str = "qwen-max"
     llm_temperature: float = 0.7
     llm_max_tokens: int = 2000
     
@@ -57,14 +60,14 @@ class Config:
     ocr_language: str = "chi_sim+eng"
     
     # 检索关键词触发
-    image_keywords: list = None
+    image_keywords: list | None = None
     
     def __post_init__(self):
         """初始化路径"""
         if self.data_dir is None:
             self.data_dir = self.project_root / "data"
         if self.documents_dir is None:
-            self.documents_dir = self.project_root / "user_data" / "documents"
+            self.documents_dir = self.data_dir / "documents"
         if self.images_dir is None:
             self.images_dir = self.data_dir / "images"
         if self.indexes_dir is None:
@@ -84,7 +87,8 @@ class Config:
         """确保所有目录存在"""
         for dir_path in [self.documents_dir, self.images_dir, 
                         self.indexes_dir, self.cache_dir, self.output_dir]:
-            dir_path.mkdir(parents=True, exist_ok=True)
+            if dir_path is not None:
+                dir_path.mkdir(parents=True, exist_ok=True)
     
     @classmethod
     def from_dict(cls, config_dict: Dict[str, Any]) -> 'Config':
@@ -108,12 +112,6 @@ config = Config()
 
 def load_env_config():
     """加载环境变量配置"""
-    # 加载项目根目录的.env文件
-    project_root = get_project_root()
-    env_file = project_root.parent / ".env"
-    
-    if env_file.exists():
-        load_dotenv(env_file)
     
     # 从环境变量更新配置
     config.llm_model = os.environ.get("LLM_MODEL", config.llm_model)
