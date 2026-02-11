@@ -4,9 +4,8 @@ Step2: 文本Embedding、图像Embedding和FAISS索引系统
 """
 
 import os
-import pickle
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Any, Optional, Tuple
 from loguru import logger
 import numpy as np
 import faiss
@@ -19,11 +18,11 @@ from transformers import CLIPProcessor, CLIPModel
 try:
     from .config import config
     from .data_processor import TextChunk, ImageData
-    from .utils import save_pickle, load_pickle, save_json, load_json, get_timestamp
+    from .utils import save_pickle, load_pickle
 except ImportError:
     from config import config
     from data_processor import TextChunk, ImageData
-    from utils import save_pickle, load_pickle, save_json, load_json, get_timestamp
+    from utils import save_pickle, load_pickle
 
 
 class TextEmbeddingModel:
@@ -153,7 +152,7 @@ class ImageEmbeddingModel:
         
         # 检查是否有GPU
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model.to(self.device)
+        self.model.to(self.device) # type: ignore
         
         logger.info(f"图像Embedding模型加载完成 (设备: {self.device}, 维度: {self.embedding_dim})")
     
@@ -168,14 +167,14 @@ class ImageEmbeddingModel:
             图像向量
         """
         try:
-            inputs = self.processor(images=image, return_tensors="pt")
+            inputs = self.processor(images=image, return_tensors="pt") # type: ignore
             inputs = {k: v.to(self.device) for k, v in inputs.items()}
             
             with torch.no_grad():
                 image_features = self.model.get_image_features(**inputs)
             
             # 归一化
-            image_features = image_features / image_features.norm(dim=-1, keepdim=True)
+            image_features = image_features / image_features.norm(dim=-1, keepdim=True) # type: ignore
             
             return image_features.cpu().numpy()[0].tolist()
             
@@ -253,14 +252,14 @@ class ImageEmbeddingModel:
             文本向量
         """
         try:
-            inputs = self.processor(text=[text], return_tensors="pt", padding=True)
+            inputs = self.processor(text=[text], return_tensors="pt", padding=True) # type: ignore
             inputs = {k: v.to(self.device) for k, v in inputs.items()}
             
             with torch.no_grad():
                 text_features = self.model.get_text_features(**inputs)
             
             # 归一化
-            text_features = text_features / text_features.norm(dim=-1, keepdim=True)
+            text_features = text_features / text_features.norm(dim=-1, keepdim=True) # type: ignore
             
             return text_features.cpu().numpy()[0].tolist()
             
@@ -306,28 +305,36 @@ class FAISSIndex:
             documents: 对应的文档数据
         """
         if self.index_type == "IndexIVFFlat":
-            self.index.train(vectors)
+            self.index.train(vectors) # type: ignore
         
-        self.index.add(vectors)
+        self.index.add(vectors) # type: ignore
         self.documents.extend(documents)
         logger.info(f"添加 {len(documents)} 个向量到索引 (总数: {self.index.ntotal})")
     
-    def search(self, query_vector: np.ndarray, k: int = 5) -> List[Tuple[int, float]]:
+    def search(
+        self,
+        query_vector: np.ndarray,
+        k: int = 5
+    ) -> List[Tuple[int, float]]:
         """
         搜索最相似的向量
         
         Args:
-            query_vector: 查询向量
-            k: 返回的结果数量
+            query_vector: 查询向量，形状为 (embedding_dim,)
+            k: 返回的结果数量，默认为5
         
         Returns:
-            [(索引, 距离)] 列表
+            [(文档索引, 相似度距离)] 列表，按相似度排序（距离越小越相似）
         """
         if self.index.ntotal == 0:
             return []
         
         query_vector = np.array([query_vector], dtype=np.float32)
-        distances, indices = self.index.search(query_vector, k)
+        # distances: 相似度距离数组，形状为 (1, k)
+        # indices: 对应的文档索引数组，形状为 (1, k)
+        distances: np.ndarray
+        indices: np.ndarray
+        distances, indices = self.index.search(query_vector, k) # type: ignore
         
         results = []
         for idx, dist in zip(indices[0], distances[0]):
@@ -452,27 +459,27 @@ class VectorStore:
     def save_indexes(self):
         """保存索引"""
         if self.text_index:
-            text_index_path = config.indexes_dir / "text_index.faiss"
-            text_docs_path = config.indexes_dir / "text_documents.pkl"
+            text_index_path = config.indexes_dir / "text_index.faiss" # type: ignore
+            text_docs_path = config.indexes_dir / "text_documents.pkl" # type: ignore
             self.text_index.save(text_index_path, text_docs_path)
         
         if self.image_index:
-            image_index_path = config.indexes_dir / "image_index.faiss"
-            image_docs_path = config.indexes_dir / "image_documents.pkl"
+            image_index_path = config.indexes_dir / "image_index.faiss" # type: ignore
+            image_docs_path = config.indexes_dir / "image_documents.pkl" # type: ignore
             self.image_index.save(image_index_path, image_docs_path)
     
     def load_indexes(self):
         """加载索引"""
-        text_index_path = config.indexes_dir / "text_index.faiss"
-        text_docs_path = config.indexes_dir / "text_documents.pkl"
+        text_index_path = config.indexes_dir / "text_index.faiss" # type: ignore
+        text_docs_path = config.indexes_dir / "text_documents.pkl" # type: ignore
         
         if text_index_path.exists() and text_docs_path.exists():
             self.text_index = FAISSIndex(config.text_embedding_dim)
             self.text_index.load(text_index_path, text_docs_path)
             logger.info("文本索引加载完成")
         
-        image_index_path = config.indexes_dir / "image_index.faiss"
-        image_docs_path = config.indexes_dir / "image_documents.pkl"
+        image_index_path = config.indexes_dir / "image_index.faiss" # type: ignore
+        image_docs_path = config.indexes_dir / "image_documents.pkl" # type: ignore
         
         if image_index_path.exists() and image_docs_path.exists():
             self.image_index = FAISSIndex(config.image_embedding_dim)
