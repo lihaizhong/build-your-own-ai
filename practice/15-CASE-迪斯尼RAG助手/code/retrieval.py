@@ -8,8 +8,12 @@ from dataclasses import dataclass
 from loguru import logger
 import numpy as np
 
-from .config import config
-from .embedding import VectorStore, TextEmbeddingModel, ImageEmbeddingModel
+try:
+    from .config import config
+    from .embedding import VectorStore, TextEmbeddingModel, ImageEmbeddingModel
+except ImportError:
+    from config import config
+    from embedding import VectorStore, TextEmbeddingModel, ImageEmbeddingModel
 
 
 @dataclass

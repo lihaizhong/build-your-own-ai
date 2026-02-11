@@ -15,8 +15,12 @@ from docx import Document
 from docx.table import Table
 from docx.text.paragraph import Paragraph
 
-from .config import config
-from .utils import table_to_markdown, chunk_text as chunk_text_fn, clean_text, get_file_hash, get_timestamp
+try:
+    from .config import config
+    from .utils import table_to_markdown, chunk_text as chunk_text_fn, clean_text, get_file_hash, get_timestamp
+except ImportError:
+    from config import config
+    from utils import table_to_markdown, chunk_text as chunk_text_fn, clean_text, get_file_hash, get_timestamp
 
 
 @dataclass

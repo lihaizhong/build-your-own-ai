@@ -8,8 +8,12 @@ from typing import List, Dict, Any, Optional
 from loguru import logger
 from openai import OpenAI
 
-from .config import config
-from .retrieval import RetrievalResult
+try:
+    from .config import config
+    from .retrieval import RetrievalResult
+except ImportError:
+    from config import config
+    from retrieval import RetrievalResult
 
 
 class PromptBuilder:

@@ -40,7 +40,7 @@ class Config:
     text_embedding_model: str = "text-embedding-v4"
     text_embedding_dim: int = 1024
     image_embedding_dim: int = 512
-    clip_model_name: str = "ViT-B/32"
+    clip_model_name: str = "clip-vit-base-patch32"
     
     # FAISS配置
     index_type: str = "IndexFlatL2"

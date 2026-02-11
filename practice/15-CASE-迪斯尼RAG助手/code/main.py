@@ -4,15 +4,40 @@ Disney RAG问答助手 - 主程序入口
 
 import sys
 import argparse
+import warnings
 from pathlib import Path
 from loguru import logger
 from typing import Optional
+import torch
 
-from .config import config, load_env_config
-from .data_processor import DocumentProcessor, ImageProcessor
-from .embedding import VectorStore
-from .retrieval import HybridRetriever
-from .generator import AnswerGenerator, RAGPipeline
+# 绝对导入，支持直接运行
+try:
+    from .config import config, load_env_config
+    from .data_processor import DocumentProcessor, ImageProcessor
+    from .embedding import VectorStore
+    from .retrieval import HybridRetriever
+    from .generator import AnswerGenerator, RAGPipeline
+except ImportError:
+    # 作为脚本直接运行时使用绝对导入
+    from config import config, load_env_config
+    from data_processor import DocumentProcessor, ImageProcessor
+    from embedding import VectorStore
+    from retrieval import HybridRetriever
+    from generator import AnswerGenerator, RAGPipeline
+
+
+def cleanup_resources():
+    """清理资源，防止multiprocessing警告"""
+    try:
+        # 清理PyTorch缓存
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        
+        # 关闭multiprocessing资源
+        import multiprocessing as mp
+        mp.util._cleanup_all_processes()  # type: ignore
+    except Exception as e:
+        logger.debug(f"资源清理时出现警告（可忽略）: {e}")
 
 
 def setup_logger(log_dir: Optional[Path] = None):
@@ -41,8 +66,12 @@ def setup_logger(log_dir: Optional[Path] = None):
     )
 
 
-def build_indexes():
-    """构建索引"""
+def build_indexes(skip_images: bool = False):
+    """构建索引
+    
+    Args:
+        skip_images: 是否跳过图像处理
+    """
     logger.info("=" * 60)
     logger.info("开始构建索引")
     logger.info("=" * 60)
@@ -61,16 +90,23 @@ def build_indexes():
     else:
         logger.warning("没有找到可处理的文档")
     
-    # 处理图像
-    logger.info("\n【Step 2】处理图像...")
-    img_processor = ImageProcessor()
-    images = img_processor.process_directory()
-    
-    if images:
-        logger.info(f"共处理 {len(images)} 个图像")
-        vector_store.build_image_index(images)
+    # 处理图像（添加异常处理）
+    if not skip_images:
+        logger.info("\n【Step 2】处理图像...")
+        try:
+            img_processor = ImageProcessor()
+            images = img_processor.process_directory()
+            
+            if images:
+                logger.info(f"共处理 {len(images)} 个图像")
+                vector_store.build_image_index(images)
+            else:
+                logger.warning("没有找到可处理的图像")
+        except Exception as e:
+            logger.warning(f"图像处理失败，跳过图像索引: {e}")
+            logger.info("继续使用文本索引...")
     else:
-        logger.warning("没有找到可处理的图像")
+        logger.info("\n【Step 2】跳过图像处理（--build-text-only）")
     
     # 保存索引
     logger.info("\n【Step 3】保存索引...")
@@ -88,6 +124,7 @@ def interactive_mode():
     logger.info("=" * 60)
     logger.info("输入 'quit' 或 'exit' 退出")
     logger.info("输入 'help' 查看帮助信息")
+    logger.info("输入 Ctrl+C 也可以退出")
     logger.info("=" * 60 + "\n")
     
     # 加载索引
@@ -131,7 +168,13 @@ def interactive_mode():
             print(f"\n{rag_pipeline.format_response(result)}")
             
         except KeyboardInterrupt:
-            print("\n\n程序被中断")
+            print("\n\n程序被中断，正在退出...")
+            logger.info("用户中断程序")
+            break
+        except EOFError:
+            # 处理 EOF (Ctrl+D)
+            print("\n\n检测到 EOF，正在退出...")
+            logger.info("检测到 EOF，退出程序")
             break
         except Exception as e:
             logger.error(f"查询失败: {e}")
@@ -185,6 +228,9 @@ def single_query(question: str):
 
 def main():
     """主函数"""
+    # 禁用multiprocessing资源泄漏警告（不影响功能）
+    warnings.filterwarnings("ignore", message=".*leaked semaphore.*")
+    
     parser = argparse.ArgumentParser(
         description="Disney RAG问答助手 - 基于向量数据库的智能问答系统",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -205,6 +251,12 @@ def main():
         '--build',
         action='store_true',
         help='构建文档和图像索引'
+    )
+    
+    parser.add_argument(
+        '--build-text-only',
+        action='store_true',
+        help='仅构建文档索引（跳过图像处理）'
     )
     
     parser.add_argument(
@@ -241,7 +293,9 @@ def main():
     
     # 执行命令
     if args.build:
-        build_indexes()
+        build_indexes(skip_images=False)
+    elif args.build_text_only:
+        build_indexes(skip_images=True)
     elif args.interactive:
         interactive_mode()
     elif args.query:
@@ -251,6 +305,9 @@ def main():
         parser.print_help()
         print("\n未指定命令，启动交互模式...")
         interactive_mode()
+    
+    # 程序退出时清理资源
+    cleanup_resources()
 
 
 def print_logo():

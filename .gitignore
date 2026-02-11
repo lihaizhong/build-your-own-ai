@@ -76,6 +76,7 @@ __pypackages__/
 # 注意：prediction_result/predictions.csv 不能忽略（需提交）
 user_data/
 !user_data/.gitkeep
+output/
 
 models/
 catboost_info/

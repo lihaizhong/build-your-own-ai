@@ -16,9 +16,14 @@ from PIL import Image
 import torch
 from transformers import CLIPProcessor, CLIPModel
 
-from .config import config
-from .data_processor import TextChunk, ImageData
-from .utils import save_pickle, load_pickle, save_json, load_json, get_timestamp
+try:
+    from .config import config
+    from .data_processor import TextChunk, ImageData
+    from .utils import save_pickle, load_pickle, save_json, load_json, get_timestamp
+except ImportError:
+    from config import config
+    from data_processor import TextChunk, ImageData
+    from utils import save_pickle, load_pickle, save_json, load_json, get_timestamp
 
 
 class TextEmbeddingModel:
@@ -142,6 +147,9 @@ class ImageEmbeddingModel:
         
         # 设置为评估模式
         self.model.eval()
+        
+        # 限制线程数，避免multiprocessing资源泄漏
+        torch.set_num_threads(1)
         
         # 检查是否有GPU
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
