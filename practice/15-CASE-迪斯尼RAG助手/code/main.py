@@ -33,9 +33,10 @@ def cleanup_resources():
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
         
-        # 关闭multiprocessing资源
-        import multiprocessing as mp
-        mp.util._cleanup_all_processes()  # type: ignore
+        # 关闭multiprocessing资源（兼容Python 3.14+）
+        import multiprocessing.util as mp_util
+        if hasattr(mp_util, '_cleanup_all_processes'):
+            mp_util._cleanup_all_processes()  # type: ignore
     except Exception as e:
         logger.debug(f"资源清理时出现警告（可忽略）: {e}")
 

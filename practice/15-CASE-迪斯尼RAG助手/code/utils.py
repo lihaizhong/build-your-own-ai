@@ -41,7 +41,23 @@ def save_pickle(data: Any, file_path: Path):
 
 
 def load_pickle(file_path: Path) -> Any:
-    """加载pickle文件"""
+    """加载pickle文件
+    
+    自动处理模块导入路径问题，支持跨环境加载索引文件
+    """
+    import sys
+    
+    # 添加 code 目录到模块搜索路径，解决 pickle 反序列化时的模块路径问题
+    # file_path 通常是: project_root/user_data/indexes/xxx.pkl
+    # 需要从 indexes 上两级到 project_root，然后找到 code 目录
+    indexes_dir = file_path.parent  # user_data/indexes
+    user_data_dir = indexes_dir.parent  # user_data
+    project_root = user_data_dir.parent  # project_root
+    code_dir = project_root / "code"
+    
+    if code_dir.exists() and str(code_dir) not in sys.path:
+        sys.path.insert(0, str(code_dir))
+    
     with open(file_path, "rb") as f:
         return pickle.load(f)
 

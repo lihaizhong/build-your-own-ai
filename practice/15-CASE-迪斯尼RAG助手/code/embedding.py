@@ -171,7 +171,14 @@ class ImageEmbeddingModel:
             inputs = {k: v.to(self.device) for k, v in inputs.items()}
             
             with torch.no_grad():
-                image_features = self.model.get_image_features(**inputs)
+                outputs = self.model.get_image_features(**inputs)
+                # 处理不同版本transformers的返回值
+                # 新版本返回 BaseModelOutputWithPooling，需要访问 pooler_output
+                # 旧版本直接返回 tensor
+                if hasattr(outputs, 'pooler_output'):
+                    image_features = outputs.pooler_output # type: ignore
+                else:
+                    image_features = outputs
             
             # 归一化
             image_features = image_features / image_features.norm(dim=-1, keepdim=True) # type: ignore
@@ -256,7 +263,14 @@ class ImageEmbeddingModel:
             inputs = {k: v.to(self.device) for k, v in inputs.items()}
             
             with torch.no_grad():
-                text_features = self.model.get_text_features(**inputs)
+                outputs = self.model.get_text_features(**inputs)
+                # 处理不同版本transformers的返回值
+                # 新版本返回 BaseModelOutputWithPooling，需要访问 pooler_output
+                # 旧版本直接返回 tensor
+                if hasattr(outputs, 'pooler_output'):
+                    text_features = outputs.pooler_output # type: ignore
+                else:
+                    text_features = outputs
             
             # 归一化
             text_features = text_features / text_features.norm(dim=-1, keepdim=True) # type: ignore
