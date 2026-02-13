@@ -508,8 +508,12 @@ if __name__ == "__main__":
     
     logger.add("logs/embedding.log", rotation="1 day")
     
-    # 加载环境变量
-    from .config import load_env_config
+    try:
+        # 加载环境变量
+        from .config import load_env_config
+    except ImportError:
+        from config import load_env_config
+
     load_env_config()
     
     # 初始化向量存储
