@@ -3,12 +3,92 @@
 提供各种通用工具函数
 """
 
+import os
 import json
 import hashlib
+import multiprocessing
 from pathlib import Path
 from typing import Any, List, Optional
 from datetime import datetime
+from loguru import logger
 import pickle
+import torch
+
+
+def init_multiprocessing(num_workers: int = 1) -> int:
+    """
+    初始化多进程环境
+    
+    在主进程启动时调用，配置多进程环境和线程限制。
+    必须在创建任何模型或多进程之前调用。
+    
+    Args:
+        num_workers: 预期的进程数，用于计算每个进程的线程配额
+    
+    Returns:
+        每个进程分配的线程数
+    """
+    # 设置多进程启动方式为 spawn（兼容性最好）
+    try:
+        multiprocessing.set_start_method('spawn', force=True)
+    except RuntimeError:
+        pass  # 已经设置过
+    
+    # 计算每个进程的线程配额
+    cpu_count = os.cpu_count() or 4
+    if num_workers > 1:
+        # 多进程模式：每个进程使用较少线程
+        threads_per_worker = max(1, min(2, cpu_count // num_workers))
+    else:
+        # 单进程模式：可以使用更多线程
+        threads_per_worker = max(1, min(4, cpu_count // 2))
+    
+    # 设置环境变量（子进程会继承）
+    os.environ.setdefault('OMP_NUM_THREADS', str(threads_per_worker))
+    os.environ.setdefault('MKL_NUM_THREADS', str(threads_per_worker))
+    os.environ.setdefault('OPENBLAS_NUM_THREADS', str(threads_per_worker))
+    
+    # 设置 PyTorch 线程数
+    torch.set_num_threads(threads_per_worker)
+    
+    logger.info(f"多进程环境初始化完成: 工作进程数={num_workers}, 每进程线程数={threads_per_worker}")
+    
+    return threads_per_worker
+
+
+def cleanup_multiprocessing():
+    """
+    清理多进程资源
+    
+    在程序退出时调用，确保所有子进程正确关闭，避免资源泄漏。
+    """
+    try:
+        # 清理PyTorch缓存
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            torch.cuda.synchronize()
+        
+        # 清理 CPU 线程池
+        try:
+            torch.cuda.empty_cache()  # 再次清理确保完整
+        except Exception:
+            pass
+        
+        # 关闭multiprocessing资源（兼容Python 3.14+）
+        import multiprocessing.util as mp_util
+        if hasattr(mp_util, '_cleanup_all_processes'):
+            mp_util._cleanup_all_processes()  # type: ignore
+        
+        # 尝试关闭所有活动的子进程
+        if multiprocessing.active_children():
+            logger.debug(f"等待 {len(multiprocessing.active_children())} 个子进程结束...")
+            for child in multiprocessing.active_children():
+                child.join(timeout=5)  # 等待最多5秒
+                if child.is_alive():
+                    child.terminate()
+                    
+    except Exception as e:
+        logger.debug(f"资源清理时出现警告（可忽略）: {e}")
 
 
 def get_file_hash(file_path: Path) -> str:

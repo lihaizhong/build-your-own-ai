@@ -8,7 +8,6 @@ import warnings
 from pathlib import Path
 from loguru import logger
 from typing import Optional
-import torch
 
 # 绝对导入，支持直接运行
 try:
@@ -17,6 +16,7 @@ try:
     from .embedding import VectorStore
     from .retrieval import HybridRetriever
     from .generator import AnswerGenerator, RAGPipeline
+    from .utils import init_multiprocessing, cleanup_multiprocessing
 except ImportError:
     # 作为脚本直接运行时使用绝对导入
     from config import config, load_env_config
@@ -24,21 +24,7 @@ except ImportError:
     from embedding import VectorStore
     from retrieval import HybridRetriever
     from generator import AnswerGenerator, RAGPipeline
-
-
-def cleanup_resources():
-    """清理资源，防止multiprocessing警告"""
-    try:
-        # 清理PyTorch缓存
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-        
-        # 关闭multiprocessing资源（兼容Python 3.14+）
-        import multiprocessing.util as mp_util
-        if hasattr(mp_util, '_cleanup_all_processes'):
-            mp_util._cleanup_all_processes()  # type: ignore
-    except Exception as e:
-        logger.debug(f"资源清理时出现警告（可忽略）: {e}")
+    from utils import init_multiprocessing, cleanup_multiprocessing
 
 
 def setup_logger(log_dir: Optional[Path] = None):
@@ -232,6 +218,9 @@ def main():
     # 禁用multiprocessing资源泄漏警告（不影响功能）
     warnings.filterwarnings("ignore", message=".*leaked semaphore.*")
     
+    # 初始化多进程环境（必须在任何模型加载或多进程创建之前）
+    init_multiprocessing(num_workers=1)
+    
     parser = argparse.ArgumentParser(
         description="Disney RAG问答助手 - 基于向量数据库的智能问答系统",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -281,10 +270,22 @@ def main():
         help='日志目录'
     )
     
+    parser.add_argument(
+        '--workers',
+        '-w',
+        type=int,
+        default=1,
+        help='多进程工作进程数（默认为1，即单进程模式）'
+    )
+    
     args = parser.parse_args()
     
     # 加载环境变量
     load_env_config()
+    
+    # 根据worker数重新配置多进程环境
+    if args.workers > 1:
+        init_multiprocessing(num_workers=args.workers)
     
     # 配置日志
     setup_logger(args.log_dir)
@@ -308,7 +309,7 @@ def main():
         interactive_mode()
     
     # 程序退出时清理资源
-    cleanup_resources()
+    cleanup_multiprocessing()
 
 
 def print_logo():

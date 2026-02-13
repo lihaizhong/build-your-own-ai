@@ -124,15 +124,20 @@ class TextEmbeddingModel:
 class ImageEmbeddingModel:
     """图像Embedding模型（CLIP）"""
     
-    def __init__(self, model_name: Optional[str] = None):
+    def __init__(self, model_name: Optional[str] = None, num_threads: Optional[int] = None):
         """
         初始化图像Embedding模型
         
         Args:
             model_name: CLIP模型名称
+            num_threads: 线程数限制，None表示使用默认值（多进程环境下建议为1）
         """
         self.model_name = model_name or config.clip_model_name
         self.embedding_dim = config.image_embedding_dim
+        
+        # 线程数配置（多进程环境下建议设置为1）
+        self.num_threads = num_threads if num_threads is not None else 1
+        torch.set_num_threads(self.num_threads)
         
         logger.info(f"加载CLIP模型: {self.model_name}")
         
@@ -147,14 +152,11 @@ class ImageEmbeddingModel:
         # 设置为评估模式
         self.model.eval()
         
-        # 限制线程数，避免multiprocessing资源泄漏
-        torch.set_num_threads(1)
-        
         # 检查是否有GPU
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device) # type: ignore
         
-        logger.info(f"图像Embedding模型加载完成 (设备: {self.device}, 维度: {self.embedding_dim})")
+        logger.info(f"图像Embedding模型加载完成 (设备: {self.device}, 维度: {self.embedding_dim}, 线程数: {self.num_threads})")
     
     def embed_image(self, image: Image.Image) -> List[float]:
         """
