@@ -1,0 +1,25 @@
+[project]
+name = "text2sql-vanna"
+version = "0.1.0"
+description = "基于Vanna的Text2SQL智能查询系统"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "vanna[chromadb,qdrant]>=0.7.3",
+    "openai>=1.0.0",
+    "dashscope>=1.20.0",
+    "pandas>=2.0.0",
+    "sqlalchemy>=2.0.0",
+    "pymysql>=1.1.0",
+    "sqlite3-utils>=3.38",
+    "python-dotenv>=1.0.0",
+    "loguru>=0.7.0",
+    "tabulate>=0.9.0",
+    "rich>=13.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "ipython>=8.0.0",
+]
