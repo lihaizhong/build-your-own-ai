@@ -9,7 +9,6 @@ import re
 from pathlib import Path
 from typing import Any, List, Optional
 from datetime import datetime
-from loguru import logger
 
 import jieba
 

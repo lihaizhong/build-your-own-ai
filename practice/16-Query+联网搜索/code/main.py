@@ -12,11 +12,9 @@ from loguru import logger
 sys.path.insert(0, str(Path(__file__).parent))
 
 try:
-    from .pipeline import WebSearchPipeline, PipelineResult
-    from .config import config
+    from .pipeline import WebSearchPipeline
 except ImportError:
-    from pipeline import WebSearchPipeline, PipelineResult
-    from config import config
+    from pipeline import WebSearchPipeline
 
 
 def setup_logger():

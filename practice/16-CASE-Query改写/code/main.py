@@ -3,7 +3,10 @@ Query改写演示程序
 演示5种Query类型的改写效果
 """
 
-from query_rewriter import QueryRewriter, QueryType
+try:
+    from .query_rewriter import QueryRewriter
+except ImportError:
+    from query_rewriter import QueryRewriter
 
 
 def print_separator(title: str = ""):

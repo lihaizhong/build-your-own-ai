@@ -6,7 +6,6 @@ Query改写核心模块
 import os
 from enum import Enum
 from pathlib import Path
-from typing import Optional
 
 from dashscope import Generation
 from dotenv import load_dotenv
@@ -61,12 +60,12 @@ class QueryRewriter:
             response = Generation.call(
                 model=self.model,
                 prompt=prompt,
-                api_key=self.api_key,
+                api_key=self.api_key, # type: ignore
             )
-            if response.status_code == 200:
-                return response.output.text.strip()
+            if response.status_code == 200: # type: ignore
+                return response.output.text.strip() # type: ignore
             else:
-                logger.error(f"LLM调用失败: {response.code} - {response.message}")
+                logger.error(f"LLM调用失败: {response.code} - {response.message}") # type: ignore
                 return ""
         except Exception as e:
             logger.error(f"LLM调用异常: {e}")

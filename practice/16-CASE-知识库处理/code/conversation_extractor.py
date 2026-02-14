@@ -10,9 +10,12 @@ from typing import Any, Dict, List, Optional
 from openai import OpenAI
 from loguru import logger
 
-from .config import config
-from .utils import preprocess_json_response, get_api_key
-
+try:
+    from .config import config
+    from .utils import preprocess_json_response, get_api_key
+except ImportError:
+    from config import config
+    from utils import preprocess_json_response, get_api_key
 
 class ConversationKnowledgeExtractor:
     """对话知识提取器 - 从对话中提取和沉淀知识"""

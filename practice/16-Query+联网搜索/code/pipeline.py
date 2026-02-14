@@ -10,12 +10,12 @@ from loguru import logger
 try:
     from .query_classifier import QueryClassifier, SearchNeedType
     from .query_rewriter import WebQueryRewriter
-    from .search_strategy import SearchStrategyGenerator, SearchStrategy
+    from .search_strategy import SearchStrategyGenerator
     from .config import config
 except ImportError:
     from query_classifier import QueryClassifier, SearchNeedType
     from query_rewriter import WebQueryRewriter
-    from search_strategy import SearchStrategyGenerator, SearchStrategy
+    from search_strategy import SearchStrategyGenerator
     from config import config
 
 
@@ -93,7 +93,7 @@ class PipelineResult:
             lines.append("建议: 使用本地知识库或已有数据回答")
         
         lines.append("=" * 60)
-        return "\n".join(lines)
+        return "\n".join(lines) # type: ignore
 
 
 class WebSearchPipeline:

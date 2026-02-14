@@ -156,7 +156,7 @@ class SimpleVanna(BaseVanna):
                 col_type = col[2]
                 col_defs.append(f"{col_name} {col_type}")
             
-            schema_parts.append(f"CREATE TABLE {table} (\n  " + ",\n  ".join(col_defs) + "\n);")
+            schema_parts.append(f"CREATE TABLE {table} (\n  " + ",\n  ".join(col_defs) + "\n);") # type: ignore
         
         self.schema_info = "\n\n".join(schema_parts)
         logger.info(f"已加载 {len(tables)} 个表的结构信息")
@@ -236,7 +236,7 @@ class SimpleVanna(BaseVanna):
         ]
         logger.info(f"已加载 {len(self.training_data)} 条训练数据")
     
-    def train(self, question: str = None, sql: str = None, ddl: str = None, documentation: str = None):
+    def train(self, question: str = None, sql: str = None, ddl: str = None, documentation: str = None): # type: ignore
         """
         添加训练数据
         
@@ -343,7 +343,7 @@ class SimpleVanna(BaseVanna):
                 max_tokens=500
             )
             
-            sql = response.choices[0].message.content.strip()
+            sql = response.choices[0].message.content.strip() # type: ignore
             
             # 清理 SQL 输出
             sql = self._clean_sql(sql)
@@ -439,8 +439,8 @@ class SimpleVanna(BaseVanna):
 
 
 def create_vanna(
-    llm_provider: str = None,
-    db_path: str = None
+    llm_provider: str = None, # type: ignore
+    db_path: str = None # type: ignore
 ) -> SimpleVanna:
     """
     创建 Vanna 实例

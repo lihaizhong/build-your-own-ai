@@ -10,9 +10,12 @@ from typing import Any, Dict, List, Optional
 from openai import OpenAI
 from loguru import logger
 
-from .config import config
-from .utils import preprocess_json_response, get_api_key, get_datetime_str
-
+try:
+    from .config import config
+    from .utils import preprocess_json_response, get_api_key, get_datetime_str
+except ImportError:
+    from config import config
+    from utils import preprocess_json_response, get_api_key, get_datetime_str
 
 class KnowledgeBaseHealthChecker:
     """知识库健康度检查器 - 检查完整性、时效性和一致性"""
@@ -101,7 +104,7 @@ class KnowledgeBaseHealthChecker:
 """
         
         try:
-            response = self.get_completion(prompt)
+            response = self.get_completion(prompt) # type: ignore
             response = preprocess_json_response(response)
             result = json.loads(response)
             return result

@@ -11,9 +11,12 @@ from openai import OpenAI
 from rank_bm25 import BM25Okapi
 from loguru import logger
 
-from .config import config
-from .utils import preprocess_text, preprocess_json_response, get_api_key
-
+try:
+    from .config import config
+    from .utils import preprocess_text, preprocess_json_response, get_api_key
+except ImportError:
+    from config import config
+    from utils import preprocess_text, preprocess_json_response, get_api_key
 
 class KnowledgeBaseOptimizer:
     """知识库优化器 - 基于BM25的问题生成与检索优化"""

@@ -5,19 +5,23 @@
 """
 
 import argparse
-import json
 from pathlib import Path
 from typing import Any, Dict, List
 
 from loguru import logger
 
-from .config import config
-from .question_generator import KnowledgeBaseOptimizer
-from .conversation_extractor import ConversationKnowledgeExtractor
-from .health_checker import KnowledgeBaseHealthChecker
-from .version_manager import KnowledgeBaseVersionManager
-from .utils import save_json, load_json
-
+try:
+    from .question_generator import KnowledgeBaseOptimizer
+    from .conversation_extractor import ConversationKnowledgeExtractor
+    from .health_checker import KnowledgeBaseHealthChecker
+    from .version_manager import KnowledgeBaseVersionManager
+    from .utils import load_json
+except ImportError:
+    from question_generator import KnowledgeBaseOptimizer
+    from conversation_extractor import ConversationKnowledgeExtractor
+    from health_checker import KnowledgeBaseHealthChecker
+    from version_manager import KnowledgeBaseVersionManager
+    from utils import load_json
 
 # 示例知识库（迪士尼主题乐园）
 SAMPLE_KNOWLEDGE_BASE: List[Dict[str, Any]] = [

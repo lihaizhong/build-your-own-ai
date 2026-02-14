@@ -16,7 +16,6 @@ from rich.markdown import Markdown
 sys.path.insert(0, str(Path(__file__).parent))
 
 from text2sql_vanna import create_vanna, SimpleVanna
-from loguru import logger
 
 console = Console()
 
@@ -97,7 +96,7 @@ class Text2SQLCLI:
         
         try:
             # 生成 SQL
-            sql = self.vanna.generate_sql(question)
+            sql = self.vanna.generate_sql(question) # type: ignore
             
             # 显示生成的 SQL
             console.print("\n[bold green]生成的 SQL:[/bold green]")
@@ -106,7 +105,7 @@ class Text2SQLCLI:
             
             # 执行 SQL
             console.print("\n[bold]📊 执行查询...[/bold]")
-            results = self.vanna.run_sql(sql)
+            results = self.vanna.run_sql(sql) # type: ignore
             
             # 显示结果
             self._display_results(results)
@@ -212,7 +211,7 @@ class Text2SQLCLI:
         sql = Prompt.ask("请输入对应的 SQL")
         
         if question and sql:
-            self.vanna.train(question=question, sql=sql)
+            self.vanna.train(question=question, sql=sql) # type: ignore
             console.print("[green]训练数据添加成功！[/green]")
     
     def _handle_quit(self):

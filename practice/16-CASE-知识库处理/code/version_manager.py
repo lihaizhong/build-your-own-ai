@@ -3,7 +3,6 @@
 支持知识库版本创建、差异比较、性能评估和回归测试
 """
 
-import json
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set
 
@@ -12,9 +11,12 @@ import faiss
 from openai import OpenAI
 from loguru import logger
 
-from .config import config
-from .utils import save_json, load_json, get_api_key
-
+try:
+    from .config import config
+    from .utils import save_json, load_json, get_api_key
+except ImportError:
+    from config import config
+    from utils import save_json, load_json, get_api_key
 
 # Embedding配置
 TEXT_EMBEDDING_MODEL = "text-embedding-v4"
@@ -101,7 +103,7 @@ class KnowledgeBaseVersionManager:
             text_index_map.add_with_ids(
                 np.array(text_vectors).astype('float32'), 
                 np.array(text_ids)
-            )
+            ) # type: ignore
         
         return metadata_store, text_index_map
     
@@ -165,8 +167,8 @@ class KnowledgeBaseVersionManager:
         kb1_dict = {chunk.get('id'): chunk for chunk in kb1}
         kb2_dict = {chunk.get('id'): chunk for chunk in kb2}
         
-        kb1_ids: Set[str] = set(kb1_dict.keys())
-        kb2_ids: Set[str] = set(kb2_dict.keys())
+        kb1_ids: Set[str] = set(kb1_dict.keys()) # type: ignore
+        kb2_ids: Set[str] = set(kb2_dict.keys()) # type: ignore
         
         added_ids = kb2_ids - kb1_ids
         removed_ids = kb1_ids - kb2_ids
@@ -455,18 +457,18 @@ class KnowledgeBaseVersionManager:
             raise ValueError(f"版本 '{version_name}' 不存在")
         
         if file_path is None:
-            file_path = str(config.versions_dir / f"{version_name}.json")
+            file_path = str(config.versions_dir / f"{version_name}.json") # type: ignore
         
         version_data = self.versions[version_name].copy()
         # 移除FAISS索引（无法序列化）
         version_data.pop('text_index', None)
         
-        save_json(version_data, file_path)
+        save_json(version_data, file_path) # type: ignore
         logger.info(f"版本 '{version_name}' 已保存到 {file_path}")
     
     def load_version(self, file_path: str, version_name: Optional[str] = None) -> Dict[str, Any]:
         """从文件加载版本"""
-        version_data = load_json(file_path)
+        version_data = load_json(file_path) # type: ignore
         
         if version_name is None:
             version_name = version_data.get('version_name', 'loaded_version')
@@ -478,7 +480,7 @@ class KnowledgeBaseVersionManager:
         version_data['metadata_store'] = metadata_store
         version_data['text_index'] = text_index
         
-        self.versions[version_name] = version_data
+        self.versions[version_name] = version_data # type: ignore
         logger.info(f"版本 '{version_name}' 已从 {file_path} 加载")
         
         return version_data
