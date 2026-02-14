@@ -1,10 +1,10 @@
-# 迪斯尼RAG问答助手
+# 迪士尼RAG问答助手
 
 基于RAG（Retrieval-Augmented Generation）技术的原生应用，支持文档处理、图像检索和混合问答。
 
 ## 项目简介
 
-本项目实现了一个完整的RAG问答系统，通过FAISS向量数据库检索相关文档和图像，结合大语言模型生成准确的答案。系统支持迪斯尼相关的知识库问答，具备文档处理、图像OCR、混合检索等高级功能。
+本项目实现了一个完整的RAG问答系统，通过FAISS向量数据库检索相关文档和图像，结合大语言模型生成准确的答案。系统支持迪士尼相关的知识库问答，具备文档处理、图像OCR、混合检索等高级功能。
 
 ## 功能特性
 
@@ -31,7 +31,7 @@
 ## 项目结构
 
 ```
-15-CASE-迪斯尼RAG助手/
+15-CASE-迪士尼RAG助手/
 ├── code/                       # 核心代码
 │   ├── __init__.py            # 模块初始化
 │   ├── config.py              # 配置管理
@@ -137,7 +137,7 @@ cp your_image.png data/images/
 ### 5. 构建索引
 
 ```bash
-cd practice/15-CASE-迪斯尼RAG助手
+cd practice/15-CASE-迪士尼RAG助手
 python -m code.main --build
 ```
 

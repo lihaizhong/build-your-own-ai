@@ -602,7 +602,7 @@ classDiagram
 ## 文件结构
 
 ```
-practice/15-CASE-迪斯尼RAG助手/
+practice/15-CASE-迪士尼RAG助手/
 ├── code/
 │   ├── main.py           # 主程序入口
 │   ├── config.py         # 配置管理
