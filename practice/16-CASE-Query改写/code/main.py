@@ -154,7 +154,7 @@ def interactive_demo():
             conversation_history = "\n".join(lines)
 
         # 执行改写
-        result = rewriter.auto_rewrite_query(query, conversation_history)
+        result = rewriter.auto_rewrite_query(query, conversation_history) # type: ignore
 
         print()
         print(f"查询类型: {result['query_type']}")
