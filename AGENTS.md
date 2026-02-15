@@ -9,11 +9,11 @@ AI/ML学习项目，包含28个课程模块，涵盖大模型、传统机器学�
 - 实战项目驱动，涵盖竞赛级案例
 - 多种算法实现和对比分析
 - 完整的MLOps流程实践
-- 独立的子项目实践环境
+- 统一的依赖管理环境
 
 **项目结构：**
 - `courseware/` - 课程材料（28个模块），包含课件PDF和参考代码
-- `practice/` - 实践项目和案例研究，包含可运行的独立项目
+- `practice/` - 实践项目和案例研究
 - `practice-py/` - Python基础练习册
 - `notebook/` - 学习笔记目录（与课程模块对应）
 - `public/` - 公共资源（图片等）
@@ -29,9 +29,6 @@ AI/ML学习项目，包含28个课程模块，涵盖大模型、传统机器学�
 # 安装依赖（使用uv包管理器）
 uv sync
 
-# 安装开发依赖
-uv sync --group dev
-
 # 激活虚拟环境
 source .venv/bin/activate  # Linux/Mac
 .venv\Scripts\activate     # Windows
@@ -41,29 +38,10 @@ python --version  # 应显示 Python 3.11+
 uv --version      # 验证uv已安装
 ```
 
-**课程模块独立环境（courseware/）：**
-```bash
-cd courseware
-uv venv --python 3.11
-source .venv/bin/activate
-uv sync
-```
-
-**实践项目独立环境（practice/）：**
-```bash
-cd practice/15-CASE-创建RAG问答
-uv venv --python 3.11
-source .venv/bin/activate
-uv sync
-```
-
-**Python练习环境（practice-py/）：**
-```bash
-cd practice-py
-uv venv --python 3.11
-source .venv/bin/activate
-uv sync
-```
+**子项目说明：**
+- 本项目采用统一依赖管理，所有子项目共享根目录的虚拟环境
+- 子项目不再维护独立的 `pyproject.toml` 文件
+- 如需添加新依赖，在根目录执行 `uv add package_name`
 
 ### Type Checking
 ```bash
@@ -113,22 +91,20 @@ uv run jupyter notebook
 uv run jupyter lab
 ```
 
-**子项目执行（RAG问答系统示例）：**
+**实践项目执行（RAG问答系统示例）：**
 ```bash
 # 进入子项目目录
 cd practice/15-CASE-创建RAG问答
 
-# 激活虚拟环境
-source .venv/bin/activate
-
-# 运行示例代码
-python code/rag_example.py
+# 运行主程序
+python code/main.py
 
 # 或使用uv运行
-uv run python code/rag_example.py
+uv run python code/main.py
 
 # 运行测试
-python -m unittest
+python test_rag.py
+python test_system.py
 ```
 
 **课程模块示例：**
@@ -149,7 +125,6 @@ jupyter notebook 1-情感分析-Deepseek-阿里代理.ipynb
 - **缩进**: 4空格（由.editorconfig强制）
 - **行结束符**: LF（Unix风格）
 - **字符集**: UTF-8
-- **最大行长度**: 100字符（推荐）
 - **尾随空格**: 不修剪（默认）
 - **最终换行**: 不要求
 
@@ -171,7 +146,11 @@ import matplotlib.pyplot as plt
 
 # 3. 本地导入
 from my_module import my_function
-from .local_utils import helper_function
+# 相对导入需要在包内使用，脚本直接运行时需添加路径或使用绝对导入
+try:
+    from .local_utils import helper_function
+except ImportError:
+    from local_utils import helper_function
 ```
 
 ### Type Hints
@@ -339,14 +318,14 @@ torch_save(model.state_dict(), 'model/pytorch_model.pth')
 ```
 
 ### Dependencies
-- 将新依赖添加到`pyproject.toml`的dependencies数组
+- 将新依赖添加到根目录`pyproject.toml`的dependencies数组
 - 使用`uv add package_name`添加依赖
-- 为稳定性固定版本（如 `numpy>=1.24,<2.0`）
+- 为稳定性固定版本（如 `numpy>=2.4.0`）
 - 使用版本范围而不是精确版本
 
 ```bash
 # 添加新依赖
-uv add pandas>=2.0.0
+uv add pandas>=3.0.0
 
 # 添加开发依赖
 uv add --group dev pytest
@@ -360,7 +339,6 @@ uv add package_name@latest
 - **应该提交**: `.env.example`, 文档, 代码文件, 配置文件, `pyproject.toml`, `uv.lock`
 - **大文件**: 模型文件和数据文件应该使用Git LFS或外部存储
 - **分支管理**: 当前开发分支为 `develop`，主分支为 `main`
-- **虚拟环境**: 每个子项目的 `.venv` 目录都应该在 `.gitignore` 中忽略
 
 ## Project Structure
 
@@ -372,78 +350,31 @@ build-your-own-ai/
 │   │   └── CASE-API使用/
 │   ├── 02-DeepSeek使用与Prompt工程/
 │   ├── 03-Cursor编程-从入门到精通/
-│   │   ├── CASE-bed_usage/
 │   ├── 04-Coze工作原理与应用实例/
 │   ├── 05-Agent进阶实战与插件开发/
 │   ├── 06-Dify本地化部署和应用/
 │   ├── 07-分析式AI基础/
-│   │   └── Case-二手车价格预测/
 │   ├── 08-不同领域的AI算法/
-│   │   └── 【完成参考】Case-二手车价格预测/
 │   ├── 09-机器学习神器/
-│   │   ├── Attrition/
-│   │   └── voice/
 │   ├── 10-时间序列模型/
-│   │   ├── CASE-资金流入流出预测/
-│   │   ├── sales_prediction/
-│   │   └── stock/
 │   ├── 11-时间序列AI大赛/
 │   ├── 12-神经网络基础与Tensorflow实战/
-│   │   └── code/
 │   ├── 13-Pytorch与视觉检测/
-│   │   ├── aistudio-baidu代码/
-│   │   ├── CNN_cases/
-│   │   └── yolo-cases/
 │   ├── 14-Embeddings和向量数据库/
-│   │   ├── CASE-向量数据库/
-│   │   └── hotel_recommendation/
 │   ├── 15-RAG技术与应用/
-│   │   ├── CASE-迪士尼RAG助手/
-│   │   ├── CASE-ChatPDF-Faiss/
-│   │   └── CASE-embedding使用/
 │   ├── 16-RAG高级技术与最佳实践/
-│   │   ├── CASE-知识库处理/
-│   │   └── graphrag-main/
 │   ├── 17-Text2SQL：自助式数据报表开发/
-│   │   ├── CASE-SQL Copilot/
-│   │   ├── Case-SQL-LangChain/
-│   │   └── CASE-SQL-vanna/
 │   ├── 18-LangChain：多任务应用开发/
-│   │   └── CASE-LangChain使用/
 │   ├── 19-Function Calling与协作/
-│   │   └── CASE-Function Calling/
 │   ├── 20-MCP与A2A的应用/
-│   │   ├── CASE-A2A使用/
-│   │   └── CASE-MCP Demo-1/
 │   ├── 21-Agent智能体系统的设计与应用/
-│   │   ├── CASE-私募基金运作指引问答助手（反应式）/
-│   │   └── CASE-投顾AI助手（混合式）/
 │   ├── 22-视觉大模型与多模态理解/
-│   │   ├── CASE-汽车剐蹭视频理解/
-│   │   ├── CASE-MinerU使用/
-│   │   └── CASE-VLM在车险中的应用/
 │   ├── 23-Fine-tuning微调艺术/
-│   │   ├── image_svd/
-│   │   └── MovieLens/
 │   ├── 24-Fine-tuning实操/
-│   │   ├── 【数据集】中文医疗数据/
-│   │   └── Qwen2_5_7B微调示例/
 │   ├── 25-项目实战：企业知识库/
-│   │   └── RAG-Challenge-2-main/
 │   ├── 26-项目实战：交互式BI报表/
-│   │   ├── 【完成参考】CASE-ChatBI助手/
-│   │   └── CASE-ChatBI助手/
 │   ├── 27-项目实战：AI运营助手/
-│   │   ├── 【完成参考】CASE-百万客群经营/
-│   │   ├── BreadBasket/
-│   │   └── CASE-百万客群经营/
-│   ├── 28-项目实战：AI搜索类应用/
-│   │   ├── 【完成参考】CASE-AI搜索问答/
-│   │   ├── CASE-AI搜索问答/
-│   │   └── CASE-Qwen-Agent最佳实践/
-│   ├── .venv/              # 课程模块虚拟环境
-│   ├── .env.example
-│   └── pyproject.toml
+│   └── 28-项目实战：AI搜索类应用/
 ├── practice/                # 实践项目和案例研究
 │   ├── 01-CASE-大模型原理与API使用/
 │   ├── 02-CASE-DeepSeek使用与Prompt工程/
@@ -459,70 +390,33 @@ build-your-own-ai/
 │   ├── 14-CASE-三国演义Embedding/
 │   ├── 14-CASE-向量数据库与元数据管理/
 │   ├── 15-CASE-创建RAG问答/
-│   │   ├── code/           # 核心代码
-│   │   ├── data/           # 数据目录
-│   │   ├── docs/           # 文档
-│   │   ├── .venv/          # 独立虚拟环境
-│   │   ├── pyproject.toml
-│   │   └── README.md
-│   ├── 15-CASE-迪斯尼RAG助手/
+│   ├── 15-CASE-迪士尼RAG助手/
 │   ├── 16-CASE-知识库处理/
 │   ├── 16-CASE-Query改写/
 │   ├── 16-Query+联网搜索/
 │   ├── 17-CASE-Text2SQL/
 │   ├── 项目实战：交互式BI报表/
 │   ├── 项目实战：企业知识库/
+│   ├── 项目实战：AI搜索类应用/
 │   ├── 项目实战：AI运营助手/
-│   └── 项目实战：AI搜索类应用/
+│   └── shared/              # 共享资源
 ├── practice-py/             # Python基础练习
-│   ├── .venv/              # Python练习虚拟环境
-│   ├── .env.example
-│   ├── pyproject.toml
-│   └── 作用域与作用域链.ipynb
+│   ├── 作用域与作用域链.ipynb
+│   └── LangChain管道语法.ipynb
 ├── notebook/                # Jupyter笔记本（学习笔记）
-│   ├── 00-开营直播/
-│   ├── 01-AI大模型原理与API使用/
-│   ├── 02-DeepSeek使用与Prompt工程/
-│   ├── 03-Cursor编程-从入门到精通/
-│   ├── 04-Coze工作原理与应用实例/
-│   ├── 05-Agent进阶实战与插件开发/
-│   ├── 06-Dify本地化部署和应用/
-│   ├── 07-分析式AI基础/
-│   ├── 08-不同领域的AI算法/
-│   ├── 09-机器学习神器/
-│   ├── 10-时间序列模型/
-│   ├── 11-时间序列AI大赛/
-│   ├── 12-神经网络基础与Tensorflow实战/
-│   ├── 13-Pytorch与视觉检测/
-│   ├── 14-Embeddings和向量数据库/
-│   ├── 15-RAG技术与应用/
-│   ├── 16-RAG高级技术与最佳实践/
-│   ├── 17-Text2SQL：自助式数据报表开发/
-│   ├── 18-LangChain：多任务应用开发/
-│   ├── 19-Function Calling与协作/
-│   ├── 20-MCP与A2A的应用/
-│   ├── 21-Agent智能体系统的设计与应用/
-│   ├── 22-视觉大模型与多模态理解/
-│   ├── 23-Fine-tuning微调艺术/
-│   ├── 24-Fine-tuning实操/
-│   ├── 25-项目实战：企业知识库/
-│   ├── 26-项目实战：交互式BI报表/
-│   ├── 27-项目实战：AI运营助手/
-│   ├── 28-项目实战：AI搜索类应用/
-│   └── 笔记-20260130.md
+│   ├── 00-开营直播/ ~ 28-项目实战：AI搜索类应用/
+│   ├── 笔记-20260130.md
+│   └── 作业-20260208.md
 ├── docs/                    # 项目文档
-│   └── IFlow 配置区别.md
+│   ├── IFlow 配置区别.md
+│   ├── iflow-agents-skills汇总.md
+│   ├── iFlow模型特性与使用建议.md
+│   └── npm/
 ├── public/                  # 公共资源（图片等）
 ├── .iflow/                  # iFlow CLI配置
-│   ├── agents/              # iFlow代理配置
-│   ├── commands/            # iFlow命令配置
+│   ├── agents/              # iFlow代理配置（16个）
 │   ├── settings.json
-│   └── skills/              # iFlow技能
-│       ├── doc-coauthoring/
-│       ├── docx/
-│       ├── pdf/
-│       ├── pptx/
-│       └── xlsx/
+│   └── skills/              # iFlow技能（5个）
 ├── .venv/                   # 根目录虚拟环境（不提交）
 ├── pyproject.toml           # 项目配置和依赖
 ├── pyrightconfig.json       # PyRight类型检查配置
@@ -537,11 +431,11 @@ build-your-own-ai/
 ## Technology Stack
 
 ### 核心语言
-- **Python**: 3.11+（当前系统：3.14.3）
+- **Python**: >=3.11（当前系统：3.14.3，类型检查：3.12）
 
 ### 包管理
 - **uv**: 现代Python包管理器（替代pip/venv）
-- **虚拟环境**: 每个子项目独立的.venv目录
+- **统一依赖管理**: 所有子项目共享根目录虚拟环境
 - **依赖查找顺序**:
   1. `.python-version` 文件设定的版本
   2. 当前启用的虚拟环境
@@ -552,137 +446,119 @@ build-your-own-ai/
 ### 类型检查
 - **basedpyright**: 基于PyRight的Python类型检查器
 
-### 按模块分类的依赖
-
-#### DeepSeek与提示词工程（课程02）
-- **dashscope**: >=1.22.1
-- **modelscope**: >=1.25.0
-
-#### RAG问答系统（实践15）
-- **langchain**: >=0.1.0
-- **langchain-community**: >=0.1.0
-- **langchain-core**: >=0.1.0
-- **langchain-openai**: >=0.1.0
-- **langchain-deepseek**: >=0.1.0
-- **faiss-cpu**: >=1.7.4
-- **PyPDF2**: >=3.0.0
-- **pypdf**: >=6.6.2
-- **python-dotenv**: >=1.0.0
-- **tiktoken**: >=0.5.0
-- **sentence-transformers**: >=2.2.0
-- **numpy**: >=1.24.0
-- **pandas**: >=2.0.0
-- **dashscope**: >=1.24.2
-
-#### 开发依赖
-- **pytest**: >=7.0.0
-- **black**: >=23.0.0
-- **ruff**: >=0.1.0
-
-### 常用依赖库
+### 核心依赖（按功能分类）
 
 #### 数据处理与科学计算
-- **numpy**: 数值计算
-- **pandas**: 数据分析
-- **scipy**: 科学计算
+- **numpy**: >=2.4.2 - 数值计算
+- **pandas**: >=3.0.0 - 数据分析
+- **scipy**: 科学计算（间接依赖）
 
 #### 机器学习
-- **scikit-learn**: 机器学习算法
-- **xgboost**: 梯度提升
-- **lightgbm**: 轻量级梯度提升
-- **catboost**: 分类提升
+- **scikit-learn**: >=1.8.0 - 机器学习算法
+- **xgboost**: >=3.1.3 - 梯度提升
+- **lightgbm**: >=4.6.0 - 轻量级梯度提升
+- **catboost**: >=1.2.8 - 分类提升
+- **prophet**: >=1.3.0 - 时间序列预测
+- **statsmodels**: >=0.14.6 - 统计模型
 
 #### 深度学习
-- **torch**: PyTorch深度学习框架
-- **tensorflow**: TensorFlow深度学习框架
-- **transformers**: 预训练模型
-- **accelerate**: 分布式训练加速
+- **torch**: >=2.10.0 - PyTorch深度学习框架
+- **torchvision**: >=0.25.0 - 计算机视觉
+- **transformers**: >=5.1.0 - 预训练模型
+- **ultralytics**: >=8.4.12 - YOLO目标检测
 
 #### 大模型API
-- **openai**: OpenAI API
-- **dashscope**: 阿里云通义千问
-- **cozepy**: Coze平台API
-- **modelscope**: ModelScope模型库
+- **openai**: >=2.17.0 - OpenAI API
+- **dashscope**: >=1.25.11 - 阿里云通义千问
+- **cozepy**: >=0.20.0 - Coze平台API
 
 #### 向量数据库与RAG
-- **faiss-cpu**: 向量相似度搜索
-- **langchain**: LLM应用开发框架
-- **jieba**: 中文分词
-- **gensim**: 文本相似度计算
-- **sentence-transformers**: 句子向量化
+- **faiss-cpu**: >=1.13.2 - 向量相似度搜索
+- **langchain**: >=1.2.9 - LLM应用开发框架
+- **langchain-community**: >=0.4.1 - LangChain社区组件
+- **langchain-openai**: >=1.1.7 - OpenAI集成
+- **chromadb**: >=1.5.0 - 向量数据库
+- **sentence-transformers**: >=5.2.2 - 句子向量化
+- **rank-bm25**: >=0.2.2 - BM25检索
+- **jieba**: >=0.42.1 - 中文分词
+- **gensim**: >=4.4.0 - 文本相似度计算
 
 #### Web框架
-- **fastapi**: 高性能Web框架
-- **flask**: 轻量级Web框架
-- **uvicorn**: ASGI服务器
+- **fastapi**: >=0.128.4 - 高性能Web框架
+- **flask**: >=3.1.2 - 轻量级Web框架
 
 #### 数据可视化
-- **matplotlib**: 基础绘图
-- **seaborn**: 统计数据可视化
-- **plotly**: 交互式图表
+- **matplotlib**: >=3.10.8 - 基础绘图
+- **seaborn**: >=0.13.2 - 统计数据可视化
 
 #### 文档处理
-- **python-docx**: Word文档处理
-- **pypdf2**: PDF文本提取
-- **pymupdf**: PDF处理
-- **pillow**: 图像处理
-- **lxml**: XML/HTML处理
+- **python-docx**: >=1.2.0 - Word文档处理
+- **pypdf**: >=6.6.2 - PDF处理
+- **pypdf2**: >=3.0.1 - PDF文本提取
+- **pymupdf**: >=1.26.7 - PDF高级处理
+- **pillow**: >=12.1.0 - 图像处理
+- **pytesseract**: >=0.3.13 - OCR文字识别
+
+#### 数据库
+- **sqlalchemy**: >=2.0.0 - SQL工具包
 
 #### 其他工具
-- **loguru**: 日志记录
-- **tqdm**: 进度条
-- **joblib**: 模型序列化
-- **ipywidgets**: Jupyter交互组件
-- **python-dotenv**: 环境变量管理
-- **requests**: HTTP请求
-- **tiktoken**: Token计数
+- **loguru**: >=0.7.3 - 日志记录
+- **pydantic**: >=2.12.5 - 数据验证
+- **python-dotenv**: >=1.2.1 - 环境变量管理
+- **requests**: >=2.32.5 - HTTP请求
+- **rich**: >=13.0.0 - 终端美化输出
+- **tabulate**: >=0.9.0 - 表格格式化
 
 ## Best Practices
 
-### 多子项目环境管理
+### 统一依赖管理
 
-本项目包含多个独立的子项目（courseware/practice/practice-py），每个子项目可以有自己的依赖和环境配置。
+本项目采用统一依赖管理策略，所有子项目共享根目录的虚拟环境。
 
 **工作流程：**
 
-1. **开始新模块或实践项目时：**
+1. **开始开发时：**
    ```bash
-   cd courseware/或 practice/<具体项目>
-   uv venv --python 3.11  # 如果不存在虚拟环境
-   source .venv/bin/activate
-   uv sync  # 安装依赖
+   # 在项目根目录
+   uv sync  # 安装所有依赖
+   source .venv/bin/activate  # 激活虚拟环境
    ```
 
-2. **在不同子项目间切换：**
-   - 每次切换子项目时，确保激活对应的虚拟环境
-   - 使用 `which python` 或 `python --version` 验证当前环境
-
-3. **安装新依赖：**
+2. **添加新依赖：**
    ```bash
-   # 在子项目目录中
+   # 在项目根目录执行
    uv add package_name
    uv add --group dev package_name  # 开发依赖
    ```
 
-4. **环境变量管理：**
-   - 每个子项目使用独立的 `.env` 文件
+3. **环境变量管理：**
+   - 项目根目录维护统一的 `.env` 文件
    - 从 `.env.example` 复制并填写配置
    ```bash
    cp .env.example .env
    # 编辑 .env 文件
    ```
 
+4. **配置的API密钥：**
+   - OpenAI API
+   - DashScope API（阿里云通义千问）
+   - Ollama API
+   - 高德 API
+   - Coze API
+   - Dify API
+   - MySQL 数据库
+
 ### 项目实践建议
 
-1. **虚拟环境管理**
-   - 每个子项目（courseware/practice/practice-py）使用独立的虚拟环境
-   - 使用 `uv venv --python 3.11` 创建虚拟环境
-   - 项目级别的依赖在各子项目的 `pyproject.toml` 中定义
-   - 不要提交.venv目录
+1. **依赖管理**
+   - 所有依赖在根目录 `pyproject.toml` 中统一管理
+   - 使用 `uv add` 添加新依赖
+   - 定期运行 `uv sync` 保持依赖同步
 
 2. **代码组织**
    - 每个课程模块有独立的结构，包含课件和参考代码
-   - 实践项目包含完整的ML/DL流程，有独立的虚拟环境
+   - 实践项目包含完整的ML/DL流程
    - 使用标准化的目录结构（code/data/docs）
 
 3. **数据处理**
@@ -706,9 +582,28 @@ build-your-own-ai/
    - 记录依赖和环境要求
 
 7. **环境变量管理**
-   - 每个子项目使用独立的 `.env` 文件
+   - 使用统一的 `.env` 文件
    - 使用 `.env.example` 作为模板
    - 不要提交包含真实密钥的 `.env` 文件
+
+### iFlow Agent 使用
+
+项目配置了 16 个专业 Agent 和 5 个技能，详见 `docs/iflow-agents-skills汇总.md`。
+
+**常用 Agent：**
+- `ai-engineer`: LLM 应用开发、RAG 系统
+- `code-reviewer`: 代码审查
+- `python-pro`: Python 高级编程
+- `data-analysis-agent`: 数据分析与可视化
+- `docs-architect`: 技术文档编写
+
+**模型选择建议：**
+- 通用任务：GLM-4.7
+- 代码任务：DeepSeek-V3.2、Qwen3-Coder-Plus
+- 复杂推理：Kimi-K2-Thinking
+- 文档处理：Kimi-K2.5
+
+详见 `docs/iFlow模型特性与使用建议.md`。
 
 ### 性能优化
 
@@ -767,23 +662,6 @@ uv venv --python 3.11
 uv sync
 ```
 
-### 子项目环境问题
-```bash
-# 检查当前Python环境
-which python
-python --version
-
-# 查看已安装的包
-uv pip list
-
-# 在特定子项目中重新创建环境
-cd practice/15-CASE-创建RAG问答
-rm -rf .venv
-uv venv --python 3.11
-source .venv/bin/activate
-uv sync
-```
-
 ### 类型检查错误
 ```bash
 # 查看详细错误信息
@@ -794,16 +672,13 @@ basedpyright path/to/problematic_file.py
 
 # 检查特定目录
 basedpyright courseware/02-DeepSeek使用与Prompt工程/
-basedpyright practice/15-CASE-创建RAG问答/
+basedpyright practice/
 ```
 
 ### GPU相关问题
 ```bash
 # 检查PyTorch GPU支持
 python -c "import torch; print(torch.cuda.is_available())"
-
-# 检查TensorFlow GPU支持
-python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
 
 # 检查系统Python版本
 python3 --version  # 当前系统: 3.14.3
@@ -815,7 +690,7 @@ python3 --version  # 当前系统: 3.14.3
 source .venv/bin/activate
 
 # 安装Jupyter（如果未安装）
-uv pip install jupyter
+uv add jupyter
 
 # 启动Jupyter
 jupyter notebook
@@ -836,7 +711,8 @@ jupyter notebook
 - `README.md`: 项目概述和快速开始
 - `AGENTS.md`: 代理开发指南（本文件）
 - `docs/IFlow 配置区别.md`: iFlow配置说明
-- 各子项目的 `README.md`: 具体模块说明
+- `docs/iflow-agents-skills汇总.md`: Agent和Skill汇总
+- `docs/iFlow模型特性与使用建议.md`: 模型选择指南
 
 ### 学习资源
 - [课程资料下载](https://pan.baidu.com/s/1MfjQwHba-dHav67tYVAWAw?pwd=8888)
@@ -846,7 +722,7 @@ jupyter notebook
 
 ### 课程模块结构
 - 每个模块包含课件PDF和参考代码
-- 实践项目提供完整的代码实现和独立环境
+- 实践项目提供完整的代码实现
 - 笔记目录包含学习笔记（与课程模块对应）
 
 ## 贡献指南
@@ -862,13 +738,7 @@ jupyter notebook
    - 包含完整的示例和环境配置说明
    - 保持文档的及时更新
 
-3. **子项目贡献**
-   - 新增实践项目时，创建独立的虚拟环境
-   - 提供 `pyproject.toml` 和 `README.md`
-   - 提供 `.env.example` 模板
-   - 确保子项目可以独立运行
-
-4. **问题报告**
+3. **问题报告**
    - 提供清晰的错误描述
    - 说明问题发生的子项目和环境
    - 包含复现步骤
@@ -880,7 +750,8 @@ jupyter notebook
 
 ---
 
-*最后更新: 2026年2月8日*
-*版本: 3.0*
+*最后更新: 2026年2月15日*
+*版本: 4.0*
 *项目根目录 Python 版本: 3.14.3*
 *项目要求 Python 版本: >=3.11*
+*类型检查 Python 版本: 3.12*
