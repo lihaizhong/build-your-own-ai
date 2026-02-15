@@ -52,7 +52,7 @@ class VectorDatabaseDemo:
         )
         
         print(f"集合 '{collection_name}' 创建成功")
-        return collection
+        return collection # type: ignore
     
     def add_documents(
         self,
@@ -79,7 +79,7 @@ class VectorDatabaseDemo:
         collection.add(
             embeddings=embeddings.tolist(),
             documents=documents,
-            metadatas=metadatas,
+            metadatas=metadatas, # type: ignore
             ids=ids
         )
         
@@ -113,7 +113,7 @@ class VectorDatabaseDemo:
             n_results=n_results
         )
         
-        return results
+        return results # type: ignore
 
 
 def main() -> None:

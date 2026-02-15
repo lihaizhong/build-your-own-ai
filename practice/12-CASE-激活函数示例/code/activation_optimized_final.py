@@ -136,7 +136,7 @@ ReLU Function:
 • Applications: Deep networks, modern DL standard
 """
 
-ax_properties.text(0.05, 0.95, properties_text, transform=ax_properties.transAxes,
+ax_properties.text(0.05, 0.95, properties_text, transform=ax_properties.transAxes, # type: ignore
                   fontsize=10, verticalalignment='top', fontfamily='monospace',
                   bbox=dict(boxstyle="round,pad=0.5", facecolor="#f8f9fa", alpha=0.9))
 

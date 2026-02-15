@@ -352,7 +352,7 @@ def main():
         print(f"  {status} {key}: {value}")
     
     # 确定使用的PDF路径
-    pdf_path = args.pdf
+    pdf_path = args.pdf # type: ignore
     if not pdf_path:
         # 如果没有通过命令行指定，询问用户
         print(f"\n默认PDF路径: {PDF_FILE_PATH}")

@@ -408,7 +408,7 @@ def main():
         doc = fitz.open(pdf_path)
         pdf_text = ""
         for page in doc:
-            pdf_text += page.get_text()
+            pdf_text += page.get_text() # type: ignore
         doc.close()
         print(f"成功读取PDF文件，共 {len(pdf_text)} 个字符")
     except ImportError:

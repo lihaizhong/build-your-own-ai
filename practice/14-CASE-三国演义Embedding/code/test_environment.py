@@ -113,7 +113,7 @@ def test_environment():
         print("⏳ 正在创建 FAISS 索引...")
         dimension = 384  # paraphrase-multilingual-MiniLM-L12-v2 的向量维度
         index = faiss.IndexFlatL2(dimension)
-        test_vector = np.random.random((1, dimension)).astype('float32')
+        test_vector = np.random.random((1, dimension)).astype('float32') # type: ignore
         index.add(test_vector)  # type: ignore
         print(f"✅ FAISS 索引创建测试")
         print(f"   索引维度: {dimension}")

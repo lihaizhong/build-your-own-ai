@@ -34,7 +34,7 @@ class SanguoWord2VecAnalyzer:
         Returns:
             模型文件的完整路径
         """
-        return get_project_path('model', model_name)
+        return get_project_path('model', model_name) # type: ignore
         
     def load_and_preprocess(self) -> None:
         """加载和预处理文本数据"""
@@ -206,7 +206,7 @@ def main() -> None:
     print(f"模型路径: {model_path}")
     
     # 创建分析器
-    analyzer = SanguoWord2VecAnalyzer(data_path)
+    analyzer = SanguoWord2VecAnalyzer(data_path) # type: ignore
     
     # 加载和预处理数据
     analyzer.load_and_preprocess()
@@ -215,7 +215,7 @@ def main() -> None:
     analyzer.train_word2vec()
     
     # 保存模型
-    analyzer.save_model(model_path)
+    analyzer.save_model(model_path) # type: ignore
     
     # 分析与曹操最相近的词
     print("\n" + "=" * 60)
