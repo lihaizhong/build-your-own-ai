@@ -1,13 +1,10 @@
-from langchain.agents import Tool, AgentExecutor, create_react_agent
-from langchain.prompts import PromptTemplate
-from langchain.schema import AgentAction, AgentFinish
-from langchain_community.llms import Tongyi
-from langchain.memory import ConversationBufferMemory
-import re
 import json
-from typing import List, Union, Dict, Any
 import os
 import dashscope
+from langchain.agents import Tool, AgentExecutor, create_react_agent
+from langchain.prompts import PromptTemplate
+from langchain_community.llms import Tongyi
+from langchain.memory import ConversationBufferMemory
 
 # 从环境变量获取 dashscope 的 API Key
 api_key = os.environ.get('DASHSCOPE_API_KEY')

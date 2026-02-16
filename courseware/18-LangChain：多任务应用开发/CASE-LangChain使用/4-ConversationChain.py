@@ -5,12 +5,9 @@
 
 
 import os
-from langchain.agents import load_tools
-from langchain.agents import initialize_agent
-from langchain_community.llms import Tongyi  # 导入通义千问Tongyi模型
-from langchain.agents import AgentType
-from langchain import ConversationChain
 import dashscope
+from langchain_community.llms import Tongyi  # 导入通义千问Tongyi模型
+from langchain import ConversationChain
 
 # 从环境变量获取 dashscope 的 API Key
 api_key = os.environ.get('DASHSCOPE_API_KEY')

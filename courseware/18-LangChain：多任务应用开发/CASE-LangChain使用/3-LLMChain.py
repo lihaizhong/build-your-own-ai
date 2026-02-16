@@ -1,9 +1,9 @@
 import os
+import dashscope
 from langchain.agents import load_tools
 from langchain.agents import initialize_agent
 from langchain_community.llms import Tongyi  # 导入通义千问Tongyi模型
 from langchain.agents import AgentType
-import dashscope
 # 你需要在环境变量中添加 OPENAI_API_KEY 和 SERPAPI_API_KEY
 #os.environ["OPENAI_API_KEY"] = '*******'
 #os.environ["SERPAPI_API_KEY"] = '*******'

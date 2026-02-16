@@ -1,14 +1,10 @@
 # 2-simple_toolchain.py
 # 使用 LCEL（LangChain Expression Language）方式构建多工具任务链
 
-from langchain_community.llms import Tongyi
-from langchain.prompts import PromptTemplate
-from langchain.memory import ConversationBufferMemory
-from langchain_core.runnables import RunnableLambda, RunnableMap, RunnablePassthrough
-from langchain.agents import Tool
 import json
 import os
 import dashscope
+from langchain_core.runnables import RunnableLambda
 
 # 从环境变量获取 dashscope 的 API Key
 api_key = os.environ.get('DASHSCOPE_API_KEY')
@@ -114,9 +110,9 @@ text_processing = TextProcessingTool()
 
 # 工具链（LCEL风格）
 tools = {
-    "文本分析": RunnableLambda(lambda x: text_analysis.run(x["text"])),
-    "数据转换": RunnableLambda(lambda x: data_conversion.run(x["input_data"], x["input_format"], x["output_format"])),
-    "文本处理": RunnableLambda(lambda x: text_processing.run(x["operation"], x["content"], **x.get("kwargs", {}))),
+    "文本分析": RunnableLambda(lambda x: text_analysis.run(x["text"])), # type: ignore
+    "数据转换": RunnableLambda(lambda x: data_conversion.run(x["input_data"], x["input_format"], x["output_format"])), # type: ignore
+    "文本处理": RunnableLambda(lambda x: text_processing.run(x["operation"], x["content"], **x.get("kwargs", {}))), # type: ignore
 }
 
 # 示例：LCEL任务链
