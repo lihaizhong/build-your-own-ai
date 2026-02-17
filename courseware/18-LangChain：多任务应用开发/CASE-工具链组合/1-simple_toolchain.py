@@ -1,248 +1,149 @@
+"""
+1-simple_toolchain.py - LangChain 1.29 版本
+
+主要变更:
+1. 使用 langchain.agents.create_agent
+2. Tool 使用 @tool 装饰器
+3. 使用 Chat Model
+"""
 import json
 import os
 import dashscope
-from langchain.agents import Tool, AgentExecutor, create_react_agent
-from langchain.prompts import PromptTemplate
-from langchain_community.llms import Tongyi
-from langchain.memory import ConversationBufferMemory
+from langchain_core.tools import tool
+from langchain_community.chat_models import ChatTongyi
+from langchain.agents import create_agent
 
 # 从环境变量获取 dashscope 的 API Key
 api_key = os.environ.get('DASHSCOPE_API_KEY')
 dashscope.api_key = api_key
 
-# 自定义工具1：文本分析工具
 
-class TextAnalysisTool:
-    """文本分析工具，用于分析文本内容"""
+# 定义工具 - 使用 @tool 装饰器
+@tool
+def text_analysis(text: str) -> str:
+    """
+    分析文本内容，提取字数、字符数和情感倾向。
+    输入: 要分析的文本
+    输出: 分析结果
+    """
+    word_count = len(text.split())
+    char_count = len(text)
     
-    def __init__(self):
-        self.name = "文本分析"
-        self.description = "分析文本内容，提取字数、字符数和情感倾向"
+    positive_words = ["好", "优秀", "喜欢", "快乐", "成功", "美好"]
+    negative_words = ["差", "糟糕", "讨厌", "悲伤", "失败", "痛苦"]
     
-    def run(self, text: str) -> str:
-        """分析文本内容
-        
-        参数:
-            text: 要分析的文本
-        返回:
-            分析结果
-        """
-        # 简单的文本分析示例
-        word_count = len(text.split())
-        char_count = len(text)
-        
-        # 简单的情感分析（示例）
-        positive_words = ["好", "优秀", "喜欢", "快乐", "成功", "美好"]
-        negative_words = ["差", "糟糕", "讨厌", "悲伤", "失败", "痛苦"]
-        
-        positive_count = sum(1 for word in positive_words if word in text)
-        negative_count = sum(1 for word in negative_words if word in text)
-        
-        sentiment = "积极" if positive_count > negative_count else "消极" if negative_count > positive_count else "中性"
-        
-        return f"文本分析结果:\n- 字数: {word_count}\n- 字符数: {char_count}\n- 情感倾向: {sentiment}"
+    positive_count = sum(1 for word in positive_words if word in text)
+    negative_count = sum(1 for word in negative_words if word in text)
+    
+    sentiment = "积极" if positive_count > negative_count else "消极" if negative_count > positive_count else "中性"
+    
+    return f"文本分析结果:\n- 字数: {word_count}\n- 字符数: {char_count}\n- 情感倾向: {sentiment}"
 
-# 自定义工具2：数据转换工具
-class DataConversionTool:
-    """数据转换工具，用于在不同格式之间转换数据"""
-    
-    def __init__(self):
-        self.name = "数据转换"
-        self.description = "在不同数据格式之间转换，如JSON、CSV等"
-    
-    def run(self, input_data: str, input_format: str, output_format: str) -> str:
-        """转换数据格式
+
+@tool
+def data_conversion(input_data: str) -> str:
+    """
+    在不同数据格式之间转换，如JSON、CSV等。
+    输入: JSON或CSV数据，自动进行反向转换
+    输出: 转换后的数据
+    """
+    try:
+        # JSON 到 CSV
+        if input_data.strip().startswith('['):
+            data = json.loads(input_data)
+            if isinstance(data, list) and data:
+                headers = list(data[0].keys())
+                csv = ",".join(headers) + "\n"
+                for item in data:
+                    row = [str(item.get(header, "")) for header in headers]
+                    csv += ",".join(row) + "\n"
+                return csv
         
-        参数:
-            input_data: 输入数据
-            input_format: 输入格式
-            output_format: 输出格式
-        返回:
-            转换后的数据
-        """
-        try:
-            if input_format.lower() == "json" and output_format.lower() == "csv":
-                # JSON到CSV的转换示例
-                data = json.loads(input_data)
-                if isinstance(data, list):
-                    if not data:
-                        return "空数据"
-                    
-                    # 获取所有可能的列
-                    headers = set()
-                    for item in data:
-                        headers.update(item.keys())
-                    headers = list(headers)
-                    
-                    # 创建CSV
-                    csv = ",".join(headers) + "\n"
-                    for item in data:
-                        row = [str(item.get(header, "")) for header in headers]
-                        csv += ",".join(row) + "\n"
-                    
-                    return csv
-                else:
-                    return "输入数据必须是JSON数组"
-            
-            elif input_format.lower() == "csv" and output_format.lower() == "json":
-                # CSV到JSON的转换示例
-                lines = input_data.strip().split("\n")
-                if len(lines) < 2:
-                    return "CSV数据至少需要标题行和数据行"
-                
-                headers = lines[0].split(",")
-                result = []
-                
-                for line in lines[1:]:
-                    values = line.split(",")
-                    if len(values) != len(headers):
-                        continue
-                    
-                    item = {}
-                    for i, header in enumerate(headers):
-                        item[header] = values[i]
+        # CSV 到 JSON
+        lines = input_data.strip().split("\n")
+        if len(lines) >= 2 and ',' in lines[0]:
+            headers = lines[0].split(",")
+            result = []
+            for line in lines[1:]:
+                values = line.split(",")
+                if len(values) == len(headers):
+                    item = {headers[i]: values[i] for i in range(len(headers))}
                     result.append(item)
-                
-                return json.dumps(result, ensure_ascii=False, indent=2)
-            
-            else:
-                return f"不支持的转换: {input_format} -> {output_format}"
+            return json.dumps(result, ensure_ascii=False, indent=2)
         
-        except Exception as e:
-            return f"转换失败: {str(e)}"
+        return "无法识别的数据格式，请提供 JSON 或 CSV 格式的数据"
+    
+    except Exception as e:
+        return f"转换失败: {str(e)}"
 
-# 自定义工具3：文本处理工具
-class TextProcessingTool:
-    """文本处理工具，用于处理文本内容"""
-    
-    def __init__(self):
-        self.name = "文本处理"
-        self.description = "处理文本内容，如查找、替换、统计等"
-    
-    def run(self, operation: str, content: str, **kwargs) -> str:
-        """处理文本内容
+
+@tool
+def text_processing(operation: str) -> str:
+    """
+    处理文本内容，如查找、替换、统计等。
+    输入格式: 操作:内容 或 操作:参数:内容
+    支持操作: 统计行数、查找
+    示例: "统计行数:第一行\\n第二行" 或 "查找:关键词:文本内容"
+    输出: 处理结果
+    """
+    try:
+        parts = operation.split(":", 2)
+        if len(parts) < 2:
+            return "格式错误，请使用: 操作:内容 或 操作:参数:内容"
         
-        参数:
-            operation: 操作类型
-            content: 文本内容
-            **kwargs: 其他参数
-        返回:
-            处理结果
-        """
-        if operation == "count_lines":
+        op = parts[0].strip().lower()
+        
+        if op in ["统计行数", "count_lines"]:
+            content = parts[1] if len(parts) == 2 else parts[2]
             return f"文本共有 {len(content.splitlines())} 行"
         
-        elif operation == "find_text":
-            search_text = kwargs.get("search_text", "")
-            if not search_text:
-                return "请提供要查找的文本"
-            
+        elif op in ["查找", "find"]:
+            if len(parts) < 3:
+                return "格式: 查找:关键词:文本内容"
+            search_text = parts[1]
+            content = parts[2]
             lines = content.splitlines()
             matches = []
-            
             for i, line in enumerate(lines):
                 if search_text in line:
                     matches.append(f"第 {i+1} 行: {line}")
-            
             if matches:
                 return f"找到 {len(matches)} 处匹配:\n" + "\n".join(matches)
-            else:
-                return f"未找到文本 '{search_text}'"
-        
-        elif operation == "replace_text":
-            old_text = kwargs.get("old_text", "")
-            new_text = kwargs.get("new_text", "")
-            
-            if not old_text:
-                return "请提供要替换的文本"
-            
-            new_content = content.replace(old_text, new_text)
-            count = content.count(old_text)
-            
-            return f"替换完成，共替换 {count} 处。\n新内容:\n{new_content}"
+            return f"未找到文本 '{search_text}'"
         
         else:
-            return f"不支持的操作: {operation}"
+            return f"不支持的操作: {op}，支持的操作: 统计行数、查找"
+    
+    except Exception as e:
+        return f"处理失败: {str(e)}"
+
 
 # 创建工具链
 def create_tool_chain():
     """创建工具链"""
-    # 创建工具
-    text_analysis = TextAnalysisTool()
-    data_conversion = DataConversionTool()
-    text_processing = TextProcessingTool()
+    # 创建工具列表
+    tools = [text_analysis, data_conversion, text_processing]
     
-    # 组合工具
-    tools = [
-        Tool(
-            name=text_analysis.name,
-            func=text_analysis.run,
-            description="分析文本内容，提取字数、字符数和情感倾向"
-        ),
-        Tool(
-            name=data_conversion.name,
-            func=data_conversion.run,
-            description="在不同数据格式之间转换，如JSON、CSV等"
-        ),
-        Tool(
-            name=text_processing.name,
-            func=text_processing.run,
-            description="处理文本内容，如查找、替换、统计等"
-        )
-    ]
+    # 初始化 Chat 模型
+    llm = ChatTongyi(model="qwen-turbo", api_key=api_key)  # type: ignore[arg-type]
     
-    # 初始化语言模型
-    llm = Tongyi(model_name="qwen-turbo", dashscope_api_key=api_key)
+    # 创建 Agent - LangChain 1.29 方式
+    agent = create_agent(llm, tools=tools)  # type: ignore[arg-type]
     
-    # 创建提示模板
-    prompt = PromptTemplate.from_template(
-        """你是一个有用的AI助手，可以使用以下工具:
-{tools}
-可用工具名称: {tool_names}
-
-使用以下格式:
-问题: 你需要回答的问题
-思考: 你应该始终思考要做什么
-行动: 要使用的工具名称，必须是 [{tool_names}] 中的一个
-行动输入: 工具的输入
-观察: 工具的结果
-... (这个思考/行动/行动输入/观察可以重复 N 次)
-思考: 我现在已经有了最终答案
-回答: 对原始问题的最终回答
-
-开始!
-问题: {input}
-思考: {agent_scratchpad}"""
-    )
-    
-    # 创建Agent
-    agent = create_react_agent(llm, tools, prompt)
-    
-    # 创建Agent执行器
-    agent_executor = AgentExecutor.from_agent_and_tools(
-        agent=agent,
-        tools=tools,
-        memory=ConversationBufferMemory(memory_key="chat_history"),
-        verbose=True,
-        handle_parsing_errors=False  # 关闭自动重试, True会严格检查重试
-    )
-    
-    return agent_executor
+    return agent
 
 # 示例：使用工具链处理任务
 def process_task(task_description):
     """
     使用工具链处理任务
-    
-    参数:
-        task_description: 任务描述
-    返回:
-        处理结果
     """
     try:
-        agent_executor = create_tool_chain()
-        response = agent_executor.invoke({"input": task_description})
-        return response["output"]  # 从返回的字典中提取输出
+        agent = create_tool_chain()
+        response = agent.invoke({
+            "messages": [{"role": "user", "content": task_description}]
+        })
+        # 获取最后一条消息
+        return response["messages"][-1].content
     except Exception as e:
         return f"处理任务时出错: {str(e)}"
 

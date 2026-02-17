@@ -1,39 +1,42 @@
-import os
-from langchain.agents import load_tools
-from langchain.agents import initialize_agent
-from langchain_community.llms import Tongyi  # 导入通义千问Tongyi模型
-from langchain.agents import AgentType
-import dashscope
+"""
+2-LLMChain.py - LangChain 1.29 版本
 
-# 你需要在环境变量中添加 OPENAI_API_KEY 和 SERPAPI_API_KEY
-#os.environ["OPENAI_API_KEY"] = '*******'
-#os.environ["SERPAPI_API_KEY"] = '*******'
+主要变更:
+1. initialize_agent 已完全移除，改用 langchain.agents.create_agent
+2. 工具从 langchain_community.tools 导入
+3. 使用 Chat Model
+4. agent 返回的是 Graph 的执行结果
+"""
+import os
+import dashscope
+from langchain_community.chat_models import ChatTongyi  # 使用 Chat Model
+from langchain_community.tools.ddg_search import DuckDuckGoSearchRun  # DuckDuckGo 搜索工具
+from langchain.agents import create_agent
+
 # 从环境变量获取 dashscope 的 API Key
-api_key = os.environ.get('DASHSCOPE_API_KEY')
+api_key = os.environ.get('DASHSCOPE_API_KEY', '')
 dashscope.api_key = api_key
 
-# 加载模型
-llm = Tongyi(model_name="qwen-turbo", dashscope_api_key=api_key)  # 使用通义千问qwen-turbo模型
+# 加载 Chat 模型（LangGraph 需要使用 Chat Model）
+llm = ChatTongyi(model="qwen-turbo", api_key=api_key)  # type: ignore[arg-type]
 
-# 加载 serpapi 工具
-tools = load_tools(["serpapi"])
- 
-"""
-agent：代理类型  
-    zero-shot-react-description: 根据工具的描述和请求内容的来决定使用哪个工具（最常用）
-    react-docstore: 使用 ReAct 框架和 docstore 交互, 使用Search 和Lookup 工具, 前者用来搜, 后者寻找term, 举例: Wipipedia 工具
-    self-ask-with-search 此代理只使用一个工具: Intermediate Answer, 它会为问题寻找事实答案(指的非 gpt 生成的答案, 而是在网络中,文本中已存在的), 如 Google search API 工具
-    conversational-react-description: 为会话设置而设计的代理, 它的prompt会被设计的具有会话性, 且还是会使用 ReAct 框架来决定使用来个工具, 并且将过往的会话交互存入内存
-"""
-# 工具加载后需要初始化，verbose=True 代表打印执行详情
-agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
- 
+
+# 使用 DuckDuckGo 搜索工具（免费，无需 API Key）
+search = DuckDuckGoSearchRun()
+
+# 创建工具列表
+tools = [search]
+
+# 创建 ReAct Agent - LangChain 1.29 方式
+agent = create_agent(llm, tools=tools)  # type: ignore[arg-type]
+
 # 运行 agent
-agent.run("今天是几月几号?历史上的今天有哪些名人出生")
+# LangGraph 使用 invoke 方法，传入 messages
+result = agent.invoke({
+    "messages": [{"role": "user", "content": "今天是几月几号?历史上的今天有哪些名人出生"}]
+})
 
-
-# In[2]:
-
-
-os.getenv("SERPAPI_API_KEY")
-
+# 提取最终回复
+for message in result["messages"]:
+    if hasattr(message, 'content'):
+        print(f"{message.__class__.__name__}: {message.content}")

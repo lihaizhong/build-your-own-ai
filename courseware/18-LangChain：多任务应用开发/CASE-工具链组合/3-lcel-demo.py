@@ -1,8 +1,8 @@
+import os
+import dashscope
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.llms import Tongyi  # 导入通义千问Tongyi模型
 from langchain_core.output_parsers import StrOutputParser
-import dashscope
-import os
 
 # 从环境变量获取 dashscope 的 API Key
 api_key = os.environ.get('DASHSCOPE_API_KEY')

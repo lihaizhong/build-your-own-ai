@@ -1,42 +1,66 @@
+"""
+3-LLMChain.py - LangChain 1.29 版本
+
+主要变更:
+1. 使用 langchain.agents.create_agent
+2. 使用 DuckDuckGo 搜索工具（免费）
+3. 使用 Chat Model
+"""
 import os
+import math
 import dashscope
-from langchain.agents import load_tools
-from langchain.agents import initialize_agent
-from langchain_community.llms import Tongyi  # 导入通义千问Tongyi模型
-from langchain.agents import AgentType
-# 你需要在环境变量中添加 OPENAI_API_KEY 和 SERPAPI_API_KEY
-#os.environ["OPENAI_API_KEY"] = '*******'
-#os.environ["SERPAPI_API_KEY"] = '*******'
- 
+from langchain_community.chat_models import ChatTongyi
+from langchain_community.tools.ddg_search import DuckDuckGoSearchRun  # DuckDuckGo 搜索工具
+from langchain_core.tools import tool
+from langchain.agents import create_agent
+
 # 从环境变量获取 dashscope 的 API Key
 api_key = os.environ.get('DASHSCOPE_API_KEY')
 dashscope.api_key = api_key
  
-# 加载 Tongyi 模型
-llm = Tongyi(model_name="deepseek-v3", dashscope_api_key=api_key)  # 使用通义千问qwen-turbo模型
- 
-# 加载 serpapi, llm-math工具, 因为llm-math要使用LLM，所以后面需要指定LLM
-tools = load_tools(["serpapi", "llm-math"], llm=llm)
- 
-"""
-agent：代理类型  
-    zero-shot-react-description: 根据工具的描述和请求内容的来决定使用哪个工具（最常用）
-    react-docstore: 使用 ReAct 框架和 docstore 交互, 使用Search 和Lookup 工具, 前者用来搜, 后者寻找term, 举例: Wipipedia 工具
-    self-ask-with-search 此代理只使用一个工具: Intermediate Answer, 它会为问题寻找事实答案(指的非 gpt 生成的答案, 而是在网络中,文本中已存在的), 如 Google search API 工具
-    conversational-react-description: 为会话设置而设计的代理, 它的prompt会被设计的具有会话性, 且还是会使用 ReAct 框架来决定使用来个工具, 并且将过往的会话交互存入内存
-"""
-# 工具加载后需要初始化，verbose=True 代表打印执行详情
-agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+# 加载 Chat 模型
+llm = ChatTongyi(model="qwen-turbo", api_key=api_key)  # type: ignore[arg-type]
+
+
+# DuckDuckGo 搜索工具（免费，无需 API Key）
+search = DuckDuckGoSearchRun()
+
+
+# 计算器工具 - 使用 @tool 装饰器自定义
+@tool
+def calculator(expression: str) -> str:
+    """
+    计算数学表达式。
+    支持: sqrt, sin, cos, tan, log, exp, pi, e 等
+    输入: 数学表达式，如 '2 + 2', 'sqrt(16)', '(74 - 32) * 5/9'
+    输出: 计算结果
+    """
+    try:
+        safe_dict = {
+            'sqrt': math.sqrt, 'sin': math.sin, 'cos': math.cos,
+            'tan': math.tan, 'log': math.log, 'log10': math.log10,
+            'exp': math.exp, 'pi': math.pi, 'e': math.e,
+            'abs': abs, 'round': round, 'pow': pow,
+        }
+        expression = expression.replace('^', '**')
+        result = eval(expression, {"__builtins__": {}}, safe_dict)
+        return f"计算结果: {result}"
+    except Exception as e:
+        return f"计算错误: {str(e)}"
+
+
+# 创建工具列表
+tools = [search, calculator]
+
+# 创建 Agent
+agent = create_agent(llm, tools=tools)  # type: ignore[arg-type]
  
 # 运行 agent
-result = agent.invoke({"input": "当前北京的温度是多少华氏度？这个温度的1/4是多少"})
-print(result)
+result = agent.invoke({
+    "messages": [{"role": "user", "content": "当前北京的温度是多少摄氏度？这个温度的1/4是多少"}]
+})
 
-
-# In[7]:
-
-
-#help(load_tools)
-import langchain_community
-help(langchain_community.llms)
-
+# 打印结果
+for message in result["messages"]:
+    if hasattr(message, 'content'):
+        print(f"{message.__class__.__name__}: {message.content}")
