@@ -132,6 +132,12 @@
 
 ---
 
+### LangChain
+
+- [LangChain 官方文档](https://docs.langchain.com)
+
+---
+
 ### 自然语言处理(Natural Language Processing, NLP)
 
 > 是人工智能和语言学的一个交叉领域，致力于让计算机能够理解、解释和生成人类语言。
@@ -140,6 +146,12 @@
 
 - [NLP 教程](https://www.runoob.com/nlp/nlp-tutorial.html)
 - [Transformers 教程](https://huggingface.co/docs/transformers/v4.56.0/zh/index)
+
+---
+
+### AI Agent
+
+- [AI Agent(智能体) 教程](https://www.runoob.com/ai-agent/ai-agent-tutorial.html)
 
 ## 学习资料
 
