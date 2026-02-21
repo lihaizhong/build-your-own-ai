@@ -21,7 +21,6 @@ import os
 import sys
 import argparse
 from pathlib import Path
-from typing import Optional
 
 # 添加项目路径
 PROJECT_ROOT = Path(__file__).parent
