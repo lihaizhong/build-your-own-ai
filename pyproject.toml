@@ -3,7 +3,7 @@ name = "build-your-own-ai"
 version = "0.1.0"
 description = "AI 训练营"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.14"
 dependencies = [
     "catboost>=1.2.8",
     "cozepy>=0.20.0",
@@ -21,10 +21,10 @@ dependencies = [
     "matplotlib>=3.10.8",
     "numpy>=2.4.2",
     "openai>=2.17.0",
-    "pandas>=3.0.0",
-    "pillow>=12.1.0",
+    "pandas>=2.0.0",
+    "pillow>=8.0",
     "prophet>=1.3.0",
-    "pydantic>=2.12.5",
+    "pydantic>=2.0",
     "pymupdf>=1.26.7",
     "pypdf>=6.6.2",
     "pypdf2>=3.0.1",
@@ -47,6 +47,9 @@ dependencies = [
     "sqlalchemy>=2.0.0",
     "chromadb>=1.5.0",
     "ddgs>=9.10.0",
+    "qwen-agent[gui]>=0.0.34",
+    "soundfile>=0.13.1",
+    "gradio==5.23.1",
 ]
 
 [dependency-groups]
