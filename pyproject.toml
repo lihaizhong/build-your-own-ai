@@ -50,6 +50,7 @@ dependencies = [
     "qwen-agent[gui]>=0.0.34",
     "soundfile>=0.13.1",
     "gradio==5.23.1",
+    "mcp>=1.12.4",
 ]
 
 [dependency-groups]
