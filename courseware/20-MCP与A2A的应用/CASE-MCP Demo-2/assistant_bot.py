@@ -18,7 +18,7 @@ ROOT_RESOURCE = os.path.join(os.path.dirname(__file__), 'resource')
 
 # 配置 DashScope
 dashscope.api_key = os.getenv('DASHSCOPE_API_KEY', '')  # 从环境变量获取 API Key
-dashscope.timeout = 30  # 设置超时时间为 30 秒
+dashscope.timeout = 30  # type: ignore # 设置超时时间为 30 秒
 
 def init_agent_service():
     """初始化高德地图助手服务
@@ -72,7 +72,7 @@ def init_agent_service():
             name='AI助手',
             description='地图查询/指定网页获取/Bing搜索',
             system_message=system,
-            function_list=tools,
+            function_list=tools, # type: ignore
         )
         print("助手初始化成功！")
         return bot

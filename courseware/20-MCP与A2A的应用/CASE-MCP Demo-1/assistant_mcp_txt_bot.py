@@ -15,7 +15,7 @@ from qwen_agent.gui import WebUI
 
 # 配置 DashScope
 dashscope.api_key = os.getenv('DASHSCOPE_API_KEY', '')  # 从环境变量获取 API Key
-dashscope.timeout = 30  # 设置超时时间为 30 秒
+dashscope.timeout = 30  # type: ignore # 设置超时时间为 30 秒
 
 def init_agent_service():
     """初始化文本计数助手服务
@@ -56,7 +56,7 @@ def init_agent_service():
             name='文本计数助手',
             description='文本统计与分析',
             system_message=system,
-            function_list=tools,
+            function_list=tools, # type: ignore
         )
         print("助手初始化成功！")
         return bot
