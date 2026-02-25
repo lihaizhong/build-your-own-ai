@@ -10,7 +10,6 @@ Qwen2.5(7B)-GRPO 模型微调代码
 pip cache purge
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 """
-import unsloth
 from unsloth import FastLanguageModel
 import torch
 

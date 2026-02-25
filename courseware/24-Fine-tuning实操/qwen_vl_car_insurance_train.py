@@ -10,7 +10,6 @@ Qwen2-VL 3B 视觉模型微调脚本 - 汽车保险承保专家
 基于Unsloth框架进行高效微调
 """
 
-import json
 import os
 from PIL import Image
 from unsloth import FastVisionModel  
