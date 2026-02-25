@@ -4,15 +4,15 @@
         "*.ipynb"
     ],
     "exclude": [
+        "**/.*",
+        ".venv",
         "**/__pycache__",
         "**/.pytest_cache",
         "**/node_modules",
         "**/catbosst_info"
     ],
-    "pythonVersion": "3.12",
+    "pythonVersion": "3.11",
     "venv": ".venv",
     "typeCheckingMode": "basic",
-    "extraPaths": [
-        "practice/15-CASE-创建RAG问答/code"
-    ]
+    "extraPaths": []
 }
