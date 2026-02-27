@@ -7,6 +7,33 @@
 基于 qwen-agent 实现的深思熟虑型智能体，适用于投资研究场景，能够整合数据，
 进行多步骤分析和推理，生成投资观点和研究报告。
 
+【框架说明】qwen-agent vs LangChain/LangGraph
+===========================================
+本文件使用 qwen-agent 框架实现，这是阿里云通义千问官方提供的 Agent 开发框架。
+与 LangChain/LangGraph 相比：
+
+1. **qwen-agent 特点**：
+   - 专为通义千问模型优化，开箱即用
+   - 内置 Assistant（助手）和 WebUI（Web界面）组件
+   - 工具注册机制简单直观（@register_tool 装饰器）
+   - 支持流式响应和多轮对话
+
+2. **LangChain/LangGraph 特点**：
+   - 模型无关，支持多种 LLM 后端
+   - LangGraph 提供状态图（StateGraph）构建复杂工作流
+   - 更适合需要精细控制状态的复杂 Agent 系统
+
+3. **选择建议**：
+   - 快速原型开发 + 通义千问模型 → qwen-agent
+   - 复杂状态管理 + 多模型支持 → LangGraph
+
+【深思熟虑智能体架构】
+=====================
+深思熟虑型智能体（Deliberative Agent）是一种能够进行多步骤推理的智能体：
+- 不同于简单的"输入→输出"反应式智能体
+- 强调"感知→建模→推理→决策→行动"的完整认知过程
+- 适合需要深度分析的复杂任务（如投资研究、战略规划）
+
 核心流程：
 1. 感知：收集市场数据和信息
 2. 建模：构建内部世界模型，理解市场状态
@@ -16,13 +43,11 @@
 """
 
 import os
-import json
 import dashscope
 from qwen_agent.agents import Assistant
 from qwen_agent.gui import WebUI
 from qwen_agent.tools.base import BaseTool, register_tool
 from datetime import datetime
-from typing import Dict, List, Any, Optional
 
 # 解决中文显示问题
 import matplotlib.pyplot as plt
@@ -32,9 +57,24 @@ plt.rcParams['axes.unicode_minus'] = False
 # 定义资源文件根目录
 ROOT_RESOURCE = os.path.join(os.path.dirname(__file__), 'resource')
 
-# 配置 DashScope
+# ====== 配置 DashScope API ======
+# 【重要】dashscope SDK 配置方式的变化：
+# - 旧版本（< 1.20）：dashscope.api_key = 'xxx', dashscope.timeout = 30
+# - 新版本（>= 1.20）：timeout 已移除模块级配置，改为在 LLM 配置中设置
+# 
+# 配置项说明：
+# 1. api_key：通过环境变量 DASHSCOPE_API_KEY 获取
+# 2. timeout：在 llm_cfg 字典中配置（见 init_agent_service 函数）
+#
+# 获取 API Key：
+# - 访问 https://dashscope.console.aliyun.com/ 开通服务
+# - 创建 API Key 并设置环境变量：export DASHSCOPE_API_KEY='your-api-key'
 dashscope.api_key = os.getenv('DASHSCOPE_API_KEY', '')
-dashscope.timeout = 30
+
+# 【兼容性说明】
+# 新版 dashscope SDK 不再支持模块级别的 timeout 设置
+# 如果需要设置超时，应在 Assistant 初始化时的 llm_cfg 中配置
+# 错误示例：dashscope.timeout = 30  # AttributeError: module 'dashscope' has no attribute 'timeout'
 
 # ====== 智能投研助手 system prompt ======
 system_prompt = """我是智能投研助手，一个基于深思熟虑型智能体架构的专业投资研究分析师。
