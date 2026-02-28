@@ -1,6 +1,5 @@
 import json
 import os
-import shutil
 
 import requests
 from huggingface_hub import snapshot_download
