@@ -18,13 +18,12 @@ attr=['Age','BusinessTravel','Department','Education','EducationField','Gender',
 lbe_list=[]
 for feature in attr:
     lbe=LabelEncoder()
-    train[feature]=lbe.fit_transform(train[feature])
-    test[feature]=lbe.transform(test[feature])
+    train[feature]=lbe.fit_transform(train[feature]) # type: ignore
+    test[feature]=lbe.transform(test[feature]) # type: ignore
     lbe_list.append(lbe)
 #print(train)
 
 import ngboost as ng
-import numpy as np
 from sklearn.model_selection import train_test_split
 X_train, X_valid, y_train, y_valid = train_test_split(train.drop('Attrition',axis=1), train['Attrition'], test_size=0.2, random_state=42)
 

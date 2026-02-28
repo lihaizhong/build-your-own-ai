@@ -2,7 +2,6 @@
 # coding: utf-8
 
 import dashscope
-from dashscope.api_entities.dashscope_response import Role
 import os
 # 从环境变量中获取 API Key
 dashscope.api_key = os.getenv('DASHSCOPE_API_KEY')
@@ -22,7 +21,7 @@ messages = [
     {"role": "user", "content": "你好，你是什么大模型？"}
 ]
 response = get_response(messages)
-print(response.output.choices[0].message.content)
+print(response.output.choices[0].message.content) # type: ignore
 
 # 情感分析
 review = '这款音效特别好 给你意想不到的音质。'
@@ -32,4 +31,4 @@ messages = [
 ]
 
 response = get_response(messages)
-print(response.output.choices[0].message.content)
+print(response.output.choices[0].message.content) # type: ignore

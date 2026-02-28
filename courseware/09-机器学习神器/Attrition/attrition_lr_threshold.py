@@ -27,8 +27,8 @@ lbe_list = []
 
 for feature in attr:
     lbe = LabelEncoder()
-    train[feature] = lbe.fit_transform(train[feature])
-    test[feature] = lbe.transform(test[feature])
+    train[feature] = lbe.fit_transform(train[feature]) # type: ignore
+    test[feature] = lbe.transform(test[feature]) # type: ignore
     lbe_list.append(lbe)
 
 # 建模环节

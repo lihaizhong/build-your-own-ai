@@ -33,10 +33,10 @@ for feature in attr:
     lbe=LabelEncoder()
     # fit_transform = 先fit 再 transform
     # fit就是指定 LabelEncoder的关系，transform是应用这种LabelEncoder的关系进行编码
-    train[feature]=lbe.fit_transform(train[feature])
+    train[feature]=lbe.fit_transform(train[feature]) # type: ignore
     # 对测试集的特征值 不需要进行fit
     # 如果对测试集进行了fit, 训练集和测试集的lbe标准 就不一样了
-    test[feature]=lbe.transform(test[feature])
+    test[feature]=lbe.transform(test[feature]) # type: ignore
     lbe_list.append(lbe)
 #print(train)
 train.to_csv('train_label_encoder.csv')

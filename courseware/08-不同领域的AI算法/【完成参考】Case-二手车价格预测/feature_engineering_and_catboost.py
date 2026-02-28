@@ -65,7 +65,6 @@ train_data, test_data = load_data()
 
 # 预处理数据
 data, y, train_ids, test_ids = preprocess_data(train_data, test_data)
-data
 
 
 # In[2]:

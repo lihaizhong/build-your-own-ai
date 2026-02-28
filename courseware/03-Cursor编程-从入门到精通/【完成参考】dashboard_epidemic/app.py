@@ -1,11 +1,7 @@
-from flask import Flask, render_template, jsonify, make_response, send_from_directory, request
+from flask import Flask, render_template, jsonify, make_response, send_from_directory
 import pandas as pd
-import json
-from datetime import datetime
-import numpy as np
 import time
 from functools import wraps
-import os
 
 app = Flask(__name__)
 
@@ -176,7 +172,7 @@ def api_summary():
             daily_data = prepare_daily_data(df)
             last_day = daily_data.iloc[-1]
             max_daily = daily_data['新增确诊'].max()
-            max_daily_date = daily_data.loc[daily_data['新增确诊'].idxmax(), '报告日期'].strftime('%Y-%m-%d')
+            max_daily_date = daily_data.loc[daily_data['新增确诊'].idxmax(), '报告日期'].strftime('%Y-%m-%d') # type: ignore
             
             # 计算风险等级统计
             region_data = prepare_region_data(df)

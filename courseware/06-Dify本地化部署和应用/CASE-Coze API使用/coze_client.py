@@ -3,7 +3,6 @@
 基于 cozepy 的 Coze API 客户端
 用于与Coze智能体进行交互
 """
-import os
 from typing import List, Optional, Generator, Dict, Any
 from cozepy import (
     Coze, 
@@ -11,7 +10,6 @@ from cozepy import (
     Message, 
     ChatEventType, 
     MessageContentType,
-    ChatEvent,
     ChatStatus
 )
 from config import COZE_API_TOKEN, COZE_BOT_ID, COZE_CN_BASE_URL, DEFAULT_USER_ID
@@ -20,7 +18,7 @@ from config import COZE_API_TOKEN, COZE_BOT_ID, COZE_CN_BASE_URL, DEFAULT_USER_I
 class CozeClient:
     """基于 cozepy 的 Coze API 客户端类"""
     
-    def __init__(self, api_token: str = None, bot_id: str = None, base_url: str = None):
+    def __init__(self, api_token: str = None, bot_id: str = None, base_url: str = None): # type: ignore
         """
         初始化Coze客户端
         
@@ -43,7 +41,7 @@ class CozeClient:
         print(f"📍 API地址: {self.base_url}")
         print(f"🤖 智能体ID: {self.bot_id}")
     
-    def chat_stream(self, message: str, user_id: str = None) -> Generator[str, None, None]:
+    def chat_stream(self, message: str, user_id: str = None) -> Generator[str, None, None]: # type: ignore
         """
         流式聊天，实时返回智能体的回复
         
@@ -67,19 +65,19 @@ class CozeClient:
                 if event.event == ChatEventType.CONVERSATION_MESSAGE_DELTA:
                     # 检查消息内容是否存在且为文本类型
                     if (hasattr(event.message, 'content') and 
-                        event.message.content and
-                        hasattr(event.message.content, 'type') and
-                        event.message.content.type == MessageContentType.TEXT):
-                        yield event.message.content.text
-                    elif hasattr(event.message, 'content') and isinstance(event.message.content, str):
+                        event.message.content and # type: ignore
+                        hasattr(event.message.content, 'type') and # type: ignore
+                        event.message.content.type == MessageContentType.TEXT): # type: ignore
+                        yield event.message.content.text # type: ignore
+                    elif hasattr(event.message, 'content') and isinstance(event.message.content, str): # type: ignore
                         # 如果content直接是字符串
-                        yield event.message.content
+                        yield event.message.content # type: ignore
                     
         except Exception as e:
             print(f"❌ 流式聊天发生错误: {e}")
             yield f"错误: {str(e)}"
     
-    def chat(self, message: str, user_id: str = None) -> Optional[str]:
+    def chat(self, message: str, user_id: str = None) -> Optional[str]: # type: ignore
         """
         普通聊天，返回完整的智能体回复
         
@@ -103,7 +101,7 @@ class CozeClient:
             # 检查聊天状态
             if chat_poll.chat.status == ChatStatus.COMPLETED:
                 # 从消息列表中提取助手的回复
-                for msg in chat_poll.messages:
+                for msg in chat_poll.messages: # type: ignore
                     if msg.role == "assistant" and msg.content:
                         return msg.content
                 
@@ -115,7 +113,7 @@ class CozeClient:
             print(f"❌ 聊天发生错误: {e}")
             return None
     
-    def chat_with_history(self, messages: List[Dict[str, str]], user_id: str = None) -> Optional[str]:
+    def chat_with_history(self, messages: List[Dict[str, str]], user_id: str = None) -> Optional[str]: # type: ignore
         """
         带历史记录的聊天
         
@@ -147,7 +145,7 @@ class CozeClient:
             # 检查聊天状态
             if chat_poll.chat.status == ChatStatus.COMPLETED:
                 # 从消息列表中提取助手的回复
-                for msg in chat_poll.messages:
+                for msg in chat_poll.messages: # type: ignore
                     if msg.role == "assistant" and msg.content:
                         return msg.content
                 

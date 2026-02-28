@@ -18,8 +18,8 @@ attr=['Age','BusinessTravel','Department','Education','EducationField','Gender',
 lbe_list=[]
 for feature in attr:
     lbe=LabelEncoder()
-    train[feature]=lbe.fit_transform(train[feature])
-    test[feature]=lbe.transform(test[feature])
+    train[feature]=lbe.fit_transform(train[feature]) # type: ignore
+    test[feature]=lbe.transform(test[feature]) # type: ignore
     lbe_list.append(lbe)
 #print(train)
 

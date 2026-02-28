@@ -3,9 +3,7 @@
 
 # In[1]:
 
-
 import dashscope
-from dashscope.api_entities.dashscope_response import Role
 import os
 # 从环境变量中，获取 DASHSCOPE_API_KEY
 api_key = os.environ.get('DASHSCOPE_API_KEY')
@@ -26,5 +24,5 @@ messages = [
     {"role": "user", "content": "你好，你是什么大模型？"}
 ]
 response = get_response(messages)
-print(response.output.choices[0].message.content)
+print(response.output.choices[0].message.content) # type: ignore
 

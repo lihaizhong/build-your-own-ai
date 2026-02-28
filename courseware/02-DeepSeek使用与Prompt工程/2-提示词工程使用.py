@@ -23,11 +23,11 @@ def get_completion(prompt, model="deepseek-v3"):
     messages = [{"role": "user", "content": prompt}]    # 将 prompt 作为用户输入
     response = dashscope.Generation.call(
         model=model,
-        messages=messages,
+        messages=messages, # type: ignore
         result_format='message',  # 将输出设置为message形式
         temperature=0,  # 模型输出的随机性，0 表示随机性最小
     )
-    return response.output.choices[0].message.content  # 返回模型生成的文本
+    return response.output.choices[0].message.content  # type: ignore # 返回模型生成的文本
     
 # 任务描述
 instruction = """

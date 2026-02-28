@@ -37,7 +37,7 @@ X_train, X_valid, y_train, y_valid = train_test_split(train.drop('Attrition',axi
 dvec = DictVectorizer(sparse=False)
 X_train = dvec.fit_transform(X_train.to_dict(orient='record'))
 X_valid = dvec.transform(X_valid.to_dict(orient='record'))
-temp_test = dvec.transform(test.to_dict(orient='record'))
+temp_test = dvec.transform(test.to_dict(orient='record')) # type: ignore
 
 # 进行DMatrix转换
 train_data = xgb.DMatrix(X_train, label=y_train)

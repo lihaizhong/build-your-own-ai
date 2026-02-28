@@ -3,8 +3,6 @@
 对 used_car_train_20200313.csv 进行基础EDA分析。
 """
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -12,7 +10,7 @@ warnings.filterwarnings('ignore')
 pd.set_option('display.max_columns', None)
 
 # 读取数据，分隔符为空格（支持多个空格）
-df = pd.read_csv('used_car_train_20200313.csv', sep='\s+', engine='python')
+df = pd.read_csv('used_car_train_20200313.csv', sep='\s+', engine='python') # type: ignore
 
 # 1. 数据基本信息
 print('数据行数和列数:', df.shape)

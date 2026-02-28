@@ -3,11 +3,8 @@
 
 # In[1]:
 
-
-import json
 import os
 import dashscope
-from dashscope.api_entities.dashscope_response import Role
 
 # 从环境变量中，获取 DASHSCOPE_API_KEY
 api_key = os.environ.get('DASHSCOPE_API_KEY')
@@ -29,5 +26,5 @@ messages=[
   ]
 
 response = get_response(messages)
-print(response.output.choices[0].message.content)
+print(response.output.choices[0].message.content) # type: ignore
 

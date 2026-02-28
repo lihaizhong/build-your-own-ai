@@ -23,8 +23,8 @@ attr = ['Age', 'BusinessTravel', 'Department', 'Education', 'EducationField',
 lbe_list = []
 for feature in attr:
     lbe = LabelEncoder()
-    train[feature] = lbe.fit_transform(train[feature])
-    test[feature] = lbe.transform(test[feature])
+    train[feature] = lbe.fit_transform(train[feature]) # type: ignore
+    test[feature] = lbe.transform(test[feature]) # type: ignore
     lbe_list.append(lbe)
 
 import lightgbm as lgb
@@ -69,7 +69,7 @@ model = lgb.train(
     valid_sets=[train_data, valid_data],
     num_boost_round=10000,
     callbacks=callbacks,
-    categorical_feature=attr
+    categorical_feature=attr # type: ignore
 )
 
 # 获取预测概率

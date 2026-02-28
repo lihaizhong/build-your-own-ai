@@ -14,7 +14,6 @@ import json
 import os
 import random
 import dashscope
-from dashscope.api_entities.dashscope_response import Role
 # 从环境变量中，获取 DASHSCOPE_API_KEY
 api_key = os.environ.get('DASHSCOPE_API_KEY')
 dashscope.api_key = api_key
@@ -45,7 +44,6 @@ def get_response(messages):
     return response
     
 current_locals = locals()
-current_locals
 
 tools = [
         {
@@ -73,11 +71,11 @@ messages=[
 
 while True:
     response = get_response(messages)
-    message = response.output.choices[0].message
+    message = response.output.choices[0].message # type: ignore
     messages.append(message)
     #print('response=', response)
 
-    if response.output.choices[0].finish_reason == 'stop':
+    if response.output.choices[0].finish_reason == 'stop': # type: ignore
         break
     
     # 判断用户是否要call function
@@ -92,10 +90,3 @@ while True:
         tool_info = {"name": "get_current_weather", "role":"tool", "content": tool_response}
         #print('tool_info=', tool_info)
         messages.append(tool_info)
-
-
-# In[6]:
-
-
-messages
-
