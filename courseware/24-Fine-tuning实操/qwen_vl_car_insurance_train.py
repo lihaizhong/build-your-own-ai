@@ -54,6 +54,7 @@ model = FastVisionModel.get_peft_model(
 
 import pandas as pd
 import os
+from datasets import Dataset
 
 print("加载训练数据...")
 # 加载Excel格式的训练数据
@@ -114,19 +115,14 @@ def convert_excel_to_training_format(df):
 # 加载并转换数据集
 train_df = load_excel_dataset("qwen-vl-train.xlsx")
 if train_df is not None:
-    converted_dataset = convert_excel_to_training_format(train_df)
+    converted_data = convert_excel_to_training_format(train_df)
+    # 将列表转换为 Hugging Face Dataset
+    converted_dataset = Dataset.from_list(converted_data)
 else:
     print("无法加载数据集，程序退出")
     exit()
 
 print(f"成功加载 {len(converted_dataset)} 个训练样本")
-
-
-# In[3]:
-
-
-converted_dataset
-
 
 # In[4]:
 
@@ -174,7 +170,8 @@ _ = model.generate(**inputs, streamer=text_streamer, max_new_tokens=128,
 # 开始训练
 print("\n开始训练模型...")
 from unsloth.trainer import UnslothVisionDataCollator
-from trl import SFTTrainer, SFTConfig
+from trl.trainer.sft_trainer import SFTTrainer
+from trl.trainer.sft_config import SFTConfig
 
 # 切换到训练模式
 FastVisionModel.for_training(model)
@@ -182,7 +179,6 @@ FastVisionModel.for_training(model)
 # 配置训练器
 trainer = SFTTrainer(
     model=model,
-    tokenizer=tokenizer,
     data_collator=UnslothVisionDataCollator(model, tokenizer),  # 必须使用视觉数据整理器
     train_dataset=converted_dataset,
     args=SFTConfig(
@@ -201,10 +197,9 @@ trainer = SFTTrainer(
         
         # 视觉微调必需配置
         remove_unused_columns=False,
-        dataset_text_field="",
-        dataset_kwargs={"skip_prepare_dataset": True},
+        max_length=2048,  # 序列最大长度
     ),
-    max_seq_length=2048,  # 序列最大长度参数移到这里
+    processing_class=tokenizer,  # 新版本使用 processing_class 替代 tokenizer
 )
 
 # 显示显存使用情况

@@ -93,10 +93,11 @@ def extract_hash_answer(text: str) -> str | None:
         return None
     return text.split("####")[1].strip()
 
-def get_gsm8k_questions(split = "train") -> Dataset:
+def get_gsm8k_questions(split: str = "train") -> Dataset:
     """加载GSM8K数据集并进行预处理"""
     #data = load_dataset('openai/gsm8k', 'main')[split]
-    data = load_dataset('/root/autodl-tmp/datasets/gsm8k', 'main')[split]
+    ds = load_dataset('/root/autodl-tmp/datasets/gsm8k', 'main')
+    data: Dataset = ds[split]  # type: ignore[assignment]
     data = data.map(lambda x: {
         'prompt': [
             {'role': 'system', 'content': SYSTEM_PROMPT},
@@ -108,14 +109,6 @@ def get_gsm8k_questions(split = "train") -> Dataset:
 
 # 加载数据集
 dataset = get_gsm8k_questions()
-
-
-# In[6]:
-
-
-dataset
-
-
 # In[4]:
 
 
@@ -179,12 +172,11 @@ training_args = GRPOConfig(
     weight_decay = 0.1,    # 权重衰减
     warmup_ratio = 0.1,    # 预热比例
     lr_scheduler_type = "cosine",  # 学习率调度器类型
-    optim = "paged_adamw_8bit",    # 优化器类型
+    optim = "adamw_8bit",  # 优化器类型（trl 0.28.0 不支持 paged_adamw_8bit）
     logging_steps = 1,             # 日志记录步数
     per_device_train_batch_size = 1,  # 每个设备的训练批次大小
     gradient_accumulation_steps = 1,  # 梯度累积步数
     num_generations = 6,              # 生成数量
-    max_prompt_length = max_prompt_length,  # 最大提示词长度
     max_completion_length = max_seq_length - max_prompt_length,  # 最大完成长度
     max_steps = 250,                 # 最大训练步数
     save_steps = 250,                # 保存步数

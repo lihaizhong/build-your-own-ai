@@ -12,7 +12,7 @@ def get_image_feature(s, k):
 	# 用新的s_temp，以及p,q重构A
 	temp = np.dot(p,s)
 	temp = np.dot(temp,q)
-	plt.imshow(temp, cmap=plt.cm.gray, interpolation='nearest')
+	plt.imshow(temp, cmap=plt.cm.gray, interpolation='nearest') # type: ignore
 	plt.show()
 	print(A-temp)
 
@@ -21,7 +21,7 @@ def get_image_feature(s, k):
 image = Image.open('./256.bmp') 
 A = np.array(image)
 # 显示原图像
-plt.imshow(A, cmap=plt.cm.gray, interpolation='nearest')
+plt.imshow(A, cmap=plt.cm.gray, interpolation='nearest') # type: ignore
 plt.show()
 # 对图像矩阵A进行奇异值分解，得到p,s,q
 p,s,q = svd(A, full_matrices=False)

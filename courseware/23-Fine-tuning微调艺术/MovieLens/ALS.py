@@ -251,10 +251,10 @@ class ALS(object):
                 dict -- {item_id: {user_id: rating}}
         """        
         self.user_ids = tuple((set(map(lambda x: x[0], X))))
-        self.user_ids_dict = dict(map(lambda x: x[::-1], enumerate(self.user_ids)))
+        self.user_ids_dict = dict(map(lambda x: x[::-1], enumerate(self.user_ids))) # type: ignore
      
         self.item_ids = tuple((set(map(lambda x: x[1], X))))
-        self.item_ids_dict = dict(map(lambda x: x[::-1], enumerate(self.item_ids)))
+        self.item_ids_dict = dict(map(lambda x: x[::-1], enumerate(self.item_ids))) # type: ignore
      
         self.shape = (len(self.user_ids), len(self.item_ids))
      
@@ -286,11 +286,11 @@ class ALS(object):
         def f(users_row, item_id):
             user_ids = iter(ratings_T[item_id].keys())
             scores = iter(ratings_T[item_id].values())
-            col_nos = map(lambda x: self.user_ids_dict[x], user_ids)
+            col_nos = map(lambda x: self.user_ids_dict[x], user_ids) # type: ignore
             _users_row = map(lambda x: users_row[x], col_nos)
             return sum(a * b for a, b in zip(_users_row, scores))
      
-        ret = [[f(users_row, item_id) for item_id in self.item_ids] for users_row in users.data]
+        ret = [[f(users_row, item_id) for item_id in self.item_ids] for users_row in users.data] # type: ignore
         return Matrix(ret)
 
     def _items_mul_ratings(self, items, ratings):
@@ -306,11 +306,11 @@ class ALS(object):
         def f(items_row, user_id):
             item_ids = iter(ratings[user_id].keys())
             scores = iter(ratings[user_id].values())
-            col_nos = map(lambda x: self.item_ids_dict[x], item_ids)
+            col_nos = map(lambda x: self.item_ids_dict[x], item_ids) # type: ignore
             _items_row = map(lambda x: items_row[x], col_nos)
             return sum(a * b for a, b in zip(_items_row, scores))
      
-        ret = [[f(items_row, user_id) for user_id in self.user_ids] for items_row in items.data]
+        ret = [[f(items_row, user_id) for user_id in self.user_ids] for items_row in items.data] # type: ignore
         return Matrix(ret)
 
     # 生成随机矩阵
@@ -324,17 +324,17 @@ class ALS(object):
 
     # 计算RMSE
     def _get_rmse(self, ratings):
-            m, n = self.shape
+            m, n = self.shape # type: ignore
             mse = 0.0
             n_elements = sum(map(len, ratings.values()))
             for i in range(m):
                 for j in range(n):
-                    user_id = self.user_ids[i]
-                    item_id = self.item_ids[j]
+                    user_id = self.user_ids[i] # type: ignore
+                    item_id = self.item_ids[j] # type: ignore
                     rating = ratings[user_id][item_id]
                     if rating > 0:
-                        user_row = self.user_matrix.col(i).transpose
-                        item_col = self.item_matrix.col(j)
+                        user_row = self.user_matrix.col(i).transpose # type: ignore
+                        item_col = self.item_matrix.col(j) # type: ignore
                         rating_hat = user_row.mat_mul(item_col).data[0][0]
                         square_error = (rating - rating_hat) ** 2
                         mse += square_error / n_elements
@@ -344,7 +344,7 @@ class ALS(object):
     def fit(self, X, k, max_iter=10):
         ratings, ratings_T = self._process_data(X)
         self.user_items = {k: set(v.keys()) for k, v in ratings.items()}
-        m, n = self.shape
+        m, n = self.shape # type: ignore
      
         error_msg = "Parameter k must be less than the rank of original matrix"
         assert k < min(m, n), error_msg
@@ -355,7 +355,7 @@ class ALS(object):
             if i % 2:
                 items = self.item_matrix
                 self.user_matrix = self._items_mul_ratings(
-                    items.mat_mul(items.transpose).inverse.mat_mul(items),
+                    items.mat_mul(items.transpose).inverse.mat_mul(items), # type: ignore
                     ratings
                 )
             else:
@@ -371,12 +371,12 @@ class ALS(object):
 
     # Top-n推荐，用户列表：user_id, n_items: Top-n
     def _predict(self, user_id, n_items):
-        users_col = self.user_matrix.col(self.user_ids_dict[user_id])
+        users_col = self.user_matrix.col(self.user_ids_dict[user_id]) # type: ignore
         users_col = users_col.transpose
      
         items_col = enumerate(users_col.mat_mul(self.item_matrix).data[0])
-        items_scores = map(lambda x: (self.item_ids[x[0]], x[1]), items_col)
-        viewed_items = self.user_items[user_id]
+        items_scores = map(lambda x: (self.item_ids[x[0]], x[1]), items_col) # type: ignore
+        viewed_items = self.user_items[user_id] # type: ignore
         items_scores = filter(lambda x: x[0] not in viewed_items, items_scores)
      
         return sorted(items_scores, key=lambda x: x[1], reverse=True)[:n_items]
