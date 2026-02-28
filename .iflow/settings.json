@@ -63,15 +63,6 @@
         "--workspace-path",
         "."
       ]
-    },
-    "pdf-reader": {
-      "description": "提供PDF文件读取和文本提取功能，支持本地文件和URL访问",
-      "command": "uvx",
-      "args": [
-        "--from",
-        "iflow-mcp-pdf-reader",
-        "pdf-reader-mcp"
-      ]
     }
   },
   "disableAutoUpdate": true
