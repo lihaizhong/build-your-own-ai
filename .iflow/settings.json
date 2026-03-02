@@ -1,5 +1,31 @@
 {
   "mcpServers": {
+    "fetch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@iflow-mcp/fetch@1.0.2"
+      ],
+      "values": {}
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@iflow-mcp/server-github@0.6.2"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      },
+      "values": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": {
+          "type": "string",
+          "title": "GitHub个人访问令牌",
+          "description": "GitHub个人访问令牌。在GitHub设置中生成个人访问令牌",
+          "default": "your_github_token_here"
+        }
+      }
+    },
     "mcp-server-code-runner": {
       "description": "多语言代码执行器，支持35种编程语言的代码片段执行，包括JavaScript、Python、Go、Java等主流语言",
       "command": "npx",
@@ -33,26 +59,6 @@
         "@iflow-mcp/desktop-commander"
       ]
     },
-    "mcp-show2user": {
-      "description": "用于向用户显示报告和待办事项的MCP工具集合，支持HTML和Markdown格式",
-      "command": "uvx",
-      "args": [
-        "--python",
-        "3.12.7",
-        "iflow-mcp_show2user@latest"
-      ]
-    },
-    "excel-edit-server": {
-      "description": "提供Excel文件读取和格式美化功能的MCP服务器",
-      "command": "uvx",
-      "args": [
-        "--python",
-        "3.12.7",
-        "iflow-mcp_excel-edit-server@latest",
-        "--workspace-path",
-        "."
-      ]
-    },
     "mcp-memory-system": {
       "description": "提供基于代理的工作区隔离和文件系统管理功能，支持多代理环境下的安全文件操作",
       "command": "uvx",
@@ -63,6 +69,14 @@
         "--workspace-path",
         "."
       ]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@iflow-mcp/server-sequential-thinking@0.6.2"
+      ],
+      "values": {}
     }
   },
   "disableAutoUpdate": true

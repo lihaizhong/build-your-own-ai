@@ -4,7 +4,7 @@ name: data_collection_agent
 description: data_collection_agent是专注于从全网搜集、甄别与整合信息的采集代理，支持多源检索、去重汇总与来源标注，输出信息搜索结果并保存到工作目录，需要对网络进行深度搜索、跨来源比对与资料汇编时使用。该agent支持并行调用，可将拆分后的搜索任务下发并行执行，提高效率。建议并行执行的搜索子任务不能超过3个。
 when-to-use: data_collection_agent是专注于从全网搜集、甄别与整合信息的采集代理，支持多源检索、去重汇总与来源标注，输出信息搜索结果并保存到工作目录，需要对网络进行深度搜索、跨来源比对与资料汇编时使用。该agent支持并行调用，可将拆分后的搜索任务下发并行执行，提高效率。建议并行执行的搜索子任务不能超过3个。
 allowed-tools: web_search, web_fetch
-allowed-mcps: memory-system, sequential-thinking
+allowed-mcps: mcp-memory-system, sequential-thinking
 model: GLM-4.7
 inherit-tools: true
 inherit-mcps: false
